@@ -132,11 +132,114 @@ const mockCashFlowData = [
     }
 ];
 
+// Données mockées VALUE TRAP DETECTOR
+const mockValueTrapData = [
+    {
+        symbole: "INTC",
+        nom: "Intel Corporation",
+        secteur: "Semi-conducteurs",
+        pe_ratio: 7.2,
+        pb_ratio: 0.9,
+        price_to_fcf: 8.5,
+        evToEbitda: 5.8,
+        roe: 6.8,
+        roic: 5.2,
+        graham_multiple: 12.1,
+        value_grade: "⚠️ VALUE_TRAP",
+        value_score: 8.9
+    },
+    {
+        symbole: "T",
+        nom: "AT&T Inc.",
+        secteur: "Télécommunications",
+        pe_ratio: 5.8,
+        pb_ratio: 0.7,
+        price_to_fcf: 6.2,
+        evToEbitda: 6.1,
+        roe: 12.5,
+        roic: 8.9,
+        graham_multiple: 9.6,
+        value_grade: "✅ SOLID_VALUE",
+        value_score: 24.1
+    },
+    {
+        symbole: "F",
+        nom: "Ford Motor Company",
+        secteur: "Automobile",
+        pe_ratio: 6.5,
+        pb_ratio: 0.8,
+        price_to_fcf: 7.8,
+        evToEbitda: 7.2,
+        roe: 18.2,
+        roic: 14.5,
+        graham_multiple: 10.8,
+        value_grade: "⭐ ELITE_VALUE",
+        value_score: 35.2
+    },
+    {
+        symbole: "IBM",
+        nom: "International Business Machines",
+        secteur: "Technologie",
+        pe_ratio: 11.8,
+        pb_ratio: 4.2,
+        price_to_fcf: 14.5,
+        evToEbitda: 12.3,
+        roe: 7.2,
+        roic: 6.1,
+        graham_multiple: 22.4,
+        value_grade: "🚫 SPECULATIVE",
+        value_score: 1.5
+    },
+    {
+        symbole: "KO",
+        nom: "Coca-Cola Company",
+        secteur: "Boissons",
+        pe_ratio: 22.5,
+        pb_ratio: 9.8,
+        price_to_fcf: 25.2,
+        evToEbitda: 18.7,
+        roe: 42.1,
+        roic: 15.8,
+        graham_multiple: 44.2,
+        value_grade: "🚫 SPECULATIVE",
+        value_score: 19.2
+    },
+    {
+        symbole: "XOM",
+        nom: "Exxon Mobil Corporation",
+        secteur: "Énergie",
+        pe_ratio: 9.2,
+        pb_ratio: 1.8,
+        price_to_fcf: 8.9,
+        evToEbitda: 5.2,
+        roe: 22.8,
+        roic: 18.5,
+        graham_multiple: 19.3,
+        value_grade: "📊 POTENTIAL_VALUE",
+        value_score: 14.1
+    },
+    {
+        symbole: "M",
+        nom: "Macy's Inc.",
+        secteur: "Distribution",
+        pe_ratio: 4.8,
+        pb_ratio: 0.6,
+        price_to_fcf: 5.2,
+        evToEbitda: 3.8,
+        roe: 28.5,
+        roic: 12.8,
+        graham_multiple: 8.1,
+        value_grade: "🎯 DEEP_VALUE",
+        value_score: 47.8
+    }
+];
+
 // Composant principal
 const InvestmentApp = () => {
     const [activeTab, setActiveTab] = React.useState('buffett');
     const [buffettData, setBuffettData] = React.useState([]);
     const [cashFlowData, setCashFlowData] = React.useState([]);
+    const [valueTrapData, setValueTrapData] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
     const [filter, setFilter] = React.useState('ALL');
 
@@ -145,6 +248,7 @@ const InvestmentApp = () => {
         const timer = setTimeout(() => {
             setBuffettData(mockBuffettData);
             setCashFlowData(mockCashFlowData);
+            setValueTrapData(mockValueTrapData);
             setLoading(false);
         }, 1000);
 
@@ -158,6 +262,9 @@ const InvestmentApp = () => {
 
     // Filtrage pour Cash Flow (par défaut tous)
     const filteredCashFlowData = cashFlowData;
+
+    // Filtrage pour Value Trap (par défaut tous)
+    const filteredValueTrapData = valueTrapData;
 
     const getBuffettRatingColor = (rating) => {
         if (rating.includes('ELITE')) return 'bg-gradient-yellow';
@@ -182,6 +289,22 @@ const InvestmentApp = () => {
             if (value > 0.03) return 'text-yellow-400 font-bold';
             return 'text-red-400 font-bold';
         }
+    };
+
+    const getValueGradeColor = (grade) => {
+        if (grade.includes('ELITE_VALUE')) return 'value-badge-elite';
+        if (grade.includes('SOLID_VALUE')) return 'value-badge-solid';
+        if (grade.includes('VALUE_TRAP')) return 'value-badge-trap';
+        if (grade.includes('POTENTIAL_VALUE')) return 'value-badge-potential';
+        if (grade.includes('DEEP_VALUE')) return 'value-badge-deep';
+        return 'value-badge-speculative';
+    };
+
+    const getValueScoreColor = (score) => {
+        if (score > 30) return 'score-excellent';
+        if (score > 20) return 'score-good';
+        if (score > 10) return 'score-average';
+        return 'score-poor';
     };
 
     const formatMillions = (value) => {
@@ -221,7 +344,7 @@ const InvestmentApp = () => {
                         React.createElement('p', { 
                             className: 'text-gray-400 mb-6',
                             key: 'subtitle' 
-                        }, 'Scores Buffett & Momentum Cash Flow - Pour traders amateurs'),
+                        }, 'Scores Buffett, Cash Flow & Value Trap Detector - Pour traders amateurs'),
                         React.createElement('div', { 
                             className: 'bg-yellow-500 text-white p-3 rounded-lg mb-4',
                             key: 'demo-warning'
@@ -245,7 +368,12 @@ const InvestmentApp = () => {
                                 key: 'cashflow',
                                 onClick: () => setActiveTab('cashflow'),
                                 className: `tab ${activeTab === 'cashflow' ? 'active' : ''}`
-                            }, '💰 Momentum Cash Flow')
+                            }, '💰 Momentum Cash Flow'),
+                            React.createElement('button', {
+                                key: 'valuetrap',
+                                onClick: () => setActiveTab('valuetrap'),
+                                className: `tab ${activeTab === 'valuetrap' ? 'active' : ''}`
+                            }, '🎯 Value Trap Detector')
                         ]
                     )
                 ),
@@ -260,19 +388,26 @@ const InvestmentApp = () => {
                         getRatingColor: getBuffettRatingColor,
                         getValueColor: getValueColor
                     })
-                    : React.createElement(CashFlowTab, {
+                    : activeTab === 'cashflow'
+                    ? React.createElement(CashFlowTab, {
                         key: 'cashflow-tab',
                         data: filteredCashFlowData,
                         getCashFlowColor: getCashFlowColor,
                         formatMillions: formatMillions,
                         formatPercent: formatPercent
                     })
+                    : React.createElement(ValueTrapTab, {
+                        key: 'valuetrap-tab',
+                        data: filteredValueTrapData,
+                        getValueGradeColor: getValueGradeColor,
+                        getValueScoreColor: getValueScoreColor
+                    })
             ]
         )
     );
 };
 
-// Composant Onglet Buffett
+// Composant Onglet Buffett (inchangé)
 const BuffettTab = ({ data, filter, onFilterChange, getRatingColor, getValueColor }) => {
     return React.createElement('div', {},
         [
@@ -380,7 +515,7 @@ const BuffettTab = ({ data, filter, onFilterChange, getRatingColor, getValueColo
     );
 };
 
-// Composant Onglet Cash Flow
+// Composant Onglet Cash Flow (inchangé)
 const CashFlowTab = ({ data, getCashFlowColor, formatMillions, formatPercent }) => {
     return React.createElement('div', { className: 'table-container' },
         [
@@ -463,9 +598,132 @@ const CashFlowTab = ({ data, getCashFlowColor, formatMillions, formatPercent }) 
                 key: 'counter'
             }, 
                 `💰 ${data.length} entreprise(s) avec un cash flow positif trouvée(s)`
+            )
+        ]
+    );
+};
+
+// NOUVEAU Composant Onglet Value Trap Detector
+const ValueTrapTab = ({ data, getValueGradeColor, getValueScoreColor }) => {
+    return React.createElement('div', { className: 'table-container' },
+        [
+            // Avertissement Value Trap
+            React.createElement('div', { 
+                className: 'warning-trap p-4 rounded-lg mb-6',
+                key: 'warning'
+            },
+                [
+                    React.createElement('h3', { 
+                        className: 'font-bold mb-2',
+                        key: 'warning-title'
+                    }, '⚠️ Attention aux Value Traps !'),
+                    React.createElement('p', { 
+                        className: 'text-sm',
+                        key: 'warning-text'
+                    }, 'Une action peut sember "bon marché" (faible P/E, P/B) mais cacher des problèmes structurels. Vérifiez toujours la rentabilité (ROE, ROIC) !')
+                ]
             ),
 
-            // Légende Cash Flow
+            // Tableau Value Trap
+            React.createElement('div', { 
+                className: 'bg-gray-800 rounded-lg overflow-hidden shadow-xl',
+                key: 'table'
+            },
+                [
+                    // En-tête du tableau Value Trap
+                    React.createElement('div', { 
+                        className: 'grid grid-cols-12 gap-2 p-4 bg-gray-700 font-semibold text-xs',
+                        key: 'table-header'
+                    },
+                        ['Symbole', 'Entreprise', 'Secteur', 'P/E', 'P/B', 'P/FCF', 'EV/EBITDA', 'ROE', 'ROIC', 'Graham', 'Score', 'Grade'].map(header =>
+                            React.createElement('div', { 
+                                key: header,
+                                className: 'tooltip',
+                                'data-tooltip': 
+                                    header === 'Graham' ? 'Multiple de Graham (P/E × P/B)' :
+                                    header === 'Score' ? 'Score Value (ROE/P/E + marge sécurité)' :
+                                    header === 'Grade' ? 'Classification risque/valeur' : ''
+                            }, header)
+                        )
+                    ),
+                    
+                    // Corps du tableau Value Trap
+                    ...data.map((item, index) =>
+                        React.createElement('div', {
+                            key: item.symbole + index,
+                            className: 'grid grid-cols-12 gap-2 p-4 border-b border-gray-700 hover:bg-gray-750 transition-colors text-xs'
+                        },
+                            [
+                                React.createElement('div', { 
+                                    className: 'font-bold text-sm',
+                                    key: 'symbole'
+                                }, item.symbole),
+                                React.createElement('div', { 
+                                    className: 'font-semibold',
+                                    key: 'nom' 
+                                }, item.nom),
+                                React.createElement('div', { 
+                                    className: 'text-gray-300',
+                                    key: 'secteur' 
+                                }, item.secteur),
+                                React.createElement('div', { 
+                                    className: item.pe_ratio < 8 ? 'text-green-400 font-bold' : 
+                                              item.pe_ratio < 15 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
+                                    key: 'pe'
+                                }, item.pe_ratio),
+                                React.createElement('div', { 
+                                    className: item.pb_ratio < 1 ? 'text-green-400 font-bold' : 
+                                              item.pb_ratio < 2 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
+                                    key: 'pb'
+                                }, item.pb_ratio),
+                                React.createElement('div', { 
+                                    className: item.price_to_fcf < 10 ? 'text-green-400 font-bold' : 
+                                              item.price_to_fcf < 20 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
+                                    key: 'p-fcf'
+                                }, item.price_to_fcf),
+                                React.createElement('div', { 
+                                    className: item.evToEbitda < 8 ? 'text-green-400 font-bold' : 
+                                              item.evToEbitda < 15 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
+                                    key: 'ev-ebitda'
+                                }, item.evToEbitda),
+                                React.createElement('div', { 
+                                    className: item.roe > 15 ? 'text-green-400 font-bold' : 
+                                              item.roe > 8 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
+                                    key: 'roe'
+                                }, `${item.roe}%`),
+                                React.createElement('div', { 
+                                    className: item.roic > 12 ? 'text-green-400 font-bold' : 
+                                              item.roic > 8 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
+                                    key: 'roic'
+                                }, `${item.roic}%`),
+                                React.createElement('div', { 
+                                    className: item.graham_multiple < 15 ? 'text-green-400 font-bold' : 
+                                              item.graham_multiple < 22.5 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
+                                    key: 'graham'
+                                }, item.graham_multiple),
+                                React.createElement('div', { 
+                                    className: getValueScoreColor(item.value_score),
+                                    key: 'score'
+                                }, item.value_score),
+                                React.createElement('div', { 
+                                    className: `px-2 py-1 rounded-full text-xs font-bold text-center text-white ${getValueGradeColor(item.value_grade)}`,
+                                    key: 'grade'
+                                }, item.value_grade)
+                            ]
+                        )
+                    )
+                ]
+            ),
+
+            // Compteur Value Trap
+            React.createElement('div', { 
+                className: 'mt-4 text-gray-400 text-sm',
+                key: 'counter'
+            }, 
+                `🎯 ${data.length} entreprise(s) analysée(s) pour détecter les value traps`
+            ),
+
+            // Légende Value Trap
             React.createElement('div', { 
                 className: 'mt-4 p-4 bg-gray-800 rounded-lg text-sm',
                 key: 'legend'
@@ -474,20 +732,24 @@ const CashFlowTab = ({ data, getCashFlowColor, formatMillions, formatPercent }) 
                     React.createElement('h3', { 
                         className: 'font-bold mb-2',
                         key: 'legend-title'
-                    }, '📋 Légende Cash Flow:'),
+                    }, '📋 Légende Value Trap:'),
                     React.createElement('div', { 
-                        className: 'grid grid-cols-2 gap-4 text-xs',
+                        className: 'grid grid-cols-2 gap-2 text-xs',
                         key: 'legend-content'
                     },
                         [
-                            React.createElement('div', { key: 'margin' }, 
-                                '• Marge FCF > 30%: 💚 Excellente'),
-                            React.createElement('div', { key: 'yield' }, 
-                                '• Yield FCF > 6%: 💜 Excellent'),
-                            React.createElement('div', { key: 'margin-mid' }, 
-                                '• Marge FCF 15-30%: 💛 Bonne'),
-                            React.createElement('div', { key: 'yield-mid' }, 
-                                '• Yield FCF 3-6%: 💙 Bon')
+                            React.createElement('div', { key: 'elite' }, 
+                                '• ⭐ ELITE_VALUE: P/E < 8, P/B < 1, ROE > 15%'),
+                            React.createElement('div', { key: 'solid' }, 
+                                '• ✅ SOLID_VALUE: P/E < 12, P/B < 1.5, ROE > 12%'),
+                            React.createElement('div', { key: 'trap' }, 
+                                '• ⚠️ VALUE_TRAP: P/E < 6, P/B < 0.8, ROE < 8%'),
+                            React.createElement('div', { key: 'deep' }, 
+                                '• 🎯 DEEP_VALUE: P/E < P/B × 10'),
+                            React.createElement('div', { key: 'potential' }, 
+                                '• 📊 POTENTIAL_VALUE: P/E < 15, P/B < 2, ROE > 8%'),
+                            React.createElement('div', { key: 'speculative' }, 
+                                '• 🚫 SPECULATIVE: Autres cas')
                         ]
                     )
                 ]
