@@ -205,3 +205,32 @@ body {
     z-index: 10;
     border: 1px solid #374151;
 }
+/* Nouveaux styles pour Value Trap */
+.bg-gradient-orange { background: linear-gradient(45deg, #f97316, #ea580c); }
+.bg-gradient-indigo { background: linear-gradient(45deg, #6366f1, #4f46e5); }
+.bg-gradient-rose { background: linear-gradient(45deg, #f43f5e, #e11d48); }
+.bg-gradient-slate { background: linear-gradient(45deg, #64748b, #475569); }
+
+/* Grid pour Value Trap */
+.grid-cols-12 { grid-template-columns: repeat(12, 1fr); }
+
+/* Badges Value Trap */
+.value-badge-elite { background: linear-gradient(45deg, #f59e0b, #d97706); }
+.value-badge-solid { background: linear-gradient(45deg, #10b981, #047857); }
+.value-badge-trap { background: linear-gradient(45deg, #f97316, #ea580c); }
+.value-badge-potential { background: linear-gradient(45deg, #3b82f6, #1d4ed8); }
+.value-badge-deep { background: linear-gradient(45deg, #8b5cf6, #7c3aed); }
+.value-badge-speculative { background: linear-gradient(45deg, #64748b, #475569); }
+
+/* Score indicators */
+.score-excellent { color: #10b981; font-weight: bold; }
+.score-good { color: #f59e0b; font-weight: bold; }
+.score-average { color: #6b7280; font-weight: bold; }
+.score-poor { color: #ef4444; font-weight: bold; }
+
+/* Warning styles */
+.warning-trap { 
+    background: linear-gradient(45deg, #fef3c7, #fde68a);
+    color: #92400e;
+    border-left: 4px solid #f59e0b;
+}
