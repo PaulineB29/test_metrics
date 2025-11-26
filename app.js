@@ -58,6 +58,129 @@ const InvestmentApp = () => {
         }
     };
 
+    const ANALYSIS_DESCRIPTIONS = {
+      buffett: {
+        title: "📈 Buffett Quality Score - Explication pour les Investisseurs",
+        sections: [
+          {
+            title: "🎯 L'Héritage de Warren Buffett",
+            content: "Cette analyse applique les principes fondamentaux du plus grand investisseur de tous les temps : Warren Buffett. Elle identifie les entreprises d'exception selon sa philosophie : 'Achetez des entreprises merveilleuses à des prix raisonnables.'"
+          },
+          {
+            title: "📊 Les 4 Piliers de la Qualité Buffett",
+            type: "columns",
+            items: [
+              {
+                emoji: "💰",
+                title: "Rentabilité (ROE)",
+                description: "Return on Equity : Ce que l'entreprise gagne avec l'argent des actionnaires",
+                quote: "Buffett dit : 'Je cherche des entreprises qui génèrent au moins 15% de ROE'"
+              },
+              {
+                emoji: "🏭", 
+                title: "Efficacité (ROIC)",
+                description: "Return on Invested Capital : Efficacité de tous les capitaux investis",
+                note: "Pourquoi c'est important : Mesure la qualité du management"
+              },
+              {
+                emoji: "⚖️",
+                title: "Solidité (Dette/Equity)", 
+                description: "Dette par rapport aux capitaux propres : Résistance aux crises",
+                rule: "La règle d'or : Moins de dette = plus de résilience"
+              },
+              {
+                emoji: "💸",
+                title: "Marge (Net Margin)",
+                description: "Marge nette : Pourcentage de bénéfice sur chaque vente", 
+                indicator: "L'indicateur : Pouvoir de fixation des prix et avantage concurrentiel"
+              }
+            ]
+          },
+          {
+            title: "🏆 Notre Système de Notation",
+            type: "table",
+            headers: ["Rating", "Signification", "Critères"],
+            rows: [
+              ["⭐ ELITE", "Excellence absolue", "ROE > 20%, ROIC > 15%, Dette < 1.5x, Marge > 15%"],
+              ["✅ STRONG", "Très haute qualité", "ROE > 12%, ROIC > 10%, Dette < 2x, Marge > 8%"],
+              ["🟡 DECENT", "Bonne qualité", "ROE > 8%, ROIC > 6%, Dette < 3x, Marge > 3%"],
+              ["🔴 WEAK", "À améliorer", "Ne répond pas aux critères de qualité"]
+            ]
+          },
+          {
+            title: "💡 La Philosophie Buffett en Action",
+            type: "comparison", 
+            good: {
+              title: "Ce que Buffett recherche :",
+              items: [
+                "✅ Avantage concurrentiel durable (marges élevées)",
+                "✅ Management compétent (ROIC élevé)",
+                "✅ Peu de dette (résistance aux crises)", 
+                "✅ Rentabilité constante (ROE stable)"
+              ]
+            },
+            bad: {
+              title: "Ce qu'il évite :",
+              items: [
+                "❌ Entreprises cycliques sans avantage concurrentiel",
+                "❌ Dette excessive",
+                "❌ Marges faibles ou erratiques",
+                "❌ Management médiocre"
+              ]
+            }
+          },
+          {
+            title: "🎯 Comment Utiliser Ces Résultats",
+            type: "usage",
+            items: [
+              {
+                target: "Pour les investisseurs long terme",
+                action: "→ Ciblez ⭐ ELITE et ✅ STRONG pour votre portefeuille de base"
+              },
+              {
+                target: "Pour les investisseurs valeur", 
+                action: "→ Étudiez 🟡 DECENT pour trouver des opportunités de revalorisation"
+              },
+              {
+                target: "Pour tous les investisseurs",
+                action: "→ Évitez 🔴 WEAK sauf analyse approfondie"
+              }
+            ]
+          },
+          {
+            title: "🚨 Points de Vigilance",
+            type: "warnings",
+            limitations: {
+              title: "Les limites de l'analyse :",
+              items: [
+                "📊 Données historiques (le passé ne garantit pas le futur)",
+                "🌍 Contexte sectoriel (certains secteurs ont naturellement plus de dette)",
+                "🔄 Évolutions récentes (vérifiez les dernières actualités)"
+              ]
+            },
+            complements: {
+              title: "Les compléments nécessaires :",
+              items: [
+                "📈 Croissance future (les bons chiffres doivent continuer)",
+                "🏢 Avantage concurrentiel (est-il durable ?)",
+                "👨‍💼 Qualité du management (intégrité et compétence)"
+              ]
+            }
+          },
+          {
+            type: "quote",
+            content: "🌟 Le Secret de Buffett",
+            quote: "\"Quand vous trouvez une entreprise exceptionnelle, gardez-la longtemps. Le temps est l'ami des merveilleuses entreprises.\"",
+            note: "Cette analyse vous donne la première étape : identifier ces entreprises exceptionnelles."
+          },
+          {
+            type: "final-note",
+            content: "Utilisez ces résultats comme point de départ pour vos recherches, pas comme décision finale d'investissement. La qualité durable paie toujours à long terme ! 📈💰"
+          }
+        ]
+      },
+    };
+    
    // Filtrage pour Buffett
     const filteredBuffettData = filter === 'ALL' 
         ? buffettData 
@@ -253,14 +376,22 @@ const InvestmentApp = () => {
 
                 // Contenu des onglets
                 activeTab === 'buffett' 
-                    ? React.createElement(BuffettTab, {
-                        key: 'buffett-tab',
-                        data: filteredBuffettData,
-                        filter: filter,
-                        onFilterChange: setFilter,
-                        getRatingColor: getBuffettRatingColor,
-                        getValueColor: getValueColor
-                    })
+                  ? React.createElement('div', { key: 'buffett-tab' },
+                      [
+                        React.createElement(DescriptionBox, {
+                          key: 'description',
+                          analysisType: 'buffett'
+                        }),
+                        React.createElement(BuffettTab, {
+                          key: 'table',
+                          data: filteredBuffettData,
+                          filter: filter,
+                          onFilterChange: setFilter,
+                          getRatingColor: getBuffettRatingColor,
+                          getValueColor: getValueColor
+                        })
+                      ]
+                    )
                     : activeTab === 'cashflow'
                     ? React.createElement(CashFlowTab, {
                         key: 'cashflow-tab',
@@ -289,7 +420,149 @@ const InvestmentApp = () => {
     );
 };
 
-// Composant Onglet Buffett (inchangé)
+const DescriptionBox = ({ analysisType }) => {
+  const desc = ANALYSIS_DESCRIPTIONS[analysisType];
+  
+  const renderSection = (section, index) => {
+    switch (section.type) {
+      case "columns":
+        return React.createElement('div', { 
+          className: 'bg-gray-750 rounded-lg p-6 mb-6',
+          key: `columns-${index}`
+        },
+          [
+            React.createElement('h3', { 
+              className: 'text-lg font-bold mb-4 text-white',
+              key: 'title'
+            }, section.title),
+            
+            React.createElement('div', {
+              className: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4',
+              key: 'columns'
+            },
+              section.items.map((item, idx) =>
+                React.createElement('div', {
+                  className: 'bg-gray-700 p-4 rounded-lg',
+                  key: idx
+                },
+                  [
+                    React.createElement('div', { 
+                      className: 'text-2xl mb-2',
+                      key: 'emoji'
+                    }, item.emoji),
+                    
+                    React.createElement('h4', { 
+                      className: 'font-bold text-white mb-2',
+                      key: 'item-title'
+                    }, item.title),
+                    
+                    React.createElement('p', {
+                      className: 'text-gray-300 text-sm mb-2',
+                      key: 'desc'
+                    }, item.description),
+                    
+                    item.quote && React.createElement('blockquote', {
+                      className: 'text-yellow-400 text-xs italic border-l-2 border-yellow-400 pl-2 mt-2',
+                      key: 'quote'
+                    }, item.quote),
+                    
+                    item.note && React.createElement('p', {
+                      className: 'text-blue-400 text-xs mt-2',
+                      key: 'note'
+                    }, item.note)
+                  ]
+                )
+              )
+            )
+          ]
+        );
+
+      case "table":
+        return React.createElement('div', { 
+          className: 'bg-gray-750 rounded-lg p-6 mb-6',
+          key: `table-${index}`
+        },
+          [
+            React.createElement('h3', { 
+              className: 'text-lg font-bold mb-4 text-white',
+              key: 'title'
+            }, section.title),
+            
+            React.createElement('div', {
+              className: 'overflow-x-auto',
+              key: 'table'
+            },
+              React.createElement('table', { 
+                className: 'w-full text-sm',
+              },
+                [
+                  React.createElement('thead', { key: 'head' },
+                    React.createElement('tr', { className: 'bg-gray-600' },
+                      section.headers.map((header, idx) =>
+                        React.createElement('th', {
+                          className: 'px-4 py-2 text-left font-semibold',
+                          key: idx
+                        }, header)
+                      )
+                    )
+                  ),
+                  
+                  React.createElement('tbody', { key: 'body' },
+                    section.rows.map((row, rowIdx) =>
+                      React.createElement('tr', {
+                        className: rowIdx % 2 === 0 ? 'bg-gray-700' : 'bg-gray-650',
+                        key: rowIdx
+                      },
+                        row.map((cell, cellIdx) =>
+                          React.createElement('td', {
+                            className: 'px-4 py-2 border-b border-gray-600',
+                            key: cellIdx
+                          }, cell)
+                        )
+                      )
+                    )
+                  )
+                ]
+              )
+            )
+          ]
+        );
+default:
+        return React.createElement('div', { 
+          className: 'mb-6',
+          key: `default-${index}`
+        },
+          [
+            section.title && React.createElement('h3', { 
+              className: 'text-lg font-bold mb-3 text-white',
+              key: 'title'
+            }, section.title),
+            
+            React.createElement('p', {
+              className: 'text-gray-300 leading-relaxed',
+              key: 'content'
+            }, section.content)
+          ]
+        );
+    }
+  };
+
+  return React.createElement('div', { 
+    className: 'bg-gray-800 rounded-lg p-6 mb-8 border-l-4 border-blue-500'
+  },
+    [
+      React.createElement('h2', { 
+        className: 'text-2xl font-bold mb-6 text-white text-center',
+        key: 'main-title'
+      }, desc.title),
+      
+      ...desc.sections.map((section, index) => renderSection(section, index))
+    ]
+  );
+};
+
+
+// Composant Onglet Buffett 
 const BuffettTab = ({ data, filter, onFilterChange, getRatingColor, getValueColor }) => {
     return React.createElement('div', {},
         [
