@@ -1,370 +1,74 @@
-// Données mockées SCORE BUFFETT
-const mockBuffettData = [
-    {
-        symbole: "AAPL",
-        nom: "Apple Inc.",
-        secteur: "Technologie",
-        roe: 25.8,
-        roic: 22.1,
-        debt_to_equity: 1.8,
-        net_margin: 21.2,
-        buffett_rating: "⭐ ELITE"
-    },
-    {
-        symbole: "MSFT",
-        nom: "Microsoft Corporation",
-        secteur: "Technologie",
-        roe: 18.9,
-        roic: 15.3,
-        debt_to_equity: 2.1,
-        net_margin: 16.8,
-        buffett_rating: "✅ STRONG"
-    },
-    {
-        symbole: "GOOGL",
-        nom: "Alphabet Inc.",
-        secteur: "Technologie",
-        roe: 12.4,
-        roic: 10.2,
-        debt_to_equity: 2.8,
-        net_margin: 11.5,
-        buffett_rating: "🟡 DECENT"
-    },
-    {
-        symbole: "TSLA",
-        nom: "Tesla Inc.",
-        secteur: "Automobile",
-        roe: 8.2,
-        roic: 6.7,
-        debt_to_equity: 4.2,
-        net_margin: 7.1,
-        buffett_rating: "🔴 WEAK"
-    },
-    {
-        symbole: "JNJ",
-        nom: "Johnson & Johnson",
-        secteur: "Santé",
-        roe: 22.5,
-        roic: 18.7,
-        debt_to_equity: 1.5,
-        net_margin: 18.9,
-        buffett_rating: "⭐ ELITE"
-    },
-    {
-        symbole: "V",
-        nom: "Visa Inc.",
-        secteur: "Services Financiers",
-        roe: 40.2,
-        roic: 35.8,
-        debt_to_equity: 0.8,
-        net_margin: 51.3,
-        buffett_rating: "⭐ ELITE"
-    }
-];
+import React, { useState, useEffect } from 'https://esm.sh/react@18'
+import ReactDOM from 'https://esm.sh/react-dom@18/client'
 
-// Données mockées MOMENTUM CASH FLOW
-const mockCashFlowData = [
-    {
-        symbole: "AAPL",
-        nom: "Apple Inc.",
-        secteur: "Technologie",
-        operating_cash_flow: 110.543,
-        free_cash_flow: 90.215,
-        revenue: 383.285,
-        net_income: 96.995,
-        fcf_margin: 0.235,
-        fcf_yield: 0.045
-    },
-    {
-        symbole: "MSFT",
-        nom: "Microsoft Corporation",
-        secteur: "Technologie",
-        operating_cash_flow: 87.582,
-        free_cash_flow: 65.432,
-        revenue: 198.270,
-        net_income: 72.738,
-        fcf_margin: 0.330,
-        fcf_yield: 0.038
-    },
-    {
-        symbole: "GOOGL",
-        nom: "Alphabet Inc.",
-        secteur: "Technologie",
-        operating_cash_flow: 91.495,
-        free_cash_flow: 69.128,
-        revenue: 307.390,
-        net_income: 76.033,
-        fcf_margin: 0.225,
-        fcf_yield: 0.042
-    },
-    {
-        symbole: "JNJ",
-        nom: "Johnson & Johnson",
-        secteur: "Santé",
-        operating_cash_flow: 23.456,
-        free_cash_flow: 18.765,
-        revenue: 94.943,
-        net_income: 17.941,
-        fcf_margin: 0.198,
-        fcf_yield: 0.035
-    },
-    {
-        symbole: "V",
-        nom: "Visa Inc.",
-        secteur: "Services Financiers",
-        operating_cash_flow: 18.432,
-        free_cash_flow: 15.678,
-        revenue: 29.310,
-        net_income: 15.301,
-        fcf_margin: 0.535,
-        fcf_yield: 0.052
-    },
-    {
-        symbole: "NVDA",
-        nom: "NVIDIA Corporation",
-        secteur: "Technologie",
-        operating_cash_flow: 15.432,
-        free_cash_flow: 12.345,
-        revenue: 26.974,
-        net_income: 9.752,
-        fcf_margin: 0.458,
-        fcf_yield: 0.048
-    }
-];
+// URL de base de l'API
+const API_BASE_URL = 'http://localhost:3001/api';
 
-// Données mockées VALUE TRAP DETECTOR
-const mockValueTrapData = [
-    {
-        symbole: "INTC",
-        nom: "Intel Corporation",
-        secteur: "Semi-conducteurs",
-        pe_ratio: 7.2,
-        pb_ratio: 0.9,
-        price_to_fcf: 8.5,
-        evToEbitda: 5.8,
-        roe: 6.8,
-        roic: 5.2,
-        graham_multiple: 12.1,
-        value_grade: "⚠️ VALUE_TRAP",
-        value_score: 8.9
-    },
-    {
-        symbole: "T",
-        nom: "AT&T Inc.",
-        secteur: "Télécommunications",
-        pe_ratio: 5.8,
-        pb_ratio: 0.7,
-        price_to_fcf: 6.2,
-        evToEbitda: 6.1,
-        roe: 12.5,
-        roic: 8.9,
-        graham_multiple: 9.6,
-        value_grade: "✅ SOLID_VALUE",
-        value_score: 24.1
-    },
-    {
-        symbole: "F",
-        nom: "Ford Motor Company",
-        secteur: "Automobile",
-        pe_ratio: 6.5,
-        pb_ratio: 0.8,
-        price_to_fcf: 7.8,
-        evToEbitda: 7.2,
-        roe: 18.2,
-        roic: 14.5,
-        graham_multiple: 10.8,
-        value_grade: "⭐ ELITE_VALUE",
-        value_score: 35.2
-    },
-    {
-        symbole: "IBM",
-        nom: "International Business Machines",
-        secteur: "Technologie",
-        pe_ratio: 11.8,
-        pb_ratio: 4.2,
-        price_to_fcf: 14.5,
-        evToEbitda: 12.3,
-        roe: 7.2,
-        roic: 6.1,
-        graham_multiple: 22.4,
-        value_grade: "🚫 SPECULATIVE",
-        value_score: 1.5
-    },
-    {
-        symbole: "KO",
-        nom: "Coca-Cola Company",
-        secteur: "Boissons",
-        pe_ratio: 22.5,
-        pb_ratio: 9.8,
-        price_to_fcf: 25.2,
-        evToEbitda: 18.7,
-        roe: 42.1,
-        roic: 15.8,
-        graham_multiple: 44.2,
-        value_grade: "🚫 SPECULATIVE",
-        value_score: 19.2
-    },
-    {
-        symbole: "XOM",
-        nom: "Exxon Mobil Corporation",
-        secteur: "Énergie",
-        pe_ratio: 9.2,
-        pb_ratio: 1.8,
-        price_to_fcf: 8.9,
-        evToEbitda: 5.2,
-        roe: 22.8,
-        roic: 18.5,
-        graham_multiple: 19.3,
-        value_grade: "📊 POTENTIAL_VALUE",
-        value_score: 14.1
-    },
-    {
-        symbole: "M",
-        nom: "Macy's Inc.",
-        secteur: "Distribution",
-        pe_ratio: 4.8,
-        pb_ratio: 0.6,
-        price_to_fcf: 5.2,
-        evToEbitda: 3.8,
-        roe: 28.5,
-        roic: 12.8,
-        graham_multiple: 8.1,
-        value_grade: "🎯 DEEP_VALUE",
-        value_score: 47.8
-    }
-];
-// NOUVELLES données mockées SHORT RISK DETECTOR
-const mockShortRiskData = [
-    {
-        symbole: "BBBY",
-        nom: "Bed Bath & Beyond Inc.",
-        secteur: "Distribution",
-        debt_to_equity: 5.8,
-        interest_coverage: 0.3,
-        current_ratio: 0.6,
-        net_income: -1250,
-        operating_cash_flow: -890,
-        revenue: 7450,
-        short_signal: "🚨 DANGEROUS_DEBT",
-        risk_score: 12
-    },
-    {
-        symbole: "AMC",
-        nom: "AMC Entertainment Holdings",
-        secteur: "Divertissement",
-        debt_to_equity: 6.2,
-        interest_coverage: 0.8,
-        current_ratio: 0.9,
-        net_income: -975,
-        operating_cash_flow: -450,
-        revenue: 3850,
-        short_signal: "🔥 INTEREST_CRISIS",
-        risk_score: 10
-    },
-    {
-        symbole: "WISH",
-        nom: "ContextLogic Inc.",
-        secteur: "E-commerce",
-        debt_to_equity: 1.2,
-        interest_coverage: 2.1,
-        current_ratio: 0.7,
-        net_income: -360,
-        operating_cash_flow: -280,
-        revenue: 890,
-        short_signal: "💧 LIQUIDITY_PROBLEM",
-        risk_score: 7
-    },
-    {
-        symbole: "F",
-        nom: "Ford Motor Company",
-        secteur: "Automobile",
-        debt_to_equity: 3.8,
-        interest_coverage: 1.2,
-        current_ratio: 1.1,
-        net_income: -125,
-        operating_cash_flow: 850,
-        revenue: 158000,
-        short_signal: "⚡ DOUBLE_TROUBLE",
-        risk_score: 6
-    },
-    {
-        symbole: "NOK",
-        nom: "Nokia Corporation",
-        secteur: "Technologie",
-        debt_to_equity: 0.8,
-        interest_coverage: 3.2,
-        current_ratio: 1.4,
-        net_income: -45,
-        operating_cash_flow: -120,
-        revenue: 26500,
-        short_signal: "💰 BURNING_CASH",
-        risk_score: 4
-    },
-    {
-        symbole: "SNDL",
-        nom: "Sundial Growers Inc.",
-        secteur: "Cannabis",
-        debt_to_equity: 0.3,
-        interest_coverage: 4.1,
-        current_ratio: 1.8,
-        net_income: -15,
-        operating_cash_flow: 8,
-        revenue: 65,
-        short_signal: "📉 MICRO_CAP_DISTRESS",
-        risk_score: 2
-    },
-    {
-        symbole: "JPM",
-        nom: "JPMorgan Chase & Co.",
-        secteur: "Financial Services",
-        debt_to_equity: 9.2,
-        interest_coverage: 1.8,
-        current_ratio: 0.9,
-        net_income: 38500,
-        operating_cash_flow: 125000,
-        revenue: 128000,
-        short_signal: "👀 WATCH",
-        risk_score: 1
-    }
-];
-
-// Composant principal
 const InvestmentApp = () => {
-    const [activeTab, setActiveTab] = React.useState('buffett');
-    const [buffettData, setBuffettData] = React.useState([]);
-    const [cashFlowData, setCashFlowData] = React.useState([]);
-    const [valueTrapData, setValueTrapData] = React.useState([]);
-    const [shortRiskData, setShortRiskData] = React.useState([]);
-    const [loading, setLoading] = React.useState(true);
-    const [filter, setFilter] = React.useState('ALL');
+    const [activeTab, setActiveTab] = useState('buffett');
+    const [buffettData, setBuffettData] = useState([]);
+    const [cashFlowData, setCashFlowData] = useState([]);
+    const [valueTrapData, setValueTrapData] = useState([]);
+    const [shortRiskData, setShortRiskData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [filter, setFilter] = useState('ALL');
 
-    React.useEffect(() => {
-        // Simuler le chargement des données
-        const timer = setTimeout(() => {
-            setBuffettData(mockBuffettData);
-            setCashFlowData(mockCashFlowData);
-            setValueTrapData(mockValueTrapData);
-            setShortRiskData(mockShortRiskData);
-            setLoading(false);
-        }, 1000);
-
-        return () => clearTimeout(timer);
+    useEffect(() => {
+        fetchAllData();
     }, []);
 
-    // Filtrage pour Buffett
+    const fetchAllData = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+
+            // Charger toutes les données en parallèle
+            const [buffettResponse, cashFlowResponse, valueTrapResponse, shortRiskResponse] = await Promise.all([
+                fetch(`${API_BASE_URL}/buffett-scores`),
+                fetch(`${API_BASE_URL}/cash-flow-momentum`),
+                fetch(`${API_BASE_URL}/value-trap-detector`),
+                fetch(`${API_BASE_URL}/short-risk-detector`)
+            ]);
+
+            // Vérifier les réponses
+            if (!buffettResponse.ok) throw new Error('Erreur Buffett API');
+            if (!cashFlowResponse.ok) throw new Error('Erreur Cash Flow API');
+            if (!valueTrapResponse.ok) throw new Error('Erreur Value Trap API');
+            if (!shortRiskResponse.ok) throw new Error('Erreur Short Risk API');
+
+            // Convertir en JSON
+            const [buffettResult, cashFlowResult, valueTrapResult, shortRiskResult] = await Promise.all([
+                buffettResponse.json(),
+                cashFlowResponse.json(),
+                valueTrapResponse.json(),
+                shortRiskResponse.json()
+            ]);
+
+            setBuffettData(buffettResult);
+            setCashFlowData(cashFlowResult);
+            setValueTrapData(valueTrapResult);
+            setShortRiskData(shortRiskResult);
+
+        } catch (err) {
+            console.error('Erreur de chargement:', err);
+            setError(`Erreur de connexion: ${err.message}. Vérifiez que le serveur backend est démarré.`);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+   // Filtrage pour Buffett
     const filteredBuffettData = filter === 'ALL' 
         ? buffettData 
         : buffettData.filter(item => item.buffett_rating.includes(filter));
 
-    // Filtrage pour Cash Flow (par défaut tous)
+    // Filtrage pour les autres onglets (par défaut tous)
     const filteredCashFlowData = cashFlowData;
-
-    // Filtrage pour Value Trap (par défaut tous)
     const filteredValueTrapData = valueTrapData;
-
-    // Filtrage pour Short Risk (par défaut tous)
     const filteredShortRiskData = shortRiskData;
 
+    // Fonctions de style (inchangées)
     const getBuffettRatingColor = (rating) => {
         if (rating.includes('ELITE')) return 'bg-gradient-yellow';
         if (rating.includes('STRONG')) return 'bg-gradient-green';
@@ -378,7 +82,7 @@ const InvestmentApp = () => {
         return 'text-red-400 font-bold';
     };
 
-   const getCashFlowColor = (value, type) => {
+    const getCashFlowColor = (value, type) => {
         if (type === 'margin') {
             if (value > 0.3) return 'text-green-400 font-bold';
             if (value > 0.15) return 'text-yellow-400 font-bold';
@@ -406,7 +110,7 @@ const InvestmentApp = () => {
         return 'score-poor';
     };
 
-        const getShortSignalColor = (signal) => {
+    const getShortSignalColor = (signal) => {
         if (signal.includes('DANGEROUS_DEBT')) return 'risk-badge-danger';
         if (signal.includes('INTEREST_CRISIS')) return 'risk-badge-crisis';
         if (signal.includes('LIQUIDITY_PROBLEM')) return 'risk-badge-liquidity';
@@ -441,124 +145,61 @@ const InvestmentApp = () => {
         }
         return 'metric-ok';
     };
-    
+
     const formatMillions = (value) => {
+        if (value === null || value === undefined) return 'N/A';
         if (value < 0) {
-            return `-$${Math.abs(value / 1000).toFixed(0)}B`;
+            return `-$${Math.abs(value / 1000000).toFixed(1)}M`;
         }
-        return `$${(value / 1000).toFixed(0)}B`;
+        return `$${(value / 1000000).toFixed(1)}M`;
     };
 
     const formatPercent = (value) => {
+        if (value === null || value === undefined) return 'N/A';
         return `${(value * 100).toFixed(1)}%`;
     };
+
+    if (error) {
+        return React.createElement('div', { 
+            className: 'min-h-screen bg-gray-900 flex items-center justify-center text-white' 
+        },
+            React.createElement('div', { className: 'text-center' },
+                [
+                    React.createElement('h2', { 
+                        className: 'text-2xl mb-4 text-red-400',
+                        key: 'error-title'
+                    }, '❌ Erreur de Connexion'),
+                    React.createElement('p', { 
+                        className: 'mb-4',
+                        key: 'error-message' 
+                    }, error),
+                    React.createElement('button', {
+                        key: 'retry-btn',
+                        onClick: fetchAllData,
+                        className: 'px-6 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors'
+                    }, '🔄 Réessayer')
+                ]
+            )
+        );
+    }
 
     if (loading) {
         return React.createElement('div', { 
             className: 'min-h-screen bg-gray-900 flex items-center justify-center' 
         },
-            React.createElement('div', { className: 'text-center' },
+            React.createElement('div', { className: 'text-center text-white' },
                 [
                     React.createElement('div', { 
                         className: 'animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto mb-4',
                         key: 'spinner'
                     }),
-                    React.createElement('p', { key: 'text' }, 'Chargement des données...')
+                    React.createElement('p', { key: 'text' }, 'Chargement des données depuis la base de données...')
                 ]
             )
         );
     }
 
 
-    return React.createElement('div', { className: 'min-h-screen bg-gray-900 text-white p-4' },
-        React.createElement('div', { className: 'max-w-7xl mx-auto' },
-            [
-                // En-tête
-                React.createElement('div', { key: 'header' },
-                    [
-                        React.createElement('h1', { 
-                            className: 'text-3xl font-bold mb-2',
-                            key: 'title'
-                        }, '📊 Analyse Investissement Avancée'),
-                        React.createElement('p', { 
-                            className: 'text-gray-400 mb-6',
-                            key: 'subtitle' 
-                        }, 'Scores Buffett, Cash Flow, Value Trap & Risk Detector - Pour traders amateurs'),
-                        React.createElement('div', { 
-                            className: 'bg-yellow-500 text-white p-3 rounded-lg mb-4',
-                            key: 'demo-warning'
-                        }, '⚠️ Mode Démo - Données simulées')
-                    ]
-                ),
-                
-                // Onglets
-                React.createElement('div', { 
-                    className: 'tabs-container',
-                    key: 'tabs'
-                },
-                    React.createElement('div', { className: 'tabs' },
-                        [
-                            React.createElement('button', {
-                                key: 'buffett',
-                                onClick: () => setActiveTab('buffett'),
-                                className: `tab ${activeTab === 'buffett' ? 'active' : ''}`
-                            }, '📈 Score Buffett'),
-                            React.createElement('button', {
-                                key: 'cashflow',
-                                onClick: () => setActiveTab('cashflow'),
-                                className: `tab ${activeTab === 'cashflow' ? 'active' : ''}`
-                            }, '💰 Momentum Cash Flow'),
-                            React.createElement('button', {
-                                key: 'valuetrap',
-                                onClick: () => setActiveTab('valuetrap'),
-                                className: `tab ${activeTab === 'valuetrap' ? 'active' : ''}`
-                            }, '🎯 Value Trap Detector'),
-                            React.createElement('button', {
-                                key: 'shortrisk',
-                                onClick: () => setActiveTab('shortrisk'),
-                                className: `tab ${activeTab === 'shortrisk' ? 'active' : ''}`
-                            }, '🚨 Short Risk Detector')
-                        ]
-                    )
-                ),
-
-                // Contenu des onglets
-                activeTab === 'buffett' 
-                    ? React.createElement(BuffettTab, {
-                        key: 'buffett-tab',
-                        data: filteredBuffettData,
-                        filter: filter,
-                        onFilterChange: setFilter,
-                        getRatingColor: getBuffettRatingColor,
-                        getValueColor: getValueColor
-                    })
-                    : activeTab === 'cashflow'
-                    ? React.createElement(CashFlowTab, {
-                        key: 'cashflow-tab',
-                        data: filteredCashFlowData,
-                        getCashFlowColor: getCashFlowColor,
-                        formatMillions: formatMillions,
-                        formatPercent: formatPercent
-                    })
-                    : activeTab === 'valuetrap'
-                    ? React.createElement(ValueTrapTab, {
-                        key: 'valuetrap-tab',
-                        data: filteredValueTrapData,
-                        getValueGradeColor: getValueGradeColor,
-                        getValueScoreColor: getValueScoreColor
-                    })
-                    : React.createElement(ShortRiskTab, {
-                        key: 'shortrisk-tab',
-                        data: filteredShortRiskData,
-                        getShortSignalColor: getShortSignalColor,
-                        getRiskScoreColor: getRiskScoreColor,
-                        getMetricColor: getMetricColor,
-                        formatMillions: formatMillions
-                    })
-            ]
-        )
-    );
-};
 
 
 // Composant Onglet Buffett (inchangé)
@@ -757,7 +398,7 @@ const CashFlowTab = ({ data, getCashFlowColor, formatMillions, formatPercent }) 
     );
 };
 
-// NOUVEAU Composant Onglet Value Trap Detector
+// Composant Onglet Value Trap Detector
 const ValueTrapTab = ({ data, getValueGradeColor, getValueScoreColor }) => {
     return React.createElement('div', { className: 'table-container' },
         [
@@ -911,7 +552,7 @@ const ValueTrapTab = ({ data, getValueGradeColor, getValueScoreColor }) => {
         ]
     );
 };
-// NOUVEAU Composant Onglet Short Risk Detector
+// Composant Onglet Short Risk Detector
 const ShortRiskTab = ({ data, getShortSignalColor, getRiskScoreColor, getMetricColor, formatMillions }) => {
     return React.createElement('div', { className: 'table-container' },
         [
