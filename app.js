@@ -708,8 +708,25 @@ const DescriptionBox = ({ analysisType }) => {
   );
 };
 
-// Composant Onglet Buffett 
-const BuffettTab = ({ data, filter, onFilterChange, getRatingColor, getValueColor, sortConfig, onSort, searchTerm, onSearch, currentPage, totalPages, onPageChange, itemsPerPage, onItemsPerPageChange }) => {
+// Composant Onglet Buffett CORRIGÉ
+const BuffettTab = ({ 
+    data, 
+    filter, 
+    onFilterChange, 
+    getRatingColor, 
+    getValueColor, 
+    sortConfig, 
+    onSort, 
+    searchTerm, 
+    onSearch, 
+    getSortedAndFilteredData, // 🔥 AJOUTER cette prop
+    getPaginatedData, 
+    currentPage, 
+    totalPages, 
+    onPageChange, 
+    itemsPerPage, 
+    onItemsPerPageChange 
+}) => {
     const sortedAndFilteredData = getSortedAndFilteredData(data);
     const paginatedData = getPaginatedData(sortedAndFilteredData);
     
@@ -815,7 +832,7 @@ const BuffettTab = ({ data, filter, onFilterChange, getRatingColor, getValueColo
                                 ]
                             ),
                             
-                            // 🔥 CORPS DU TABLEAU - SEULEMENT les lignes de données
+                            // Corps du tableau
                             ...paginatedData.map((item, index) =>
                                 React.createElement('div', {
                                     key: item.symbole + index,
@@ -863,7 +880,7 @@ const BuffettTab = ({ data, filter, onFilterChange, getRatingColor, getValueColo
                 ]
             ),
 
-            // 🔥 PAGINATION - EN DEHORS du tableau
+            // PAGINATION
             React.createElement(Pagination, {
                 key: 'pagination',
                 currentPage: currentPage,
@@ -873,7 +890,7 @@ const BuffettTab = ({ data, filter, onFilterChange, getRatingColor, getValueColo
                 onItemsPerPageChange: onItemsPerPageChange
             }),
 
-            // 🔥 COMPTEUR 
+            // COMPTEUR
             React.createElement('div', { 
                 className: 'mt-4 text-gray-400 text-sm',
                 key: 'counter'
