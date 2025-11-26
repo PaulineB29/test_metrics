@@ -177,7 +177,7 @@ const InvestmentApp = () => {
     const filteredShortRiskData = shortRiskData || [];
 
     // 🔥 FONCTION DE TRI ET RECHERCHE (MANQUANTE)
-    const getSortedAndFilteredData = (data) => {
+    const gdData = (data) => {
         if (!data) return [];
         
         // Filtrage par recherche globale
@@ -260,11 +260,7 @@ const InvestmentApp = () => {
         setGlobalSearch(searchTerm);
     };
 
-    // 🔥 FONCTION POUR FILTRER ET TRIER LES DONNÉES
-    const getSortedAndFilteredData = (data) => {
-        if (!data) return [];
-        
-        // Filtrage par recherche globale
+    // Filtrage par recherche globale
         let filteredData = data;
         if (globalSearch) {
             const searchLower = globalSearch.toLowerCase();
@@ -1040,21 +1036,7 @@ const DescriptionBox = ({ analysisType }) => {
     );
   };
 
-  return React.createElement('div', { 
-    className: 'bg-gray-800 rounded-lg p-6 mb-8 border-l-4 border-blue-500'
-  },
-    [
-      React.createElement('h2', { 
-        className: 'text-2xl font-bold mb-6 text-white text-center',
-        key: 'main-title'
-      }, desc.title),
-      
-      ...desc.sections.map((section, index) => renderSection(section, index))
-    ]
-  );
-};
-
-  return React.createElement('div', { 
+ return React.createElement('div', { 
     className: 'bg-gray-800 rounded-lg p-6 mb-8 border-l-4 border-blue-500'
   },
     [
@@ -1819,9 +1801,27 @@ const ValueTrapTab = ({
   
 
 
-// Composant Onglet Short Risk Detector avec Tri et Recherche
-const ShortRiskTab = ({ data, getShortSignalColor, getRiskScoreColor, getMetricColor, formatMillions, sortConfig, onSort, searchTerm, onSearch, getSortedAndFilteredData }) => {
+      // Composant Onglet Short Risk Detector avec Tri et Recherche
+      const ShortRiskTab = ({ 
+          data, 
+          getShortSignalColor, 
+          getRiskScoreColor, 
+          getMetricColor, 
+          formatMillions, 
+          sortConfig, 
+          onSort, 
+          searchTerm, 
+          onSearch, 
+          getSortedAndFilteredData,
+          getPaginatedData,
+          currentPage,
+          totalPages,
+          onPageChange,
+          itemsPerPage,
+          onItemsPerPageChange
+      }) => {
     const sortedAndFilteredData = getSortedAndFilteredData(data);
+    const paginatedData = getPaginatedData(sortedAndFilteredData);
     
     return React.createElement('div', { className: 'table-container' },
         [
