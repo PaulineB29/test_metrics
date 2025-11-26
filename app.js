@@ -1183,25 +1183,26 @@ const ValueTrapTab = ({ data, getValueGradeColor, getValueScoreColor }) => {
     );
 };
 // Composant Onglet Short Risk Detector
+// Composant Onglet Short Risk Detector
 const ShortRiskTab = ({ data, getShortSignalColor, getRiskScoreColor, getMetricColor, formatMillions }) => {
     return React.createElement('div', { className: 'table-container' },
         [
             // Avertissement important
             React.createElement('div', { 
-                className: 'alert-warning p-4 rounded-lg mb-6',
+                className: 'bg-yellow-900/20 p-4 rounded-lg mb-6 border border-yellow-500',
                 key: 'warning'
             },
                 [
                     React.createElement('h3', { 
-                        className: 'font-bold mb-2',
+                        className: 'font-bold mb-2 text-yellow-400',
                         key: 'warning-title'
                     }, '⚠️ MISE EN GARDE IMPORTANTE'),
                     React.createElement('p', { 
-                        className: 'text-sm mb-2',
+                        className: 'text-sm mb-2 text-yellow-200',
                         key: 'warning-text-1'
                     }, 'Ces entreprises présentent des risques MAIS :'),
                     React.createElement('ul', { 
-                        className: 'text-sm list-disc list-inside space-y-1',
+                        className: 'text-sm list-disc list-inside space-y-1 text-yellow-200',
                         key: 'warning-list'
                     },
                         [
@@ -1224,7 +1225,7 @@ const ShortRiskTab = ({ data, getShortSignalColor, getRiskScoreColor, getMetricC
                 [
                     // En-tête du tableau Short Risk
                     React.createElement('div', { 
-                        className: 'grid grid-cols-11 gap-2 p-4 bg-gray-700 font-semibold text-xs',
+                        className: 'grid grid-cols-11 gap-2 p-4 bg-gray-700 font-semibold text-sm',
                         key: 'table-header'
                     },
                         ['Symbole', 'Entreprise', 'Secteur', 'Dette/Equity', 'Coverage Int.', 'Current Ratio', 'Net Income', 'Cash Flow Op.', 'Revenus', 'Score Risque', 'Signal'].map(header =>
@@ -1244,10 +1245,10 @@ const ShortRiskTab = ({ data, getShortSignalColor, getRiskScoreColor, getMetricC
                         React.createElement('div', {
                             key: item.symbole + index,
                             className: 'grid grid-cols-11 gap-2 p-4 border-b border-gray-700 hover:bg-gray-750 transition-colors text-sm'
-                            },
-                                  [
+                        },
+                            [
                                 React.createElement('div', { 
-                                    className: 'font-bold text-sm',
+                                    className: 'font-bold text-lg',
                                     key: 'symbole'
                                 }, item.symbole),
                                 React.createElement('div', { 
@@ -1260,19 +1261,19 @@ const ShortRiskTab = ({ data, getShortSignalColor, getRiskScoreColor, getMetricC
                                 }, item.secteur),
                                 React.createElement('div', { 
                                     className: item.debt_to_equity > 3 ? 'text-red-400 font-bold' : 
-                                               item.debt_to_equity > 2 ? 'text-yellow-400 font-bold' : 'text-green-400 font-bold',
+                                              item.debt_to_equity > 2 ? 'text-yellow-400 font-bold' : 'text-green-400 font-bold',
                                     key: 'debt'
                                 }, `${Number(item.debt_to_equity).toFixed(2)}x`),
                                 React.createElement('div', { 
                                     className: item.interest_coverage < 1 ? 'text-red-400 font-bold' : 
                                               item.interest_coverage < 1.5 ? 'text-yellow-400 font-bold' : 'text-green-400 font-bold',
                                     key: 'interest'
-                                }, `${Number(item.interest_coverage).toFixed(2)}`),  // ← Formaté + couleurs unifiées
+                                }, `${Number(item.interest_coverage).toFixed(2)}`),
                                 React.createElement('div', { 
                                     className: item.current_ratio < 0.8 ? 'text-red-400 font-bold' : 
                                               item.current_ratio < 1 ? 'text-yellow-400 font-bold' : 'text-green-400 font-bold',
                                     key: 'current'
-                                }, `${Number(item.current_ratio).toFixed(2)}`),  // ← Formaté + couleurs unifiées
+                                }, `${Number(item.current_ratio).toFixed(2)}`),
                                 React.createElement('div', { 
                                     className: item.net_income < 0 ? 'text-red-400 font-bold' : 'text-green-400 font-bold',
                                     key: 'net-income'
@@ -1288,7 +1289,7 @@ const ShortRiskTab = ({ data, getShortSignalColor, getRiskScoreColor, getMetricC
                                     className: item.risk_score >= 8 ? 'text-red-400 font-bold' : 
                                               item.risk_score >= 5 ? 'text-yellow-400 font-bold' : 'text-green-400 font-bold',
                                     key: 'risk-score'
-                                }, item.risk_score),  // ← Couleurs unifiées
+                                }, item.risk_score),
                                 React.createElement('div', { 
                                     className: `px-3 py-2 rounded-full text-xs font-bold text-center text-white ${getShortSignalColor(item.short_signal)}`,
                                     key: 'signal'
@@ -1314,7 +1315,7 @@ const ShortRiskTab = ({ data, getShortSignalColor, getRiskScoreColor, getMetricC
             },
                 [
                     React.createElement('h3', { 
-                        className: 'font-bold mb-2',
+                        className: 'font-bold mb-2 text-white',
                         key: 'legend-title'
                     }, '📋 Légende Risques:'),
                     React.createElement('div', { 
@@ -1323,21 +1324,21 @@ const ShortRiskTab = ({ data, getShortSignalColor, getRiskScoreColor, getMetricC
                     },
                         [
                             React.createElement('div', { key: 'dangerous-debt' }, 
-                                '• DANGEROUS_DEBT: D/E > 4 (ou > 8 pour banques)'),
+                                '• 🚨 DANGEROUS_DEBT: D/E > 4 (ou > 8 pour banques)'),
                             React.createElement('div', { key: 'interest-crisis' }, 
-                                '• INTEREST_CRISIS: Coverage intérêt < 1'),
+                                '• 🔥 INTEREST_CRISIS: Coverage intérêt < 1'),
                             React.createElement('div', { key: 'liquidity' }, 
-                                '• LIQUIDITY_PROBLEM: Current ratio < 0.8'),
+                                '• 💧 LIQUIDITY_PROBLEM: Current ratio < 0.8'),
                             React.createElement('div', { key: 'cash-burn' }, 
-                                '• BURNING_CASH: Net income & cash flow négatifs'),
+                                '• 💰 BURNING_CASH: Net income & cash flow négatifs'),
                             React.createElement('div', { key: 'double-trouble' }, 
-                                '• DOUBLE_TROUBLE: D/E > 2 ET coverage < 2'),
+                                '• ⚡ DOUBLE_TROUBLE: D/E > 2 ET coverage < 2'),
                             React.createElement('div', { key: 'micro-cap' }, 
-                                '• MICRO_CAP_DISTRESS: Perte + petit chiffre affaires'),
+                                '• 📉 MICRO_CAP_DISTRESS: Perte + petit chiffre affaires'),
                             React.createElement('div', { key: 'score-critical' }, 
-                                '• Score 8-15: Risque critique'),
+                                '• 🔴 Score 8-15: Risque critique'),
                             React.createElement('div', { key: 'score-high' }, 
-                                '• Score 5-7: Risque élevé')
+                                '• 🟡 Score 5-7: Risque élevé')
                         ]
                     )
                 ]
