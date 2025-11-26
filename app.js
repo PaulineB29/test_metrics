@@ -927,11 +927,11 @@ const CashFlowTab = ({ data, getCashFlowColor, formatMillions, formatPercent }) 
                                 React.createElement('div', { 
                                     className: getCashFlowColor(item.fcf_margin, 'margin'),
                                     key: 'fcf-margin'
-                                }, formatPercent(item.fcf_margin)),
-                                React.createElement('div', { 
+                                }, `${(Number(item.fcf_margin) * 100).toFixed(1)}%`),
+                               React.createElement('div', { 
                                     className: getCashFlowColor(item.fcf_yield, 'yield'),
                                     key: 'fcf-yield'
-                                }, formatPercent(item.fcf_yield)),
+                                }, `${(Number(item.fcf_yield) * 100).toFixed(1)}%`), 
                                 React.createElement('div', { 
                                     className: `px-3 py-2 rounded-full text-xs font-bold text-center text-white ${
                                         item.fcf_yield > 0.06 ? 'bg-gradient-purple' : 'bg-gradient-teal'
@@ -1022,41 +1022,41 @@ const ValueTrapTab = ({ data, getValueGradeColor, getValueScoreColor }) => {
                                     className: item.pe_ratio < 8 ? 'text-green-400 font-bold' : 
                                               item.pe_ratio < 15 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
                                     key: 'pe'
-                                }, item.pe_ratio),
+                                }, `${Number(item.pe_ratio).toFixed(2)}`),
                                 React.createElement('div', { 
                                     className: item.pb_ratio < 1 ? 'text-green-400 font-bold' : 
                                               item.pb_ratio < 2 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
                                     key: 'pb'
-                                }, item.pb_ratio),
+                                }, `${Number(item.pb_ratio).toFixed(2)}`),
                                 React.createElement('div', { 
                                     className: item.price_to_fcf < 10 ? 'text-green-400 font-bold' : 
                                               item.price_to_fcf < 20 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
                                     key: 'p-fcf'
-                                }, item.price_to_fcf),
+                                }, `${Number(item.price_to_fcf).toFixed(2)}`),
                                 React.createElement('div', { 
                                     className: item.evToEbitda < 8 ? 'text-green-400 font-bold' : 
                                               item.evToEbitda < 15 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
                                     key: 'ev-ebitda'
-                                }, item.evToEbitda),
+                                }, `${Number(item.evToEbitda).toFixed(2)}`), 
                                 React.createElement('div', { 
                                     className: item.roe > 15 ? 'text-green-400 font-bold' : 
                                               item.roe > 8 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
                                     key: 'roe'
-                                }, `${item.roe}%`),
+                                }, `${Number(item.roe).toFixed(2)}%`), 
                                 React.createElement('div', { 
                                     className: item.roic > 12 ? 'text-green-400 font-bold' : 
                                               item.roic > 8 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
                                     key: 'roic'
-                                }, `${item.roic}%`),
+                                }, `${Number(item.roic).toFixed(2)}%`),
                                 React.createElement('div', { 
                                     className: item.graham_multiple < 15 ? 'text-green-400 font-bold' : 
                                               item.graham_multiple < 22.5 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
                                     key: 'graham'
-                                }, item.graham_multiple),
+                                }, `${Number(item.graham_multiple).toFixed(2)}`),
                                 React.createElement('div', { 
                                     className: getValueScoreColor(item.value_score),
                                     key: 'score'
-                                }, item.value_score),
+                                }, `${Number(item.value_score).toFixed(2)}`),
                                 React.createElement('div', { 
                                     className: `px-2 py-1 rounded-full text-xs font-bold text-center text-white ${getValueGradeColor(item.value_grade)}`,
                                     key: 'grade'
