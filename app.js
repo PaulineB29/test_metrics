@@ -161,14 +161,13 @@ const InvestmentApp = () => {
     const [filter, setFilter] = useState('ALL');
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
     const [globalSearch, setGlobalSearch] = useState('');
-    const [currentData, setCurrentData] = useState([]);
-    
-    // 🔥 AJOUTER LA PAGINATION
+        
+    // 🔥 PAGINATION
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(100);
     const [totalPages, setTotalPages] = useState(1);
 
-    // 🔥 UNE SEULE DÉCLARATION de filteredBuffettData
+    // 🔥 DONNÉES FILTRÉES (UNE SEULE DÉCLARATION)
     const filteredBuffettData = filter === 'ALL' 
         ? buffettData 
         : buffettData.filter(item => item.buffett_rating && item.buffett_rating.includes(filter));
@@ -177,6 +176,50 @@ const InvestmentApp = () => {
     const filteredValueTrapData = valueTrapData || [];
     const filteredShortRiskData = shortRiskData || [];
 
+    // 🔥 FONCTION DE TRI ET RECHERCHE (MANQUANTE)
+    const getSortedAndFilteredData = (data) => {
+        if (!data) return [];
+        
+        // Filtrage par recherche globale
+        let filteredData = data;
+        if (globalSearch) {
+            const searchLower = globalSearch.toLowerCase();
+            filteredData = data.filter(item => 
+                Object.values(item).some(value => 
+                    value && value.toString().toLowerCase().includes(searchLower)
+                )
+            );
+        }
+
+        // Tri
+        if (sortConfig.key) {
+            filteredData = [...filteredData].sort((a, b) => {
+                let aValue = a[sortConfig.key];
+                let bValue = b[sortConfig.key];
+
+                // Gestion des valeurs nulles/undefined
+                if (aValue === null || aValue === undefined) aValue = '';
+                if (bValue === null || bValue === undefined) bValue = '';
+
+                // Conversion en nombre si possible
+                if (!isNaN(parseFloat(aValue)) && !isNaN(parseFloat(bValue))) {
+                    aValue = parseFloat(aValue);
+                    bValue = parseFloat(bValue);
+                }
+
+                if (aValue < bValue) {
+                    return sortConfig.direction === 'asc' ? -1 : 1;
+                }
+                if (aValue > bValue) {
+                    return sortConfig.direction === 'asc' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+
+        return filteredData;
+    };
+  
     // 🔥 FONCTION PAGINATION
     const getPaginatedData = (data) => {
         if (!data || data.length === 0) return [];
