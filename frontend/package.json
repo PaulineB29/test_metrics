@@ -1,17 +1,9 @@
 {
   "name": "buffett-frontend",
   "type": "module",
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
-    "vite": "^4.4.0",
-    "@vitejs/plugin-react": "^4.0.0"
-  },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "echo 'Building for GitLab Pages...'",
+    "predeploy": "npm run build",
+    "deploy": "echo 'Deployed to GitLab Pages'"
   }
 }
