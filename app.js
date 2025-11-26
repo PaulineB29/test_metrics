@@ -1250,21 +1250,21 @@ const ShortRiskTab = ({ data, getShortSignalColor, getRiskScoreColor, getMetricC
                     },
                         [
                             React.createElement('div', { key: 'dangerous-debt' }, 
-                                '• 🚨 DANGEROUS_DEBT: D/E > 4 (ou > 8 pour banques)'),
+                                '• DANGEROUS_DEBT: D/E > 4 (ou > 8 pour banques)'),
                             React.createElement('div', { key: 'interest-crisis' }, 
-                                '• 🔥 INTEREST_CRISIS: Coverage intérêt < 1'),
+                                '• INTEREST_CRISIS: Coverage intérêt < 1'),
                             React.createElement('div', { key: 'liquidity' }, 
-                                '• 💧 LIQUIDITY_PROBLEM: Current ratio < 0.8'),
+                                '• LIQUIDITY_PROBLEM: Current ratio < 0.8'),
                             React.createElement('div', { key: 'cash-burn' }, 
-                                '• 💰 BURNING_CASH: Net income & cash flow négatifs'),
+                                '• BURNING_CASH: Net income & cash flow négatifs'),
                             React.createElement('div', { key: 'double-trouble' }, 
-                                '• ⚡ DOUBLE_TROUBLE: D/E > 2 ET coverage < 2'),
+                                '• DOUBLE_TROUBLE: D/E > 2 ET coverage < 2'),
                             React.createElement('div', { key: 'micro-cap' }, 
-                                '• 📉 MICRO_CAP_DISTRESS: Perte + petit chiffre affaires'),
+                                '• MICRO_CAP_DISTRESS: Perte + petit chiffre affaires'),
                             React.createElement('div', { key: 'score-critical' }, 
-                                '• 🔴 Score 8-15: Risque critique'),
+                                '• Score 8-15: Risque critique'),
                             React.createElement('div', { key: 'score-high' }, 
-                                '• 🟡 Score 5-7: Risque élevé')
+                                '• Score 5-7: Risque élevé')
                         ]
                     )
                 ]
