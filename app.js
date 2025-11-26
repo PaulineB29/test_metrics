@@ -176,49 +176,6 @@ const InvestmentApp = () => {
     const filteredValueTrapData = valueTrapData || [];
     const filteredShortRiskData = shortRiskData || [];
 
-      // 🔥 FONCTION DE TRI ET RECHERCHE (MANQUANTE)
-      const getSortedAndFilteredData = (data) => {
-      if (!data) return [];
-      
-      // Filtrage par recherche globale
-      let filteredData = data;
-      if (globalSearch) {
-          const searchLower = globalSearch.toLowerCase();
-          filteredData = data.filter(item => 
-              Object.values(item).some(value => 
-                  value && value.toString().toLowerCase().includes(searchLower)
-              )
-          );
-      }
-  
-      // Tri
-      if (sortConfig.key) {
-          filteredData = [...filteredData].sort((a, b) => {
-              let aValue = a[sortConfig.key];
-              let bValue = b[sortConfig.key];
-  
-              // Gestion des valeurs nulles/undefined
-              if (aValue === null || aValue === undefined) aValue = '';
-              if (bValue === null || bValue === undefined) bValue = '';
-  
-              // Conversion en nombre si possible
-              if (!isNaN(parseFloat(aValue)) && !isNaN(parseFloat(bValue))) {
-                  aValue = parseFloat(aValue);
-                  bValue = parseFloat(bValue);
-              }
-  
-              if (aValue < bValue) {
-                  return sortConfig.direction === 'asc' ? -1 : 1;
-              }
-              if (aValue > bValue) {
-                  return sortConfig.direction === 'asc' ? 1 : -1;
-              }
-              return 0;
-          });
-      }
-  
-      return filteredData;
-  };
   
     // 🔥 FONCTION PAGINATION
     const getPaginatedData = (data) => {
@@ -259,46 +216,49 @@ const InvestmentApp = () => {
     const handleGlobalSearch = (searchTerm) => {
         setGlobalSearch(searchTerm);
     };
-
+  
+  const getSortedAndFilteredData = (data) => {
+    if (!data) return [];
+    
+    let filteredData = data;
+    
     // Filtrage par recherche globale
-        let filteredData = data;
-        if (globalSearch) {
-            const searchLower = globalSearch.toLowerCase();
-            filteredData = data.filter(item => 
-                Object.values(item).some(value => 
-                    value && value.toString().toLowerCase().includes(searchLower)
-                )
-            );
-        }
+    if (globalSearch) {
+        const searchLower = globalSearch.toLowerCase();
+        filteredData = data.filter(item => 
+            Object.values(item).some(value => 
+                value && value.toString().toLowerCase().includes(searchLower)
+            )
+        );
+    }
 
-        // Tri
-        if (sortConfig.key) {
-            filteredData = [...filteredData].sort((a, b) => {
-                let aValue = a[sortConfig.key];
-                let bValue = b[sortConfig.key];
+    // Tri
+    if (sortConfig.key) {
+        filteredData = [...filteredData].sort((a, b) => {
+            let aValue = a[sortConfig.key];
+            let bValue = b[sortConfig.key];
 
-                // Gestion des valeurs nulles/undefined
-                if (aValue === null || aValue === undefined) aValue = '';
-                if (bValue === null || bValue === undefined) bValue = '';
+            if (aValue === null || aValue === undefined) aValue = '';
+            if (bValue === null || bValue === undefined) bValue = '';
 
-                // Conversion en nombre si possible
-                if (!isNaN(parseFloat(aValue)) && !isNaN(parseFloat(bValue))) {
-                    aValue = parseFloat(aValue);
-                    bValue = parseFloat(bValue);
-                }
+            if (!isNaN(parseFloat(aValue)) && !isNaN(parseFloat(bValue))) {
+                aValue = parseFloat(aValue);
+                bValue = parseFloat(bValue);
+            }
 
-                if (aValue < bValue) {
-                    return sortConfig.direction === 'asc' ? -1 : 1;
-                }
-                if (aValue > bValue) {
-                    return sortConfig.direction === 'asc' ? 1 : -1;
-                }
-                return 0;
-            });
-        }
+            if (aValue < bValue) {
+                return sortConfig.direction === 'asc' ? -1 : 1;
+            }
+            if (aValue > bValue) {
+                return sortConfig.direction === 'asc' ? 1 : -1;
+            }
+            return 0;
+        });
+    }
 
-        return filteredData;
-    };
+    return filteredData;
+};
+  
   const fetchAllData = async () => {
         try {
             setLoading(true);
