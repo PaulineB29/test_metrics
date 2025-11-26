@@ -233,6 +233,100 @@ const mockValueTrapData = [
         value_score: 47.8
     }
 ];
+// NOUVELLES données mockées SHORT RISK DETECTOR
+const mockShortRiskData = [
+    {
+        symbole: "BBBY",
+        nom: "Bed Bath & Beyond Inc.",
+        secteur: "Distribution",
+        debt_to_equity: 5.8,
+        interest_coverage: 0.3,
+        current_ratio: 0.6,
+        net_income: -1250,
+        operating_cash_flow: -890,
+        revenue: 7450,
+        short_signal: "🚨 DANGEROUS_DEBT",
+        risk_score: 12
+    },
+    {
+        symbole: "AMC",
+        nom: "AMC Entertainment Holdings",
+        secteur: "Divertissement",
+        debt_to_equity: 6.2,
+        interest_coverage: 0.8,
+        current_ratio: 0.9,
+        net_income: -975,
+        operating_cash_flow: -450,
+        revenue: 3850,
+        short_signal: "🔥 INTEREST_CRISIS",
+        risk_score: 10
+    },
+    {
+        symbole: "WISH",
+        nom: "ContextLogic Inc.",
+        secteur: "E-commerce",
+        debt_to_equity: 1.2,
+        interest_coverage: 2.1,
+        current_ratio: 0.7,
+        net_income: -360,
+        operating_cash_flow: -280,
+        revenue: 890,
+        short_signal: "💧 LIQUIDITY_PROBLEM",
+        risk_score: 7
+    },
+    {
+        symbole: "F",
+        nom: "Ford Motor Company",
+        secteur: "Automobile",
+        debt_to_equity: 3.8,
+        interest_coverage: 1.2,
+        current_ratio: 1.1,
+        net_income: -125,
+        operating_cash_flow: 850,
+        revenue: 158000,
+        short_signal: "⚡ DOUBLE_TROUBLE",
+        risk_score: 6
+    },
+    {
+        symbole: "NOK",
+        nom: "Nokia Corporation",
+        secteur: "Technologie",
+        debt_to_equity: 0.8,
+        interest_coverage: 3.2,
+        current_ratio: 1.4,
+        net_income: -45,
+        operating_cash_flow: -120,
+        revenue: 26500,
+        short_signal: "💰 BURNING_CASH",
+        risk_score: 4
+    },
+    {
+        symbole: "SNDL",
+        nom: "Sundial Growers Inc.",
+        secteur: "Cannabis",
+        debt_to_equity: 0.3,
+        interest_coverage: 4.1,
+        current_ratio: 1.8,
+        net_income: -15,
+        operating_cash_flow: 8,
+        revenue: 65,
+        short_signal: "📉 MICRO_CAP_DISTRESS",
+        risk_score: 2
+    },
+    {
+        symbole: "JPM",
+        nom: "JPMorgan Chase & Co.",
+        secteur: "Financial Services",
+        debt_to_equity: 9.2,
+        interest_coverage: 1.8,
+        current_ratio: 0.9,
+        net_income: 38500,
+        operating_cash_flow: 125000,
+        revenue: 128000,
+        short_signal: "👀 WATCH",
+        risk_score: 1
+    }
+];
 
 // Composant principal
 const InvestmentApp = () => {
@@ -240,6 +334,7 @@ const InvestmentApp = () => {
     const [buffettData, setBuffettData] = React.useState([]);
     const [cashFlowData, setCashFlowData] = React.useState([]);
     const [valueTrapData, setValueTrapData] = React.useState([]);
+    const [shortRiskData, setShortRiskData] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
     const [filter, setFilter] = React.useState('ALL');
 
@@ -249,6 +344,7 @@ const InvestmentApp = () => {
             setBuffettData(mockBuffettData);
             setCashFlowData(mockCashFlowData);
             setValueTrapData(mockValueTrapData);
+            setShortRiskData(mockShortRiskData);
             setLoading(false);
         }, 1000);
 
@@ -266,6 +362,9 @@ const InvestmentApp = () => {
     // Filtrage pour Value Trap (par défaut tous)
     const filteredValueTrapData = valueTrapData;
 
+    // Filtrage pour Short Risk (par défaut tous)
+    const filteredShortRiskData = shortRiskData;
+
     const getBuffettRatingColor = (rating) => {
         if (rating.includes('ELITE')) return 'bg-gradient-yellow';
         if (rating.includes('STRONG')) return 'bg-gradient-green';
@@ -279,7 +378,7 @@ const InvestmentApp = () => {
         return 'text-red-400 font-bold';
     };
 
-    const getCashFlowColor = (value, type) => {
+   const getCashFlowColor = (value, type) => {
         if (type === 'margin') {
             if (value > 0.3) return 'text-green-400 font-bold';
             if (value > 0.15) return 'text-yellow-400 font-bold';
@@ -307,7 +406,46 @@ const InvestmentApp = () => {
         return 'score-poor';
     };
 
+        const getShortSignalColor = (signal) => {
+        if (signal.includes('DANGEROUS_DEBT')) return 'risk-badge-danger';
+        if (signal.includes('INTEREST_CRISIS')) return 'risk-badge-crisis';
+        if (signal.includes('LIQUIDITY_PROBLEM')) return 'risk-badge-liquidity';
+        if (signal.includes('BURNING_CASH')) return 'risk-badge-cashburn';
+        if (signal.includes('DOUBLE_TROUBLE')) return 'risk-badge-trouble';
+        if (signal.includes('MICRO_CAP_DISTRESS')) return 'risk-badge-distress';
+        return 'risk-badge-watch';
+    };
+
+    const getRiskScoreColor = (score) => {
+        if (score >= 8) return 'risk-score-critical';
+        if (score >= 5) return 'risk-score-high';
+        if (score >= 3) return 'risk-score-medium';
+        return 'risk-score-low';
+    };
+
+    const getMetricColor = (value, metric) => {
+        if (metric === 'debt_to_equity') {
+            return value > 3 ? 'metric-danger' : value > 2 ? 'metric-warning' : 'metric-ok';
+        }
+        if (metric === 'interest_coverage') {
+            return value < 1 ? 'metric-danger' : value < 1.5 ? 'metric-warning' : 'metric-ok';
+        }
+        if (metric === 'current_ratio') {
+            return value < 0.8 ? 'metric-danger' : value < 1 ? 'metric-warning' : 'metric-ok';
+        }
+        if (metric === 'net_income') {
+            return value < 0 ? 'metric-danger' : 'metric-ok';
+        }
+        if (metric === 'operating_cash_flow') {
+            return value < 0 ? 'metric-danger' : 'metric-ok';
+        }
+        return 'metric-ok';
+    };
+    
     const formatMillions = (value) => {
+        if (value < 0) {
+            return `-$${Math.abs(value / 1000).toFixed(0)}B`;
+        }
         return `$${(value / 1000).toFixed(0)}B`;
     };
 
@@ -331,6 +469,7 @@ const InvestmentApp = () => {
         );
     }
 
+
     return React.createElement('div', { className: 'min-h-screen bg-gray-900 text-white p-4' },
         React.createElement('div', { className: 'max-w-7xl mx-auto' },
             [
@@ -344,7 +483,7 @@ const InvestmentApp = () => {
                         React.createElement('p', { 
                             className: 'text-gray-400 mb-6',
                             key: 'subtitle' 
-                        }, 'Scores Buffett, Cash Flow & Value Trap Detector - Pour traders amateurs'),
+                        }, 'Scores Buffett, Cash Flow, Value Trap & Risk Detector - Pour traders amateurs'),
                         React.createElement('div', { 
                             className: 'bg-yellow-500 text-white p-3 rounded-lg mb-4',
                             key: 'demo-warning'
@@ -373,7 +512,12 @@ const InvestmentApp = () => {
                                 key: 'valuetrap',
                                 onClick: () => setActiveTab('valuetrap'),
                                 className: `tab ${activeTab === 'valuetrap' ? 'active' : ''}`
-                            }, '🎯 Value Trap Detector')
+                            }, '🎯 Value Trap Detector'),
+                            React.createElement('button', {
+                                key: 'shortrisk',
+                                onClick: () => setActiveTab('shortrisk'),
+                                className: `tab ${activeTab === 'shortrisk' ? 'active' : ''}`
+                            }, '🚨 Short Risk Detector')
                         ]
                     )
                 ),
@@ -396,16 +540,26 @@ const InvestmentApp = () => {
                         formatMillions: formatMillions,
                         formatPercent: formatPercent
                     })
-                    : React.createElement(ValueTrapTab, {
+                    : activeTab === 'valuetrap'
+                    ? React.createElement(ValueTrapTab, {
                         key: 'valuetrap-tab',
                         data: filteredValueTrapData,
                         getValueGradeColor: getValueGradeColor,
                         getValueScoreColor: getValueScoreColor
                     })
+                    : React.createElement(ShortRiskTab, {
+                        key: 'shortrisk-tab',
+                        data: filteredShortRiskData,
+                        getShortSignalColor: getShortSignalColor,
+                        getRiskScoreColor: getRiskScoreColor,
+                        getMetricColor: getMetricColor,
+                        formatMillions: formatMillions
+                    })
             ]
         )
     );
 };
+
 
 // Composant Onglet Buffett (inchangé)
 const BuffettTab = ({ data, filter, onFilterChange, getRatingColor, getValueColor }) => {
@@ -750,6 +904,165 @@ const ValueTrapTab = ({ data, getValueGradeColor, getValueScoreColor }) => {
                                 '• 📊 POTENTIAL_VALUE: P/E < 15, P/B < 2, ROE > 8%'),
                             React.createElement('div', { key: 'speculative' }, 
                                 '• 🚫 SPECULATIVE: Autres cas')
+                        ]
+                    )
+                ]
+            )
+        ]
+    );
+};
+// NOUVEAU Composant Onglet Short Risk Detector
+const ShortRiskTab = ({ data, getShortSignalColor, getRiskScoreColor, getMetricColor, formatMillions }) => {
+    return React.createElement('div', { className: 'table-container' },
+        [
+            // Avertissement important
+            React.createElement('div', { 
+                className: 'alert-warning p-4 rounded-lg mb-6',
+                key: 'warning'
+            },
+                [
+                    React.createElement('h3', { 
+                        className: 'font-bold mb-2',
+                        key: 'warning-title'
+                    }, '⚠️ MISE EN GARDE IMPORTANTE'),
+                    React.createElement('p', { 
+                        className: 'text-sm mb-2',
+                        key: 'warning-text-1'
+                    }, 'Ces entreprises présentent des risques MAIS :'),
+                    React.createElement('ul', { 
+                        className: 'text-sm list-disc list-inside space-y-1',
+                        key: 'warning-list'
+                    },
+                        [
+                            'Certaines peuvent être des turnarounds',
+                            'Les banques ont souvent des D/E élevés par nature',
+                            'Certaines situations peuvent être temporaires',
+                            'Ne pas short seller sans analyse fondamentale approfondie !'
+                        ].map((item, index) => 
+                            React.createElement('li', { key: index }, item)
+                        )
+                    )
+                ]
+            ),
+
+            // Tableau Short Risk
+            React.createElement('div', { 
+                className: 'bg-gray-800 rounded-lg overflow-hidden shadow-xl',
+                key: 'table'
+            },
+                [
+                    // En-tête du tableau Short Risk
+                    React.createElement('div', { 
+                        className: 'grid grid-cols-11 gap-2 p-4 bg-gray-700 font-semibold text-xs',
+                        key: 'table-header'
+                    },
+                        ['Symbole', 'Entreprise', 'Secteur', 'Dette/Equity', 'Coverage Int.', 'Current Ratio', 'Net Income', 'Cash Flow Op.', 'Revenus', 'Score Risque', 'Signal'].map(header =>
+                            React.createElement('div', { 
+                                key: header,
+                                className: 'tooltip',
+                                'data-tooltip': 
+                                    header === 'Coverage Int.' ? 'Intérêt Coverage (EBIT / Charges intérêts)' :
+                                    header === 'Current Ratio' ? 'Liquidité courante (Actif court terme / Passif court terme)' :
+                                    header === 'Score Risque' ? 'Score de risque composite (0-15+)' : ''
+                            }, header)
+                        )
+                    ),
+                    
+                    // Corps du tableau Short Risk
+                    ...data.map((item, index) =>
+                        React.createElement('div', {
+                            key: item.symbole + index,
+                            className: 'grid grid-cols-11 gap-2 p-4 border-b border-gray-700 hover:bg-gray-750 transition-colors text-xs'
+                        },
+                            [
+                                React.createElement('div', { 
+                                    className: 'font-bold text-sm',
+                                    key: 'symbole'
+                                }, item.symbole),
+                                React.createElement('div', { 
+                                    className: 'font-semibold',
+                                    key: 'nom' 
+                                }, item.nom),
+                                React.createElement('div', { 
+                                    className: 'text-gray-300',
+                                    key: 'secteur' 
+                                }, item.secteur),
+                                React.createElement('div', { 
+                                    className: getMetricColor(item.debt_to_equity, 'debt_to_equity'),
+                                    key: 'debt'
+                                }, item.debt_to_equity),
+                                React.createElement('div', { 
+                                    className: getMetricColor(item.interest_coverage, 'interest_coverage'),
+                                    key: 'interest'
+                                }, item.interest_coverage),
+                                React.createElement('div', { 
+                                    className: getMetricColor(item.current_ratio, 'current_ratio'),
+                                    key: 'current'
+                                }, item.current_ratio),
+                                React.createElement('div', { 
+                                    className: getMetricColor(item.net_income, 'net_income'),
+                                    key: 'net-income'
+                                }, formatMillions(item.net_income)),
+                                React.createElement('div', { 
+                                    className: getMetricColor(item.operating_cash_flow, 'operating_cash_flow'),
+                                    key: 'cash-flow'
+                                }, formatMillions(item.operating_cash_flow)),
+                                React.createElement('div', { 
+                                    key: 'revenue'
+                                }, formatMillions(item.revenue)),
+                                React.createElement('div', { 
+                                    className: getRiskScoreColor(item.risk_score),
+                                    key: 'risk-score'
+                                }, item.risk_score),
+                                React.createElement('div', { 
+                                    className: `px-2 py-1 rounded-full text-xs font-bold text-center text-white ${getShortSignalColor(item.short_signal)}`,
+                                    key: 'signal'
+                                }, item.short_signal)
+                            ]
+                        )
+                    )
+                ]
+            ),
+
+            // Compteur Short Risk
+            React.createElement('div', { 
+                className: 'mt-4 text-gray-400 text-sm',
+                key: 'counter'
+            }, 
+                `🚨 ${data.length} entreprise(s) à risque détectée(s)`
+            ),
+
+            // Légende Short Risk
+            React.createElement('div', { 
+                className: 'mt-4 p-4 bg-gray-800 rounded-lg text-sm',
+                key: 'legend'
+            },
+                [
+                    React.createElement('h3', { 
+                        className: 'font-bold mb-2',
+                        key: 'legend-title'
+                    }, '📋 Légende Risques:'),
+                    React.createElement('div', { 
+                        className: 'grid grid-cols-2 gap-2 text-xs',
+                        key: 'legend-content'
+                    },
+                        [
+                            React.createElement('div', { key: 'dangerous-debt' }, 
+                                '• 🚨 DANGEROUS_DEBT: D/E > 4 (ou > 8 pour banques)'),
+                            React.createElement('div', { key: 'interest-crisis' }, 
+                                '• 🔥 INTEREST_CRISIS: Coverage intérêt < 1'),
+                            React.createElement('div', { key: 'liquidity' }, 
+                                '• 💧 LIQUIDITY_PROBLEM: Current ratio < 0.8'),
+                            React.createElement('div', { key: 'cash-burn' }, 
+                                '• 💰 BURNING_CASH: Net income & cash flow négatifs'),
+                            React.createElement('div', { key: 'double-trouble' }, 
+                                '• ⚡ DOUBLE_TROUBLE: D/E > 2 ET coverage < 2'),
+                            React.createElement('div', { key: 'micro-cap' }, 
+                                '• 📉 MICRO_CAP_DISTRESS: Perte + petit chiffre affaires'),
+                            React.createElement('div', { key: 'score-critical' }, 
+                                '• 🔴 Score 8-15: Risque critique'),
+                            React.createElement('div', { key: 'score-high' }, 
+                                '• 🟡 Score 5-7: Risque élevé')
                         ]
                     )
                 ]
