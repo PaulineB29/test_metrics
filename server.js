@@ -93,27 +93,28 @@ app.get('/api/buffett-scores', async (req, res) => {
 app.get('/api/cash-flow-momentum', async (req, res) => {
   try {
     const query = `
-      SELECT 
-        e.symbole,
-        e.nom,
-        e.secteur,
-        df.operating_cash_flow,
-        df.free_cash_flow,
-        df.revenue,
-        df.net_income,
-        ROUND((df.free_cash_flow / NULLIF(df.revenue, 0))::numeric, 3) as fcf_margin,
-        ROUND((df.free_cash_flow / NULLIF(df.market_cap, 0))::numeric, 4) as fcf_yield
+      SELECT DISTINCT ON (e.symbole)
+          e.symbole,      e.nom,
+          e.secteur,
+          df.operating_cash_flow,
+          df.free_cash_flow,
+          df.revenue,
+          df.net_income,
+          -- Vérification de cohérence
+          CASE 
+              WHEN df.free_cash_flow = df.operating_cash_flow THEN '⚠️ CAPEX=0?'
+              WHEN df.free_cash_flow > df.operating_cash_flow THEN '❌ INCOHERENT'
+              ELSE '✅ OK'
+          END as coherence_check,
+          ROUND((df.free_cash_flow / NULLIF(df.revenue, 0))::numeric, 3) as fcf_margin,
+          ROUND((df.free_cash_flow / NULLIF(df.market_cap, 0))::numeric, 4) as fcf_yield
       FROM donnees_financieres df
       JOIN entreprises e ON df.entreprise_id = e.id
-      WHERE df.free_cash_flow > 0 
-        AND df.operating_cash_flow > df.net_income
-        AND (df.free_cash_flow / NULLIF(df.revenue, 0)) BETWEEN 0.05 AND 1.0
-        AND (df.free_cash_flow / NULLIF(df.market_cap, 0)) BETWEEN 0.01 AND 0.25
-        AND df.free_cash_flow < df.revenue * 2
-        AND df.market_cap > 100000000
-        AND df.revenue > 10000000
-      ORDER BY fcf_yield DESC
-      LIMIT 50;
+      WHERE df.free_cash_flow > 0
+        AND df.free_cash_flow <= df.operating_cash_flow  -- Cohérence de base
+        AND (df.free_cash_flow / NULLIF(df.revenue, 0)) BETWEEN 0.05 AND 0.5  -- Plus réaliste
+        AND (df.free_cash_flow / NULLIF(df.market_cap, 0)) BETWEEN 0.01 AND 0.15  -- Plus réaliste
+      ORDER BY e.symbole, fcf_yield DESC
     `;
     const result = await pool.query(query);
     res.json(result.rows);
