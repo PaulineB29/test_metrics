@@ -162,34 +162,46 @@ const InvestmentApp = () => {
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
     const [globalSearch, setGlobalSearch] = useState('');
     const [currentData, setCurrentData] = useState([]);
+    
+    // 🔥 AJOUTER LA PAGINATION
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(100);
+    const [totalPages, setTotalPages] = useState(1);
 
-    // 🔥 AJOUTER : Définir les fonctions de filtrage AVANT le useEffect
+    // 🔥 UNE SEULE DÉCLARATION de filteredBuffettData
     const filteredBuffettData = filter === 'ALL' 
         ? buffettData 
-        : buffettData.filter(item => item.buffett_rating.includes(filter));
+        : buffettData.filter(item => item.buffett_rating && item.buffett_rating.includes(filter));
 
-    const filteredCashFlowData = cashFlowData;
-    const filteredValueTrapData = valueTrapData;
-    const filteredShortRiskData = shortRiskData;
+    const filteredCashFlowData = cashFlowData || [];
+    const filteredValueTrapData = valueTrapData || [];
+    const filteredShortRiskData = shortRiskData || [];
 
+    // 🔥 FONCTION PAGINATION
+    const getPaginatedData = (data) => {
+        if (!data || data.length === 0) return [];
+        
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        return data.slice(startIndex, endIndex);
+    };
+
+    // 🔥 CALCUL DES PAGES
     useEffect(() => {
+        let dataLength = 0;
         switch (activeTab) {
-            case 'buffett':
-                setCurrentData(filteredBuffettData);
-                break;
-            case 'cashflow':
-                setCurrentData(filteredCashFlowData);
-                break;
-            case 'valuetrap':
-                setCurrentData(filteredValueTrapData);
-                break;
-            case 'shortrisk':
-                setCurrentData(filteredShortRiskData);
-                break;
-            default:
-                setCurrentData([]);
+            case 'buffett': dataLength = filteredBuffettData.length; break;
+            case 'cashflow': dataLength = filteredCashFlowData.length; break;
+            case 'valuetrap': dataLength = filteredValueTrapData.length; break;
+            case 'shortrisk': dataLength = filteredShortRiskData.length; break;
+            default: dataLength = 0;
         }
-    }, [activeTab, filteredBuffettData, filteredCashFlowData, filteredValueTrapData, filteredShortRiskData]);
+        setTotalPages(Math.ceil(dataLength / itemsPerPage));
+        
+        // Revenir à la page 1 quand les données changent
+        setCurrentPage(1);
+    }, [filteredBuffettData, filteredCashFlowData, filteredValueTrapData, filteredShortRiskData, activeTab, itemsPerPage]);
+   
 
      // 🔥 FONCTION DE TRI
     const handleSort = (key) => {
@@ -553,50 +565,90 @@ const SortableHeader = ({ column, sortConfig, onSort, children }) => {
                 ),
 
                   // Contenu des onglets
-                  activeTab === 'buffett' 
-                    ? React.createElement('div', { key: 'buffett-tab' },
-                        [
-                          React.createElement(Desc, {
-                            key: 'description',
-                            analysisType: 'buffett'
-                          }),
-                          React.createElement(BuffettTab, {
-                            key: 'table',
-                            data: filteredBuffettData,
-                            filter: filter,
-                            onFilterChange: setFilter,
-                            getRatingColor: getBuffettRatingColor,
-                            getValueColor: getValueColor,
-                            sortConfig: sortConfig,
-                            onSort: handleSort,
-                            searchTerm: globalSearch,
-                            onSearch: handleGlobalSearch
-                          })
-                        ]
-                      )
-                    : activeTab === 'cashflow'
-                    ? React.createElement(CashFlowTab, {
-                        key: 'cashflow-tab',
-                        data: filteredCashFlowData,
-                        getCashFlowColor: getCashFlowColor,
-                        formatMillions: formatMillions,
-                        formatPercent: formatPercent
-                    })
-                    : activeTab === 'valuetrap'
-                    ? React.createElement(ValueTrapTab, {
-                        key: 'valuetrap-tab',
-                        data: filteredValueTrapData,
-                        getValueGradeColor: getValueGradeColor,
-                        getValueScoreColor: getValueScoreColor
-                    })
-                    : React.createElement(ShortRiskTab, {
-                        key: 'shortrisk-tab',
-                        data: filteredShortRiskData,
-                        getShortSignalColor: getShortSignalColor,
-                        getRiskScoreColor: getRiskScoreColor,
-                        getMetricColor: getMetricColor,
-                        formatMillions: formatMillions
-                    })
+          activeTab === 'buffett' 
+              ? React.createElement('div', { key: 'buffett-tab' },
+                  [
+                      React.createElement(DescriptionBox, {
+                          key: 'description',
+                          analysisType: 'buffett'
+                      }),
+                      React.createElement(BuffettTab, {
+                          key: 'table',
+                          data: filteredBuffettData,
+                          filter: filter,
+                          onFilterChange: setFilter,
+                          getRatingColor: getBuffettRatingColor,
+                          getValueColor: getValueColor,
+                          sortConfig: sortConfig,
+                          onSort: handleSort,
+                          searchTerm: globalSearch,
+                          onSearch: handleGlobalSearch,
+                          getSortedAndFilteredData: getSortedAndFilteredData,
+                          getPaginatedData: getPaginatedData,
+                          currentPage: currentPage,
+                          totalPages: totalPages,
+                          onPageChange: setCurrentPage,
+                          itemsPerPage: itemsPerPage,
+                          onItemsPerPageChange: setItemsPerPage
+                      })
+                  ]
+              )
+              : activeTab === 'cashflow'
+              ? React.createElement(CashFlowTab, {
+                  key: 'cashflow-tab',
+                  data: filteredCashFlowData,
+                  getCashFlowColor: getCashFlowColor,
+                  formatMillions: formatMillions,
+                  formatPercent: formatPercent,
+                  sortConfig: sortConfig,
+                  onSort: handleSort,
+                  searchTerm: globalSearch,
+                  onSearch: handleGlobalSearch,
+                  getSortedAndFilteredData: getSortedAndFilteredData,
+                  getPaginatedData: getPaginatedData,
+                  currentPage: currentPage,
+                  totalPages: totalPages,
+                  onPageChange: setCurrentPage,
+                  itemsPerPage: itemsPerPage,
+                  onItemsPerPageChange: setItemsPerPage
+              })
+              : activeTab === 'valuetrap'
+              ? React.createElement(ValueTrapTab, {
+                  key: 'valuetrap-tab',
+                  data: filteredValueTrapData,
+                  getValueGradeColor: getValueGradeColor,
+                  getValueScoreColor: getValueScoreColor,
+                  sortConfig: sortConfig,
+                  onSort: handleSort,
+                  searchTerm: globalSearch,
+                  onSearch: handleGlobalSearch,
+                  getSortedAndFilteredData: getSortedAndFilteredData,
+                  getPaginatedData: getPaginatedData,
+                  currentPage: currentPage,
+                  totalPages: totalPages,
+                  onPageChange: setCurrentPage,
+                  itemsPerPage: itemsPerPage,
+                  onItemsPerPageChange: setItemsPerPage
+              })
+              : React.createElement(ShortRiskTab, {
+                  key: 'shortrisk-tab',
+                  data: filteredShortRiskData,
+                  getShortSignalColor: getShortSignalColor,
+                  getRiskScoreColor: getRiskScoreColor,
+                  getMetricColor: getMetricColor,
+                  formatMillions: formatMillions,
+                  sortConfig: sortConfig,
+                  onSort: handleSort,
+                  searchTerm: globalSearch,
+                  onSearch: handleGlobalSearch,
+                  getSortedAndFilteredData: getSortedAndFilteredData,
+                  getPaginatedData: getPaginatedData,
+                  currentPage: currentPage,
+                  totalPages: totalPages,
+                  onPageChange: setCurrentPage,
+                  itemsPerPage: itemsPerPage,
+                  onItemsPerPageChange: setItemsPerPage
+              })
             ]
         )
     );
@@ -986,10 +1038,135 @@ const DescriptionBox = ({ analysisType }) => {
   );
 };
 
+// Composant Pagination réutilisable
+const Pagination = ({ currentPage, totalPages, onPageChange, itemsPerPage, onItemsPerPageChange }) => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    
+    if (endPage - startPage + 1 < maxVisiblePages) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+    }
+    
+    return React.createElement('div', {
+        className: 'flex flex-col md:flex-row items-center justify-between gap-4 mt-6 p-4 bg-gray-800 rounded-lg'
+    },
+        [
+            // Sélecteur d'items par page
+            React.createElement('div', {
+                className: 'flex items-center gap-3',
+                key: 'items-per-page'
+            },
+                [
+                    React.createElement('span', {
+                        className: 'text-gray-400 text-sm',
+                        key: 'label'
+                    }, 'Lignes par page:'),
+                    
+                    React.createElement('select', {
+                        value: itemsPerPage,
+                        onChange: (e) => onItemsPerPageChange(Number(e.target.value)),
+                        className: 'bg-gray-700 text-white px-3 py-1 rounded border border-gray-600',
+                        key: 'select'
+                    },
+                        [25, 50, 100, 200].map(value =>
+                            React.createElement('option', {
+                                value: value,
+                                key: value
+                            }, value)
+                        )
+                    )
+                ]
+            ),
+            
+            // Contrôles de pagination
+            React.createElement('div', {
+                className: 'flex items-center gap-2',
+                key: 'pagination-controls'
+            },
+                [
+                    // Bouton Première page
+                    React.createElement('button', {
+                        onClick: () => onPageChange(1),
+                        disabled: currentPage === 1,
+                        className: `px-3 py-1 rounded ${
+                            currentPage === 1 
+                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+                                : 'bg-gray-600 text-white hover:bg-gray-500'
+                        }`,
+                        key: 'first'
+                    }, '⏮️ Première'),
+                    
+                    // Bouton Précédent
+                    React.createElement('button', {
+                        onClick: () => onPageChange(currentPage - 1),
+                        disabled: currentPage === 1,
+                        className: `px-3 py-1 rounded ${
+                            currentPage === 1 
+                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+                                : 'bg-gray-600 text-white hover:bg-gray-500'
+                        }`,
+                        key: 'prev'
+                    }, '◀️ Précédent'),
+                    
+                    // Numéros de page
+                    ...pages.map(page =>
+                        React.createElement('button', {
+                            onClick: () => onPageChange(page),
+                            className: `px-3 py-1 rounded ${
+                                page === currentPage 
+                                    ? 'bg-blue-600 text-white font-bold' 
+                                    : 'bg-gray-600 text-white hover:bg-gray-500'
+                            }`,
+                            key: page
+                        }, page)
+                    ),
+                    
+                    // Bouton Suivant
+                    React.createElement('button', {
+                        onClick: () => onPageChange(currentPage + 1),
+                        disabled: currentPage === totalPages,
+                        className: `px-3 py-1 rounded ${
+                            currentPage === totalPages 
+                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+                                : 'bg-gray-600 text-white hover:bg-gray-500'
+                        }`,
+                        key: 'next'
+                    }, 'Suivant ▶️'),
+                    
+                    // Bouton Dernière page
+                    React.createElement('button', {
+                        onClick: () => onPageChange(totalPages),
+                        disabled: currentPage === totalPages,
+                        className: `px-3 py-1 rounded ${
+                            currentPage === totalPages 
+                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+                                : 'bg-gray-600 text-white hover:bg-gray-500'
+                        }`,
+                        key: 'last'
+                    }, 'Dernière ⏭️')
+                ]
+            ),
+            
+            // Informations de pagination
+            React.createElement('div', {
+                className: 'text-gray-400 text-sm',
+                key: 'page-info'
+            }, `Page ${currentPage} sur ${totalPages}`)
+        ]
+    );
+};
 
 // Composant Onglet Buffett 
-const BuffettTab = ({ data, filter, onFilterChange, getRatingColor, getValueColor, sortConfig, onSort, searchTerm, onSearch }) => {
+const BuffettTab = ({ data, filter, onFilterChange, getRatingColor, getValueColor, sortConfig, onSort, searchTerm, onSearch, currentPage, totalPages, onPageChange, itemsPerPage, onItemsPerPageChange }) => {
     const sortedAndFilteredData = getSortedAndFilteredData(data);
+    const paginatedData = getPaginatedData(sortedAndFilteredData);
     
     return React.createElement('div', {},
         [
@@ -1034,8 +1211,8 @@ const BuffettTab = ({ data, filter, onFilterChange, getRatingColor, getValueColo
                         key: 'table'
                     },
                         [
-                   // En-tête du tableau AVEC TRI
-                      React.createElement('div', { 
+                            // En-tête du tableau AVEC TRI
+                            React.createElement('div', { 
                                 className: 'grid grid-cols-8 gap-4 p-4 bg-gray-700 font-semibold text-sm',
                                 key: 'table-header'
                             },
@@ -1093,8 +1270,8 @@ const BuffettTab = ({ data, filter, onFilterChange, getRatingColor, getValueColo
                                 ]
                             ),
                             
-                            // Corps du tableau
-                            ...data.map((item, index) =>
+                            // 🔥 CORPS DU TABLEAU - SEULEMENT les lignes de données
+                            ...paginatedData.map((item, index) =>
                                 React.createElement('div', {
                                     key: item.symbole + index,
                                     className: 'grid grid-cols-8 gap-4 p-4 border-b border-gray-700 hover:bg-gray-750 transition-colors text-sm'
@@ -1137,26 +1314,51 @@ const BuffettTab = ({ data, filter, onFilterChange, getRatingColor, getValueColo
                                 )
                             )
                         ]
-                    ),
-
-                    // Compteur
-                    React.createElement('div', { 
-                        className: 'mt-4 text-gray-400 text-sm',
-                        key: 'counter'
-                    }, 
-                        `📊 ${data.length} entreprise(s) trouvée(s) ${
-                            filter !== 'ALL' ? `(Filtre: ${filter})` : ''
-                        }`
                     )
                 ]
+            ),
+
+            // 🔥 PAGINATION - EN DEHORS du tableau
+            React.createElement(Pagination, {
+                key: 'pagination',
+                currentPage: currentPage,
+                totalPages: totalPages,
+                onPageChange: onPageChange,
+                itemsPerPage: itemsPerPage,
+                onItemsPerPageChange: onItemsPerPageChange
+            }),
+
+            // 🔥 COMPTEUR 
+            React.createElement('div', { 
+                className: 'mt-4 text-gray-400 text-sm',
+                key: 'counter'
+            }, 
+                `📊 ${sortedAndFilteredData.length} entreprise(s) trouvée(s) - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, sortedAndFilteredData.length)} à ${Math.min(currentPage * itemsPerPage, sortedAndFilteredData.length)}`
             )
         ]
     );
 };
 
-// Composant Onglet Cash Flow avec Tri et Recherche
-const CashFlowTab = ({ data, getCashFlowColor, formatMillions, formatPercent, sortConfig, onSort, searchTerm, onSearch, getSortedAndFilteredData }) => {
+// Composant Onglet Cash Flow avec Tri, Recherche et PAGINATION
+const CashFlowTab = ({ 
+    data, 
+    getCashFlowColor, 
+    formatMillions, 
+    formatPercent, 
+    sortConfig, 
+    onSort, 
+    searchTerm, 
+    onSearch, 
+    getSortedAndFilteredData,
+    getPaginatedData,
+    currentPage,
+    totalPages,
+    onPageChange,
+    itemsPerPage,
+    onItemsPerPageChange
+}) => {
     const sortedAndFilteredData = getSortedAndFilteredData(data);
+    const paginatedData = getPaginatedData(sortedAndFilteredData); // 🔥 AJOUT PAGINATION
     
     return React.createElement('div', { className: 'table-container' },
         [
@@ -1250,7 +1452,8 @@ const CashFlowTab = ({ data, getCashFlowColor, formatMillions, formatPercent, so
                         ]
                     ),
                     
-                    ...sortedAndFilteredData.map((item, index) =>
+                    // 🔥 CORRECTION : utiliser paginatedData au lieu de sortedAndFilteredData
+                    ...paginatedData.map((item, index) =>
                         React.createElement('div', {
                             key: item.symbole + index,
                             className: 'grid grid-cols-10 gap-4 p-4 border-b border-gray-700 hover:bg-gray-750 transition-colors text-sm'
@@ -1302,20 +1505,46 @@ const CashFlowTab = ({ data, getCashFlowColor, formatMillions, formatPercent, so
                 ]
             ),
 
-            // Compteur Cash Flow
+            // 🔥 AJOUT PAGINATION
+            React.createElement(Pagination, {
+                key: 'pagination',
+                currentPage: currentPage,
+                totalPages: totalPages,
+                onPageChange: onPageChange,
+                itemsPerPage: itemsPerPage,
+                onItemsPerPageChange: onItemsPerPageChange
+            }),
+
+            // 🔥 COMPTEUR MIS À JOUR avec informations de pagination
             React.createElement('div', { 
                 className: 'mt-4 text-gray-400 text-sm',
                 key: 'counter'
             }, 
-                `💰 ${sortedAndFilteredData.length} entreprise(s) avec un cash flow positif trouvée(s)`
+                `💰 ${sortedAndFilteredData.length} entreprise(s) avec un cash flow positif - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, sortedAndFilteredData.length)} à ${Math.min(currentPage * itemsPerPage, sortedAndFilteredData.length)}`
             )
         ]
     );
 };
 
-// Composant Onglet Value Trap Detector avec Tri et Recherche
-const ValueTrapTab = ({ data, getValueGradeColor, getValueScoreColor, sortConfig, onSort, searchTerm, onSearch, getSortedAndFilteredData }) => {
+// Composant Onglet Value Trap Detector avec Tri, Recherche et PAGINATION
+const ValueTrapTab = ({ 
+    data, 
+    getValueGradeColor, 
+    getValueScoreColor, 
+    sortConfig, 
+    onSort, 
+    searchTerm, 
+    onSearch, 
+    getSortedAndFilteredData,
+    getPaginatedData,
+    currentPage,
+    totalPages,
+    onPageChange,
+    itemsPerPage,
+    onItemsPerPageChange
+}) => {
     const sortedAndFilteredData = getSortedAndFilteredData(data);
+    const paginatedData = getPaginatedData(sortedAndFilteredData); // 🔥 AJOUT PAGINATION
     
     return React.createElement('div', { className: 'table-container' },
         [
@@ -1437,8 +1666,8 @@ const ValueTrapTab = ({ data, getValueGradeColor, getValueScoreColor, sortConfig
                         ]
                     ),
                     
-                    // Corps du tableau Value Trap
-                    ...sortedAndFilteredData.map((item, index) =>
+                    // 🔥 CORRECTION : utiliser paginatedData au lieu de sortedAndFilteredData
+                    ...paginatedData.map((item, index) =>
                         React.createElement('div', {
                             key: item.symbole + index,
                             className: 'grid grid-cols-12 gap-2 p-4 border-b border-gray-700 hover:bg-gray-750 transition-colors text-xs'
@@ -1505,14 +1734,25 @@ const ValueTrapTab = ({ data, getValueGradeColor, getValueScoreColor, sortConfig
                 ]
             ),
 
-            // Compteur Value Trap
+            // 🔥 AJOUT PAGINATION
+            React.createElement(Pagination, {
+                key: 'pagination',
+                currentPage: currentPage,
+                totalPages: totalPages,
+                onPageChange: onPageChange,
+                itemsPerPage: itemsPerPage,
+                onItemsPerPageChange: onItemsPerPageChange
+            }),
+
+            // 🔥 COMPTEUR MIS À JOUR avec informations de pagination
             React.createElement('div', { 
                 className: 'mt-4 text-gray-400 text-sm',
                 key: 'counter'
             }, 
-                `🎯 ${sortedAndFilteredData.length} entreprise(s) analysée(s) pour détecter les value traps`
-            )
-          // Légende Value Trap
+                `🎯 ${sortedAndFilteredData.length} entreprise(s) analysée(s) - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, sortedAndFilteredData.length)} à ${Math.min(currentPage * itemsPerPage, sortedAndFilteredData.length)}`
+            ),
+
+            // Légende Value Trap
             React.createElement('div', { 
                 className: 'mt-4 p-4 bg-gray-800 rounded-lg text-sm',
                 key: 'legend'
@@ -1680,7 +1920,7 @@ const ShortRiskTab = ({ data, getShortSignalColor, getRiskScoreColor, getMetricC
                     ),
                     
                     // Corps du tableau Short Risk
-                    ...sortedAndFilteredData.map((item, index) =>
+                    ...paginatedData.map((item, index) =>
                         React.createElement('div', {
                             key: item.symbole + index,
                             className: 'grid grid-cols-11 gap-2 p-4 border-b border-gray-700 hover:bg-gray-750 transition-colors text-sm'
