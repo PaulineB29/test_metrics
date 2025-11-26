@@ -828,20 +828,20 @@ const BuffettTab = ({ data, filter, onFilterChange, getRatingColor, getValueColo
                                         React.createElement('div', { 
                                             className: getValueColor(item.roe, 15, 10),
                                             key: 'roe'
-                                        }, `${item.roe}%`),
+                                         }, `${Number(item.roe).toFixed(2)}%`),
                                         React.createElement('div', { 
                                             className: getValueColor(item.roic, 12, 8),
                                             key: 'roic'
-                                        }, `${item.roic}%`),
+                                        }, `${Number(item.roic).toFixed(2)}%`),
                                         React.createElement('div', { 
                                             className: item.debt_to_equity < 2 ? 'text-green-400 font-bold' : 
                                                       item.debt_to_equity < 3 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
                                             key: 'debt'
-                                        }, `${item.debt_to_equity}x`),
+                                        }, `${Number(item.debt_to_equity).toFixed(2)}x`),
                                         React.createElement('div', { 
                                             className: getValueColor(item.net_margin, 8, 5),
                                             key: 'margin'
-                                        }, `${item.net_margin}%`),
+                                        }, `${Number(item.net_margin).toFixed(2)}%`),
                                         React.createElement('div', { 
                                             className: `px-3 py-2 rounded-full text-xs font-bold text-center text-white ${getRatingColor(item.buffett_rating)}`,
                                             key: 'rating'
