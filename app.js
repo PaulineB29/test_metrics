@@ -145,7 +145,6 @@ const ANALYSIS_DESCRIPTIONS = {
         sections: [] // À compléter
       }
     };
-    };
 
 const InvestmentApp = () => {
     const [activeTab, setActiveTab] = useState('buffett');
