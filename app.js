@@ -199,8 +199,95 @@ const InvestmentApp = () => {
         );
     }
 
+ return React.createElement('div', { className: 'min-h-screen bg-gray-900 text-white p-4' },
+        React.createElement('div', { className: 'max-w-7xl mx-auto' },
+            [
+                // En-tête
+                React.createElement('div', { key: 'header' },
+                    [
+                        React.createElement('h1', { 
+                            className: 'text-3xl font-bold mb-2',
+                            key: 'title'
+                        }, '📊 Analyse Investissement - Données Réelles'),
+                        React.createElement('p', { 
+                            className: 'text-gray-400 mb-6',
+                            key: 'subtitle' 
+                        }, 'Données en direct depuis PostgreSQL'),
+                        React.createElement('div', { 
+                            className: 'bg-green-500 text-white p-3 rounded-lg mb-4',
+                            key: 'live-warning'
+                        }, '✅ Connecté à la base de données en temps réel')
+                    ]
+                ),
+                
+                // Onglets
+                React.createElement('div', { 
+                    className: 'tabs-container',
+                    key: 'tabs'
+                },
+                    React.createElement('div', { className: 'tabs' },
+                        [
+                            React.createElement('button', {
+                                key: 'buffett',
+                                onClick: () => setActiveTab('buffett'),
+                                className: `tab ${activeTab === 'buffett' ? 'active' : ''}`
+                            }, `📈 Score Buffett (${buffettData.length})`),
+                            React.createElement('button', {
+                                key: 'cashflow',
+                                onClick: () => setActiveTab('cashflow'),
+                                className: `tab ${activeTab === 'cashflow' ? 'active' : ''}`
+                            }, `💰 Cash Flow (${cashFlowData.length})`),
+                            React.createElement('button', {
+                                key: 'valuetrap',
+                                onClick: () => setActiveTab('valuetrap'),
+                                className: `tab ${activeTab === 'valuetrap' ? 'active' : ''}`
+                            }, `🎯 Value Trap (${valueTrapData.length})`),
+                            React.createElement('button', {
+                                key: 'shortrisk',
+                                onClick: () => setActiveTab('shortrisk'),
+                                className: `tab ${activeTab === 'shortrisk' ? 'active' : ''}`
+                            }, `🚨 Short Risk (${shortRiskData.length})`)
+                        ]
+                    )
+                ),
 
-
+                // Contenu des onglets
+                activeTab === 'buffett' 
+                    ? React.createElement(BuffettTab, {
+                        key: 'buffett-tab',
+                        data: filteredBuffettData,
+                        filter: filter,
+                        onFilterChange: setFilter,
+                        getRatingColor: getBuffettRatingColor,
+                        getValueColor: getValueColor
+                    })
+                    : activeTab === 'cashflow'
+                    ? React.createElement(CashFlowTab, {
+                        key: 'cashflow-tab',
+                        data: filteredCashFlowData,
+                        getCashFlowColor: getCashFlowColor,
+                        formatMillions: formatMillions,
+                        formatPercent: formatPercent
+                    })
+                    : activeTab === 'valuetrap'
+                    ? React.createElement(ValueTrapTab, {
+                        key: 'valuetrap-tab',
+                        data: filteredValueTrapData,
+                        getValueGradeColor: getValueGradeColor,
+                        getValueScoreColor: getValueScoreColor
+                    })
+                    : React.createElement(ShortRiskTab, {
+                        key: 'shortrisk-tab',
+                        data: filteredShortRiskData,
+                        getShortSignalColor: getShortSignalColor,
+                        getRiskScoreColor: getRiskScoreColor,
+                        getMetricColor: getMetricColor,
+                        formatMillions: formatMillions
+                    })
+            ]
+        )
+    );
+}
 
 // Composant Onglet Buffett (inchangé)
 const BuffettTab = ({ data, filter, onFilterChange, getRatingColor, getValueColor }) => {
