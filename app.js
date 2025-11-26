@@ -411,15 +411,7 @@ const SortableHeader = ({ column, sortConfig, onSort, children }) => {
     );
 };
 
-
-    
-    
-   // Filtrage pour Buffett
-    const filteredBuffettData = filter === 'ALL' 
-        ? buffettData 
-        : buffettData.filter(item => item.buffett_rating.includes(filter));
-
-    // Filtrage pour les autres onglets (par défaut tous)
+  // Filtrage pour les autres onglets (par défaut tous)
     const filteredCashFlowData = cashFlowData;
     const filteredValueTrapData = valueTrapData;
     const filteredShortRiskData = shortRiskData;
