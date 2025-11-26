@@ -1170,9 +1170,9 @@ const ShortRiskTab = ({ data, getShortSignalColor, getRiskScoreColor, getMetricC
                     ...data.map((item, index) =>
                         React.createElement('div', {
                             key: item.symbole + index,
-                            className: 'grid grid-cols-11 gap-2 p-4 border-b border-gray-700 hover:bg-gray-750 transition-colors text-xs'
-                        },
-                            [
+                            className: 'grid grid-cols-11 gap-2 p-4 border-b border-gray-700 hover:bg-gray-750 transition-colors text-sm'
+                            },
+                                  [
                                 React.createElement('div', { 
                                     className: 'font-bold text-sm',
                                     key: 'symbole'
@@ -1186,34 +1186,38 @@ const ShortRiskTab = ({ data, getShortSignalColor, getRiskScoreColor, getMetricC
                                     key: 'secteur' 
                                 }, item.secteur),
                                 React.createElement('div', { 
-                                    className: getMetricColor(item.debt_to_equity, 'debt_to_equity'),
+                                    className: item.debt_to_equity > 3 ? 'text-red-400 font-bold' : 
+                                               item.debt_to_equity > 2 ? 'text-yellow-400 font-bold' : 'text-green-400 font-bold',
                                     key: 'debt'
-                                }, item.debt_to_equity),
+                                }, `${Number(item.debt_to_equity).toFixed(2)}x`),
                                 React.createElement('div', { 
-                                    className: getMetricColor(item.interest_coverage, 'interest_coverage'),
+                                    className: item.interest_coverage < 1 ? 'text-red-400 font-bold' : 
+                                              item.interest_coverage < 1.5 ? 'text-yellow-400 font-bold' : 'text-green-400 font-bold',
                                     key: 'interest'
-                                }, item.interest_coverage),
+                                }, `${Number(item.interest_coverage).toFixed(2)}`),  // ← Formaté + couleurs unifiées
                                 React.createElement('div', { 
-                                    className: getMetricColor(item.current_ratio, 'current_ratio'),
+                                    className: item.current_ratio < 0.8 ? 'text-red-400 font-bold' : 
+                                              item.current_ratio < 1 ? 'text-yellow-400 font-bold' : 'text-green-400 font-bold',
                                     key: 'current'
-                                }, item.current_ratio),
+                                }, `${Number(item.current_ratio).toFixed(2)}`),  // ← Formaté + couleurs unifiées
                                 React.createElement('div', { 
-                                    className: getMetricColor(item.net_income, 'net_income'),
+                                    className: item.net_income < 0 ? 'text-red-400 font-bold' : 'text-green-400 font-bold',
                                     key: 'net-income'
                                 }, formatMillions(item.net_income)),
                                 React.createElement('div', { 
-                                    className: getMetricColor(item.operating_cash_flow, 'operating_cash_flow'),
+                                    className: item.operating_cash_flow < 0 ? 'text-red-400 font-bold' : 'text-green-400 font-bold',
                                     key: 'cash-flow'
                                 }, formatMillions(item.operating_cash_flow)),
                                 React.createElement('div', { 
                                     key: 'revenue'
                                 }, formatMillions(item.revenue)),
                                 React.createElement('div', { 
-                                    className: getRiskScoreColor(item.risk_score),
+                                    className: item.risk_score >= 8 ? 'text-red-400 font-bold' : 
+                                              item.risk_score >= 5 ? 'text-yellow-400 font-bold' : 'text-green-400 font-bold',
                                     key: 'risk-score'
-                                }, item.risk_score),
+                                }, item.risk_score),  // ← Couleurs unifiées
                                 React.createElement('div', { 
-                                    className: `px-2 py-1 rounded-full text-xs font-bold text-center text-white ${getShortSignalColor(item.short_signal)}`,
+                                    className: `px-3 py-2 rounded-full text-xs font-bold text-center text-white ${getShortSignalColor(item.short_signal)}`,
                                     key: 'signal'
                                 }, item.short_signal)
                             ]
