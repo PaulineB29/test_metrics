@@ -4,61 +4,7 @@ import ReactDOM from 'https://esm.sh/react-dom@18/client'
 // URL de base de l'API
 const API_BASE_URL = 'https://test-metrics-hwmp.onrender.com/api';
 
-const InvestmentApp = () => {
-    const [activeTab, setActiveTab] = useState('buffett');
-    const [buffettData, setBuffettData] = useState([]);
-    const [cashFlowData, setCashFlowData] = useState([]);
-    const [valueTrapData, setValueTrapData] = useState([]);
-    const [shortRiskData, setShortRiskData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [filter, setFilter] = useState('ALL');
-
-    useEffect(() => {
-        fetchAllData();
-    }, []);
-
-    const fetchAllData = async () => {
-        try {
-            setLoading(true);
-            setError(null);
-
-            // Charger toutes les données en parallèle
-            const [buffettResponse, cashFlowResponse, valueTrapResponse, shortRiskResponse] = await Promise.all([
-                fetch(`${API_BASE_URL}/buffett-scores`),
-                fetch(`${API_BASE_URL}/cash-flow-momentum`),
-                fetch(`${API_BASE_URL}/value-trap-detector`),
-                fetch(`${API_BASE_URL}/short-risk-detector`)
-            ]);
-
-            // Vérifier les réponses
-            if (!buffettResponse.ok) throw new Error('Erreur Buffett API');
-            if (!cashFlowResponse.ok) throw new Error('Erreur Cash Flow API');
-            if (!valueTrapResponse.ok) throw new Error('Erreur Value Trap API');
-            if (!shortRiskResponse.ok) throw new Error('Erreur Short Risk API');
-
-            // Convertir en JSON
-            const [buffettResult, cashFlowResult, valueTrapResult, shortRiskResult] = await Promise.all([
-                buffettResponse.json(),
-                cashFlowResponse.json(),
-                valueTrapResponse.json(),
-                shortRiskResponse.json()
-            ]);
-
-            setBuffettData(buffettResult);
-            setCashFlowData(cashFlowResult);
-            setValueTrapData(valueTrapResult);
-            setShortRiskData(shortRiskResult);
-
-        } catch (err) {
-            console.error('Erreur de chargement:', err);
-            setError(`Erreur de connexion: ${err.message}. Vérifiez que le serveur backend est démarré.`);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const ANALYSIS_DESCRIPTIONS = {
+const ANALYSIS_DESCRIPTIONS = {
       buffett: {
         title: "📈 Buffett Quality Score - Explication pour les Investisseurs",
         sections: [
@@ -179,7 +125,83 @@ const InvestmentApp = () => {
           }
         ]
       },
+      // Ajouter les autres analyses plus tard
+      cashflow: {
+        title: "💰 Cash Flow - Les Générateurs de Trésorerie",
+        sections: [
+          {
+            title: "🎯 Ce que cette analyse mesure",
+            content: "Cette analyse identifie les entreprises qui génèrent d'excellents flux de trésorerie - le véritable 'oxygène' d'une entreprise."
+          }
+          // ... (vous pourrez compléter plus tard)
+        ]
+      },
+      valuetrap: {
+        title: "🎯 Value Trap Detector - Éviter les Fausses Bonnes Affaires",
+        sections: [] // À compléter
+      },
+      shortrisk: {
+        title: "🔍 Short Risk - Détecteur de Détresse",
+        sections: [] // À compléter
+      }
     };
+    };
+
+const InvestmentApp = () => {
+    const [activeTab, setActiveTab] = useState('buffett');
+    const [buffettData, setBuffettData] = useState([]);
+    const [cashFlowData, setCashFlowData] = useState([]);
+    const [valueTrapData, setValueTrapData] = useState([]);
+    const [shortRiskData, setShortRiskData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [filter, setFilter] = useState('ALL');
+
+    useEffect(() => {
+        fetchAllData();
+    }, []);
+
+    const fetchAllData = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+
+            // Charger toutes les données en parallèle
+            const [buffettResponse, cashFlowResponse, valueTrapResponse, shortRiskResponse] = await Promise.all([
+                fetch(`${API_BASE_URL}/buffett-scores`),
+                fetch(`${API_BASE_URL}/cash-flow-momentum`),
+                fetch(`${API_BASE_URL}/value-trap-detector`),
+                fetch(`${API_BASE_URL}/short-risk-detector`)
+            ]);
+
+            // Vérifier les réponses
+            if (!buffettResponse.ok) throw new Error('Erreur Buffett API');
+            if (!cashFlowResponse.ok) throw new Error('Erreur Cash Flow API');
+            if (!valueTrapResponse.ok) throw new Error('Erreur Value Trap API');
+            if (!shortRiskResponse.ok) throw new Error('Erreur Short Risk API');
+
+            // Convertir en JSON
+            const [buffettResult, cashFlowResult, valueTrapResult, shortRiskResult] = await Promise.all([
+                buffettResponse.json(),
+                cashFlowResponse.json(),
+                valueTrapResponse.json(),
+                shortRiskResponse.json()
+            ]);
+
+            setBuffettData(buffettResult);
+            setCashFlowData(cashFlowResult);
+            setValueTrapData(valueTrapResult);
+            setShortRiskData(shortRiskResult);
+
+        } catch (err) {
+            console.error('Erreur de chargement:', err);
+            setError(`Erreur de connexion: ${err.message}. Vérifiez que le serveur backend est démarré.`);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    
     
    // Filtrage pour Buffett
     const filteredBuffettData = filter === 'ALL' 
@@ -527,7 +549,183 @@ const DescriptionBox = ({ analysisType }) => {
             )
           ]
         );
-default:
+            case "comparison":
+        return React.createElement('div', { 
+          className: 'bg-gray-750 rounded-lg p-6 mb-6',
+          key: `comparison-${index}`
+        },
+          [
+            React.createElement('h3', { 
+              className: 'text-lg font-bold mb-4 text-white',
+              key: 'title'
+            }, section.title),
+            
+            React.createElement('div', {
+              className: 'grid grid-cols-1 md:grid-cols-2 gap-6',
+              key: 'comparison-grid'
+            },
+              [
+                // Colonne "Ce qu'il faut faire"
+                React.createElement('div', {
+                  className: 'bg-green-900/30 p-4 rounded-lg border border-green-500',
+                  key: 'good'
+                },
+                  [
+                    React.createElement('h4', {
+                      className: 'font-bold text-green-400 mb-3',
+                      key: 'good-title'
+                    }, section.good.title),
+                    ...section.good.items.map((item, idx) =>
+                      React.createElement('div', {
+                        className: 'flex items-center text-green-300 text-sm mb-2',
+                        key: `good-${idx}`
+                      }, item)
+                    )
+                  ]
+                ),
+                
+                // Colonne "Ce qu'il faut éviter"
+                React.createElement('div', {
+                  className: 'bg-red-900/30 p-4 rounded-lg border border-red-500',
+                  key: 'bad'
+                },
+                  [
+                    React.createElement('h4', {
+                      className: 'font-bold text-red-400 mb-3',
+                      key: 'bad-title'
+                    }, section.bad.title),
+                    ...section.bad.items.map((item, idx) =>
+                      React.createElement('div', {
+                        className: 'flex items-center text-red-300 text-sm mb-2',
+                        key: `bad-${idx}`
+                      }, item)
+                    )
+                  ]
+                )
+              ]
+            )
+          ]
+        );
+
+      case "usage":
+        return React.createElement('div', { 
+          className: 'bg-gray-750 rounded-lg p-6 mb-6',
+          key: `usage-${index}`
+        },
+          [
+            React.createElement('h3', { 
+              className: 'text-lg font-bold mb-4 text-white',
+              key: 'title'
+            }, section.title),
+            
+            ...section.items.map((item, idx) =>
+              React.createElement('div', {
+                className: 'mb-3 p-3 bg-gray-700 rounded-lg',
+                key: `usage-${idx}`
+              },
+                [
+                  React.createElement('div', {
+                    className: 'font-semibold text-blue-300 mb-1',
+                    key: 'target'
+                  }, item.target),
+                  React.createElement('div', {
+                    className: 'text-white',
+                    key: 'action'
+                  }, item.action)
+                ]
+              )
+            )
+          ]
+        );
+
+      case "warnings":
+        return React.createElement('div', { 
+          className: 'bg-yellow-900/20 rounded-lg p-6 mb-6 border border-yellow-500',
+          key: `warnings-${index}`
+        },
+          [
+            React.createElement('h3', { 
+              className: 'text-lg font-bold mb-4 text-yellow-400',
+              key: 'title'
+            }, section.title),
+            
+            React.createElement('div', {
+              className: 'grid grid-cols-1 md:grid-cols-2 gap-6',
+              key: 'warnings-grid'
+            },
+              [
+                React.createElement('div', {
+                  key: 'limitations'
+                },
+                  [
+                    React.createElement('h4', {
+                      className: 'font-semibold text-yellow-300 mb-3',
+                      key: 'limitations-title'
+                    }, section.limitations.title),
+                    ...section.limitations.items.map((item, idx) =>
+                      React.createElement('div', {
+                        className: 'flex items-center text-yellow-200 text-sm mb-2',
+                        key: `limit-${idx}`
+                      }, item)
+                    )
+                  ]
+                ),
+                
+                React.createElement('div', {
+                  key: 'complements'
+                },
+                  [
+                    React.createElement('h4', {
+                      className: 'font-semibold text-blue-300 mb-3',
+                      key: 'complements-title'
+                    }, section.complements.title),
+                    ...section.complements.items.map((item, idx) =>
+                      React.createElement('div', {
+                        className: 'flex items-center text-blue-200 text-sm mb-2',
+                        key: `comp-${idx}`
+                      }, item)
+                    )
+                  ]
+                )
+              ]
+            )
+          ]
+        );
+
+      case "quote":
+        return React.createElement('div', { 
+          className: 'bg-purple-900/30 rounded-lg p-6 mb-6 text-center border border-purple-500',
+          key: `quote-${index}`
+        },
+          [
+            React.createElement('h3', { 
+              className: 'text-xl font-bold mb-3 text-purple-300',
+              key: 'content'
+            }, section.content),
+            
+            React.createElement('blockquote', {
+              className: 'text-white text-lg italic mb-4',
+              key: 'quote'
+            }, section.quote),
+            
+            React.createElement('p', {
+              className: 'text-gray-300',
+              key: 'note'
+            }, section.note)
+          ]
+        );
+
+      case "final-note":
+        return React.createElement('div', { 
+          className: 'bg-blue-900/30 rounded-lg p-4 mb-4 text-center',
+          key: `final-${index}`
+        },
+          React.createElement('p', {
+            className: 'text-blue-200 font-semibold'
+          }, section.content)
+        );
+
+      default:
         return React.createElement('div', { 
           className: 'mb-6',
           key: `default-${index}`
@@ -545,7 +743,7 @@ default:
           ]
         );
     }
-  };
+};
 
   return React.createElement('div', { 
     className: 'bg-gray-800 rounded-lg p-6 mb-8 border-l-4 border-blue-500'
