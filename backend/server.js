@@ -1,40 +1,58 @@
 import express from 'express';
 import cors from 'cors';
-import pkg from 'pg';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3001;
 
-// Middleware
+// Middleware CORS
 app.use(cors());
 app.use(express.json());
 
-// Configuration de la base de données
-const pool = new pg.Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
+// Configuration PostgreSQL
+const pool = {
+  query: async (queryText) => {
+    // Cette fonction sera exécutée côté serveur Heroku
+    const { Client } = await import('pg');
+    const client = new Client({
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false }
+    });
+    await client.connect();
+    try {
+      const result = await client.query(queryText);
+      return result;
+    } finally {
+      await client.end();
+    }
+  }
+};
+
+// Routes
+app.get('/', (req, res) => {
+  res.json({ 
+    message: '🚀 Buffett API is running!',
+    endpoints: [
+      '/api/buffett-scores',
+      '/api/cash-flow-momentum',
+      '/api/value-trap-detector', 
+      '/api/short-risk-detector',
+      '/health'
+    ]
+  });
+});
+
+app.get('/health', async (req, res) => {
+  try {
+    await pool.query('SELECT 1');
+    res.json({ status: 'OK', database: 'Connected' });
+  } catch (error) {
+    res.status(500).json({ status: 'ERROR', error: error.message });
   }
 });
 
-// Test de connexion
-pool.connect((err, client, release) => {
-  if (err) {
-    console.error('❌ Erreur de connexion à la base de données:', err);
-  } else {
-    console.log('✅ Connecté à la base de données PostgreSQL');
-    release();
-  }
-});
-
-// 1. Endpoint SCORE BUFFETT
+// 1. SCORE BUFFETT
 app.get('/api/buffett-scores', async (req, res) => {
   try {
-    console.log('📊 Requête Buffett reçue');
-    
     const query = `
       SELECT 
         e.symbole,
@@ -44,7 +62,6 @@ app.get('/api/buffett-scores', async (req, res) => {
         a.roic,
         a."debtToEquity" as debt_to_equity,
         a."netMargin" as net_margin,
-        -- Score Buffett
         CASE 
           WHEN a.roe > 15 AND a.roic > 12 AND a."debtToEquity" < 2 
                AND a."netMargin" > 8 THEN '⭐ ELITE'
@@ -60,30 +77,19 @@ app.get('/api/buffett-scores', async (req, res) => {
         AND a.roe BETWEEN 5 AND 50
         AND a.roic BETWEEN 5 AND 40
         AND a."netMargin" BETWEEN 0 AND 40
-      ORDER BY 
-        a.roe DESC,
-        a.roic DESC
+      ORDER BY a.roe DESC, a.roic DESC
       LIMIT 100;
     `;
-
     const result = await pool.query(query);
-    console.log(`✅ ${result.rows.length} entreprises Buffett trouvées`);
-    
     res.json(result.rows);
   } catch (error) {
-    console.error('❌ Erreur Buffett:', error);
-    res.status(500).json({ 
-      error: 'Erreur interne du serveur',
-      details: error.message 
-    });
+    res.status(500).json({ error: error.message });
   }
 });
 
-// 2. Endpoint MOMENTUM CASH FLOW
+// 2. CASH FLOW MOMENTUM  
 app.get('/api/cash-flow-momentum', async (req, res) => {
   try {
-    console.log('💰 Requête Cash Flow reçue');
-    
     const query = `
       SELECT 
         e.symbole,
@@ -107,25 +113,16 @@ app.get('/api/cash-flow-momentum', async (req, res) => {
       ORDER BY fcf_yield DESC
       LIMIT 50;
     `;
-
     const result = await pool.query(query);
-    console.log(`✅ ${result.rows.length} entreprises Cash Flow trouvées`);
-    
     res.json(result.rows);
   } catch (error) {
-    console.error('❌ Erreur Cash Flow:', error);
-    res.status(500).json({ 
-      error: 'Erreur interne du serveur',
-      details: error.message 
-    });
+    res.status(500).json({ error: error.message });
   }
 });
 
-// 3. Endpoint VALUE TRAP DETECTOR
+// 3. VALUE TRAP DETECTOR
 app.get('/api/value-trap-detector', async (req, res) => {
   try {
-    console.log('🎯 Requête Value Trap reçue');
-    
     const query = `
       SELECT 
         e.symbole,
@@ -137,9 +134,7 @@ app.get('/api/value-trap-detector', async (req, res) => {
         a."evToEbitda",
         a.roe,
         a.roic,
-        -- GRAHAM NUMBER CORRIGÉ (approximation)
         ROUND(SQRT(22.5 * a."peRatio" * a."pbRatio")::numeric, 2) as graham_multiple,
-        -- SCORE VALUE AMÉLIORÉ
         CASE 
           WHEN a."peRatio" < 8 AND a."pbRatio" < 1 AND a.roe > 15 AND a.roic > 12 THEN '⭐ ELITE_VALUE'
           WHEN a."peRatio" < 12 AND a."pbRatio" < 1.5 AND a.roe > 12 AND a.roic > 10 THEN '✅ SOLID_VALUE'
@@ -148,7 +143,6 @@ app.get('/api/value-trap-detector', async (req, res) => {
           WHEN a."peRatio" < a."pbRatio" * 10 THEN '🎯 DEEP_VALUE'
           ELSE '🚫 SPECULATIVE'
         END as value_grade,
-        -- SCORE AMÉLIORÉ : ROE/P/E + marge de sécurité P/B
         ROUND(
           (a.roe / NULLIF(a."peRatio", 0.1)) * 
           (1 / NULLIF(GREATEST(a."pbRatio", 0.3), 5)) * 
@@ -164,25 +158,16 @@ app.get('/api/value-trap-detector', async (req, res) => {
       ORDER BY value_score DESC, a."peRatio" ASC
       LIMIT 50;
     `;
-
     const result = await pool.query(query);
-    console.log(`✅ ${result.rows.length} entreprises Value Trap analysées`);
-    
     res.json(result.rows);
   } catch (error) {
-    console.error('❌ Erreur Value Trap:', error);
-    res.status(500).json({ 
-      error: 'Erreur interne du serveur',
-      details: error.message 
-    });
+    res.status(500).json({ error: error.message });
   }
 });
 
-// 4. Endpoint SHORT RISK DETECTOR
+// 4. SHORT RISK DETECTOR
 app.get('/api/short-risk-detector', async (req, res) => {
   try {
-    console.log('🚨 Requête Short Risk reçue');
-    
     const query = `
       SELECT
         e.symbole,
@@ -194,7 +179,6 @@ app.get('/api/short-risk-detector', async (req, res) => {
         df.net_income,
         df.operating_cash_flow,
         df.revenue,
-        -- SIGNAL DE DANGER AMÉLIORÉ
         CASE
           WHEN a."debtToEquity" > 4 OR (e.secteur = 'Financial Services' AND a."debtToEquity" > 8) THEN '🚨 DANGEROUS_DEBT'
           WHEN a."interestCoverage" < 1 THEN '🔥 INTEREST_CRISIS'
@@ -204,7 +188,6 @@ app.get('/api/short-risk-detector', async (req, res) => {
           WHEN df.net_income < 0 AND df.revenue < 10000000 THEN '📉 MICRO_CAP_DISTRESS'
           ELSE '👀 WATCH'
         END as short_signal,
-        -- SCORE DE RISQUE AMÉLIORÉ
         (CASE WHEN a."debtToEquity" > 3 THEN 3 WHEN a."debtToEquity" > 2 THEN 2 ELSE 0 END +
          CASE WHEN a."interestCoverage" < 1 THEN 3 WHEN a."interestCoverage" < 1.5 THEN 2 ELSE 0 END +
          CASE WHEN a."currentRatio" < 0.8 THEN 3 WHEN a."currentRatio" < 1 THEN 2 ELSE 0 END +
@@ -213,59 +196,19 @@ app.get('/api/short-risk-detector', async (req, res) => {
       FROM analyses_buffett a
       JOIN entreprises e ON a.entreprise_id = e.id
       JOIN donnees_financieres df ON a.entreprise_id = df.entreprise_id
-        AND df.date = (
-          SELECT MAX(date) FROM donnees_financieres df2
-          WHERE df2.entreprise_id = a.entreprise_id
-        )
-      WHERE
-        (a."debtToEquity" > 2 OR
-         a."interestCoverage" < 1.5 OR
-         a."currentRatio" < 1 OR
-         df.net_income < 0 OR
-         df.operating_cash_flow < 0)
+        AND df.date = (SELECT MAX(date) FROM donnees_financieres df2 WHERE df2.entreprise_id = a.entreprise_id)
+      WHERE (a."debtToEquity" > 2 OR a."interestCoverage" < 1.5 OR a."currentRatio" < 1 OR df.net_income < 0 OR df.operating_cash_flow < 0)
         AND df.market_cap > 50000000
       ORDER BY risk_score DESC, a."debtToEquity" DESC
       LIMIT 100;
     `;
-
     const result = await pool.query(query);
-    console.log(`✅ ${result.rows.length} entreprises à risque détectées`);
-    
     res.json(result.rows);
   } catch (error) {
-    console.error('❌ Erreur Short Risk:', error);
-    res.status(500).json({ 
-      error: 'Erreur interne du serveur',
-      details: error.message 
-    });
+    res.status(500).json({ error: error.message });
   }
 });
 
-// Endpoint de santé
-app.get('/health', async (req, res) => {
-  try {
-    await pool.query('SELECT 1');
-    res.json({ 
-      status: 'OK', 
-      message: 'API Buffett opérationnelle',
-      database: 'Connectée'
-    });
-  } catch (error) {
-    res.status(500).json({ 
-      status: 'ERROR', 
-      message: 'Problème de connexion base de données',
-      error: error.message 
-    });
-  }
-});
-
-// Démarrer le serveur
 app.listen(port, () => {
-  console.log(`🚀 API Server running on http://localhost:${port}`);
-  console.log(`📊 Endpoints disponibles:`);
-  console.log(`   • Buffett Scores: http://localhost:${port}/api/buffett-scores`);
-  console.log(`   • Cash Flow: http://localhost:${port}/api/cash-flow-momentum`);
-  console.log(`   • Value Trap: http://localhost:${port}/api/value-trap-detector`);
-  console.log(`   • Short Risk: http://localhost:${port}/api/short-risk-detector`);
-  console.log(`   • Health: http://localhost:${port}/health`);
+  console.log(`🚀 Server running on port ${port}`);
 });
