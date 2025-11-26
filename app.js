@@ -150,160 +150,6 @@ const ANALYSIS_DESCRIPTIONS = {
       }
     };
 
-const InvestmentApp = () => {
-    const [activeTab, setActiveTab] = useState('buffett');
-    const [buffettData, setBuffettData] = useState([]);
-    const [cashFlowData, setCashFlowData] = useState([]);
-    const [valueTrapData, setValueTrapData] = useState([]);
-    const [shortRiskData, setShortRiskData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [filter, setFilter] = useState('ALL');
-    const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
-    const [globalSearch, setGlobalSearch] = useState('');
-        
-    // 🔥 PAGINATION
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(100);
-    const [totalPages, setTotalPages] = useState(1);
-
-    // 🔥 DONNÉES FILTRÉES (UNE SEULE DÉCLARATION)
-    const filteredBuffettData = filter === 'ALL' 
-        ? buffettData 
-        : buffettData.filter(item => item.buffett_rating && item.buffett_rating.includes(filter));
-
-    const filteredCashFlowData = cashFlowData || [];
-    const filteredValueTrapData = valueTrapData || [];
-    const filteredShortRiskData = shortRiskData || [];
-
-  
-    // 🔥 FONCTION PAGINATION
-    const getPaginatedData = (data) => {
-        if (!data || data.length === 0) return [];
-        
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        return data.slice(startIndex, endIndex);
-    };
-
-    // 🔥 CALCUL DES PAGES
-    useEffect(() => {
-        let dataLength = 0;
-        switch (activeTab) {
-            case 'buffett': dataLength = filteredBuffettData.length; break;
-            case 'cashflow': dataLength = filteredCashFlowData.length; break;
-            case 'valuetrap': dataLength = filteredValueTrapData.length; break;
-            case 'shortrisk': dataLength = filteredShortRiskData.length; break;
-            default: dataLength = 0;
-        }
-        setTotalPages(Math.ceil(dataLength / itemsPerPage));
-        
-        // Revenir à la page 1 quand les données changent
-        setCurrentPage(1);
-    }, [filteredBuffettData, filteredCashFlowData, filteredValueTrapData, filteredShortRiskData, activeTab, itemsPerPage]);
-   
-
-     // 🔥 FONCTION DE TRI
-    const handleSort = (key) => {
-        let direction = 'asc';
-        if (sortConfig.key === key && sortConfig.direction === 'asc') {
-            direction = 'desc';
-        }
-        setSortConfig({ key, direction });
-    };
-
-    // 🔥 FONCTION DE RECHERCHE GLOBALE
-    const handleGlobalSearch = (searchTerm) => {
-        setGlobalSearch(searchTerm);
-    };
-  
-  const getSortedAndFilteredData = (data) => {
-    if (!data) return [];
-    
-    let filteredData = data;
-    
-    // Filtrage par recherche globale
-    if (globalSearch) {
-        const searchLower = globalSearch.toLowerCase();
-        filteredData = data.filter(item => 
-            Object.values(item).some(value => 
-                value && value.toString().toLowerCase().includes(searchLower)
-            )
-        );
-    }
-
-    // Tri
-    if (sortConfig.key) {
-        filteredData = [...filteredData].sort((a, b) => {
-            let aValue = a[sortConfig.key];
-            let bValue = b[sortConfig.key];
-
-            if (aValue === null || aValue === undefined) aValue = '';
-            if (bValue === null || bValue === undefined) bValue = '';
-
-            if (!isNaN(parseFloat(aValue)) && !isNaN(parseFloat(bValue))) {
-                aValue = parseFloat(aValue);
-                bValue = parseFloat(bValue);
-            }
-
-            if (aValue < bValue) {
-                return sortConfig.direction === 'asc' ? -1 : 1;
-            }
-            if (aValue > bValue) {
-                return sortConfig.direction === 'asc' ? 1 : -1;
-            }
-            return 0;
-        });
-    }
-
-    return filteredData;
-};
-  
-  const fetchAllData = async () => {
-        try {
-            setLoading(true);
-            setError(null);
-
-            // Charger toutes les données en parallèle
-            const [buffettResponse, cashFlowResponse, valueTrapResponse, shortRiskResponse] = await Promise.all([
-                fetch(`${API_BASE_URL}/buffett-scores`),
-                fetch(`${API_BASE_URL}/cash-flow-momentum`),
-                fetch(`${API_BASE_URL}/value-trap-detector`),
-                fetch(`${API_BASE_URL}/short-risk-detector`)
-            ]);
-
-            // Vérifier les réponses
-            if (!buffettResponse.ok) throw new Error('Erreur Buffett API');
-            if (!cashFlowResponse.ok) throw new Error('Erreur Cash Flow API');
-            if (!valueTrapResponse.ok) throw new Error('Erreur Value Trap API');
-            if (!shortRiskResponse.ok) throw new Error('Erreur Short Risk API');
-
-            // Convertir en JSON
-            const [buffettResult, cashFlowResult, valueTrapResult, shortRiskResult] = await Promise.all([
-                buffettResponse.json(),
-                cashFlowResponse.json(),
-                valueTrapResponse.json(),
-                shortRiskResponse.json()
-            ]);
-
-            setBuffettData(buffettResult);
-            setCashFlowData(cashFlowResult);
-            setValueTrapData(valueTrapResult);
-            setShortRiskData(shortRiskResult);
-
-        } catch (err) {
-            console.error('Erreur de chargement:', err);
-            setError(`Erreur de connexion: ${err.message}. Vérifiez que le serveur backend est démarré.`);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-  useEffect(() => {
-        fetchAllData();
-    }, []);
-
-  
   // Composant Barre de Recherche Globale
 const GlobalSearchBar = ({ searchTerm, onSearch, dataCount }) => {
     return React.createElement('div', { 
@@ -367,276 +213,128 @@ const SortableHeader = ({ column, sortConfig, onSort, children }) => {
     );
 };
 
-    // Fonctions de style (inchangées)
-    const getBuffettRatingColor = (rating) => {
-        if (rating.includes('ELITE')) return 'bg-gradient-yellow';
-        if (rating.includes('STRONG')) return 'bg-gradient-green';
-        if (rating.includes('DECENT')) return 'bg-gradient-blue';
-        return 'bg-gradient-red';
-    };
-
-    const getValueColor = (value, excellent, good) => {
-        if (value >= excellent) return 'text-green-400 font-bold';
-        if (value >= good) return 'text-yellow-400 font-bold';
-        return 'text-red-400 font-bold';
-    };
-
-    const getCashFlowColor = (value, type) => {
-        if (type === 'margin') {
-            if (value > 0.3) return 'text-green-400 font-bold';
-            if (value > 0.15) return 'text-yellow-400 font-bold';
-            return 'text-red-400 font-bold';
-        } else if (type === 'yield') {
-            if (value > 0.06) return 'text-green-400 font-bold';
-            if (value > 0.03) return 'text-yellow-400 font-bold';
-            return 'text-red-400 font-bold';
-        }
-    };
-
-    const getValueGradeColor = (grade) => {
-        if (grade.includes('ELITE_VALUE')) return 'value-badge-elite';
-        if (grade.includes('SOLID_VALUE')) return 'value-badge-solid';
-        if (grade.includes('VALUE_TRAP')) return 'value-badge-trap';
-        if (grade.includes('POTENTIAL_VALUE')) return 'value-badge-potential';
-        if (grade.includes('DEEP_VALUE')) return 'value-badge-deep';
-        return 'value-badge-speculative';
-    };
-
-    const getValueScoreColor = (score) => {
-        if (score > 30) return 'score-excellent';
-        if (score > 20) return 'score-good';
-        if (score > 10) return 'score-average';
-        return 'score-poor';
-    };
-
-    const getShortSignalColor = (signal) => {
-        if (signal.includes('DANGEROUS_DEBT')) return 'risk-badge-danger';
-        if (signal.includes('INTEREST_CRISIS')) return 'risk-badge-crisis';
-        if (signal.includes('LIQUIDITY_PROBLEM')) return 'risk-badge-liquidity';
-        if (signal.includes('BURNING_CASH')) return 'risk-badge-cashburn';
-        if (signal.includes('DOUBLE_TROUBLE')) return 'risk-badge-trouble';
-        if (signal.includes('MICRO_CAP_DISTRESS')) return 'risk-badge-distress';
-        return 'risk-badge-watch';
-    };
-
-    const getRiskScoreColor = (score) => {
-        if (score >= 8) return 'risk-score-critical';
-        if (score >= 5) return 'risk-score-high';
-        if (score >= 3) return 'risk-score-medium';
-        return 'risk-score-low';
-    };
-
-    const getMetricColor = (value, metric) => {
-        if (metric === 'debt_to_equity') {
-            return value > 3 ? 'metric-danger' : value > 2 ? 'metric-warning' : 'metric-ok';
-        }
-        if (metric === 'interest_coverage') {
-            return value < 1 ? 'metric-danger' : value < 1.5 ? 'metric-warning' : 'metric-ok';
-        }
-        if (metric === 'current_ratio') {
-            return value < 0.8 ? 'metric-danger' : value < 1 ? 'metric-warning' : 'metric-ok';
-        }
-        if (metric === 'net_income') {
-            return value < 0 ? 'metric-danger' : 'metric-ok';
-        }
-        if (metric === 'operating_cash_flow') {
-            return value < 0 ? 'metric-danger' : 'metric-ok';
-        }
-        return 'metric-ok';
-    };
-
-    const formatMillions = (value) => {
-        if (value === null || value === undefined) return 'N/A';
-        if (value < 0) {
-            return `-$${Math.abs(value / 1000000).toFixed(1)}M`;
-        }
-        return `$${(value / 1000000).toFixed(1)}M`;
-    };
-
-    const formatPercent = (value) => {
-        if (value === null || value === undefined) return 'N/A';
-        return `${(value * 100).toFixed(1)}%`;
-    };
-
-    if (error) {
-        return React.createElement('div', { 
-            className: 'min-h-screen bg-gray-900 flex items-center justify-center text-white' 
-        },
-            React.createElement('div', { className: 'text-center' },
-                [
-                    React.createElement('h2', { 
-                        className: 'text-2xl mb-4 text-red-400',
-                        key: 'error-title'
-                    }, '❌ Erreur de Connexion'),
-                    React.createElement('p', { 
-                        className: 'mb-4',
-                        key: 'error-message' 
-                    }, error),
-                    React.createElement('button', {
-                        key: 'retry-btn',
-                        onClick: fetchAllData,
-                        className: 'px-6 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors'
-                    }, '🔄 Réessayer')
-                ]
-            )
-        );
+// Composant Pagination réutilisable
+const Pagination = ({ currentPage, totalPages, onPageChange, itemsPerPage, onItemsPerPageChange }) => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    
+    if (endPage - startPage + 1 < maxVisiblePages) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
-
-    if (loading) {
-        return React.createElement('div', { 
-            className: 'min-h-screen bg-gray-900 flex items-center justify-center' 
-        },
-            React.createElement('div', { className: 'text-center text-white' },
-                [
-                    React.createElement('div', { 
-                        className: 'animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto mb-4',
-                        key: 'spinner'
-                    }),
-                    React.createElement('p', { key: 'text' }, 'Chargement des données depuis la base de données...')
-                ]
-            )
-        );
+    
+    for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
     }
-
- return React.createElement('div', { className: 'min-h-screen bg-gray-900 text-white p-4' },
-        React.createElement('div', { className: 'max-w-7xl mx-auto' },
-            [
-                // En-tête
-                React.createElement('div', { key: 'header' },
-                    [
-                        React.createElement('h1', { 
-                            className: 'text-3xl font-bold mb-2',
-                            key: 'title'
-                        }, '📊 Analyse Investissement - Données Réelles'),
-                        React.createElement('p', { 
-                            className: 'text-gray-400 mb-6',
-                            key: 'subtitle' 
-                        }, 'Données en direct depuis PostgreSQL'),
-                        React.createElement('div', { 
-                            className: 'bg-green-500 text-white p-3 rounded-lg mb-4',
-                            key: 'live-warning'
-                        }, '✅ Connecté à la base de données en temps réel')
-                    ]
-                ),
-                
-                // Onglets
-                React.createElement('div', { 
-                    className: 'tabs-container',
-                    key: 'tabs'
-                },
-                    React.createElement('div', { className: 'tabs' },
-                        [
-                            React.createElement('button', {
-                                key: 'buffett',
-                                onClick: () => setActiveTab('buffett'),
-                                className: `tab ${activeTab === 'buffett' ? 'active' : ''}`
-                            }, `📈 Score Buffett (${buffettData.length})`),
-                            React.createElement('button', {
-                                key: 'cashflow',
-                                onClick: () => setActiveTab('cashflow'),
-                                className: `tab ${activeTab === 'cashflow' ? 'active' : ''}`
-                            }, `💰 Cash Flow (${cashFlowData.length})`),
-                            React.createElement('button', {
-                                key: 'valuetrap',
-                                onClick: () => setActiveTab('valuetrap'),
-                                className: `tab ${activeTab === 'valuetrap' ? 'active' : ''}`
-                            }, `🎯 Value Trap (${valueTrapData.length})`),
-                            React.createElement('button', {
-                                key: 'shortrisk',
-                                onClick: () => setActiveTab('shortrisk'),
-                                className: `tab ${activeTab === 'shortrisk' ? 'active' : ''}`
-                            }, `🚨 Short Risk (${shortRiskData.length})`)
-                        ]
+    
+    return React.createElement('div', {
+        className: 'flex flex-col md:flex-row items-center justify-between gap-4 mt-6 p-4 bg-gray-800 rounded-lg'
+    },
+        [
+            // Sélecteur d'items par page
+            React.createElement('div', {
+                className: 'flex items-center gap-3',
+                key: 'items-per-page'
+            },
+                [
+                    React.createElement('span', {
+                        className: 'text-gray-400 text-sm',
+                        key: 'label'
+                    }, 'Lignes par page:'),
+                    
+                    React.createElement('select', {
+                        value: itemsPerPage,
+                        onChange: (e) => onItemsPerPageChange(Number(e.target.value)),
+                        className: 'bg-gray-700 text-white px-3 py-1 rounded border border-gray-600',
+                        key: 'select'
+                    },
+                        [25, 50, 100, 200].map(value =>
+                            React.createElement('option', {
+                                value: value,
+                                key: value
+                            }, value)
+                        )
                     )
-                ),
-
-                  // Contenu des onglets
-          activeTab === 'buffett' 
-              ? React.createElement('div', { key: 'buffett-tab' },
-                  [
-                      React.createElement(DescriptionBox, {
-                          key: 'description',
-                          analysisType: 'buffett'
-                      }),
-                      React.createElement(BuffettTab, {
-                          key: 'table',
-                          data: filteredBuffettData,
-                          filter: filter,
-                          onFilterChange: setFilter,
-                          getRatingColor: getBuffettRatingColor,
-                          getValueColor: getValueColor,
-                          sortConfig: sortConfig,
-                          onSort: handleSort,
-                          searchTerm: globalSearch,
-                          onSearch: handleGlobalSearch,
-                          getSortedAndFilteredData: getSortedAndFilteredData,
-                          getPaginatedData: getPaginatedData,
-                          currentPage: currentPage,
-                          totalPages: totalPages,
-                          onPageChange: setCurrentPage,
-                          itemsPerPage: itemsPerPage,
-                          onItemsPerPageChange: setItemsPerPage
-                      })
-                  ]
-              )
-              : activeTab === 'cashflow'
-              ? React.createElement(CashFlowTab, {
-                  key: 'cashflow-tab',
-                  data: filteredCashFlowData,
-                  getCashFlowColor: getCashFlowColor,
-                  formatMillions: formatMillions,
-                  formatPercent: formatPercent,
-                  sortConfig: sortConfig,
-                  onSort: handleSort,
-                  searchTerm: globalSearch,
-                  onSearch: handleGlobalSearch,
-                  getSortedAndFilteredData: getSortedAndFilteredData,
-                  getPaginatedData: getPaginatedData,
-                  currentPage: currentPage,
-                  totalPages: totalPages,
-                  onPageChange: setCurrentPage,
-                  itemsPerPage: itemsPerPage,
-                  onItemsPerPageChange: setItemsPerPage
-              })
-              : activeTab === 'valuetrap'
-              ? React.createElement(ValueTrapTab, {
-                  key: 'valuetrap-tab',
-                  data: filteredValueTrapData,
-                  getValueGradeColor: getValueGradeColor,
-                  getValueScoreColor: getValueScoreColor,
-                  sortConfig: sortConfig,
-                  onSort: handleSort,
-                  searchTerm: globalSearch,
-                  onSearch: handleGlobalSearch,
-                  getSortedAndFilteredData: getSortedAndFilteredData,
-                  getPaginatedData: getPaginatedData,
-                  currentPage: currentPage,
-                  totalPages: totalPages,
-                  onPageChange: setCurrentPage,
-                  itemsPerPage: itemsPerPage,
-                  onItemsPerPageChange: setItemsPerPage
-              })
-              : React.createElement(ShortRiskTab, {
-                  key: 'shortrisk-tab',
-                  data: filteredShortRiskData,
-                  getShortSignalColor: getShortSignalColor,
-                  getRiskScoreColor: getRiskScoreColor,
-                  getMetricColor: getMetricColor,
-                  formatMillions: formatMillions,
-                  sortConfig: sortConfig,
-                  onSort: handleSort,
-                  searchTerm: globalSearch,
-                  onSearch: handleGlobalSearch,
-                  getSortedAndFilteredData: getSortedAndFilteredData,
-                  getPaginatedData: getPaginatedData,
-                  currentPage: currentPage,
-                  totalPages: totalPages,
-                  onPageChange: setCurrentPage,
-                  itemsPerPage: itemsPerPage,
-                  onItemsPerPageChange: setItemsPerPage
-              })
-            ]
-        )
+                ]
+            ),
+            
+            // Contrôles de pagination
+            React.createElement('div', {
+                className: 'flex items-center gap-2',
+                key: 'pagination-controls'
+            },
+                [
+                    // Bouton Première page
+                    React.createElement('button', {
+                        onClick: () => onPageChange(1),
+                        disabled: currentPage === 1,
+                        className: `px-3 py-1 rounded ${
+                            currentPage === 1 
+                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+                                : 'bg-gray-600 text-white hover:bg-gray-500'
+                        }`,
+                        key: 'first'
+                    }, '⏮️ Première'),
+                    
+                    // Bouton Précédent
+                    React.createElement('button', {
+                        onClick: () => onPageChange(currentPage - 1),
+                        disabled: currentPage === 1,
+                        className: `px-3 py-1 rounded ${
+                            currentPage === 1 
+                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+                                : 'bg-gray-600 text-white hover:bg-gray-500'
+                        }`,
+                        key: 'prev'
+                    }, '◀️ Précédent'),
+                    
+                    // Numéros de page
+                    ...pages.map(page =>
+                        React.createElement('button', {
+                            onClick: () => onPageChange(page),
+                            className: `px-3 py-1 rounded ${
+                                page === currentPage 
+                                    ? 'bg-blue-600 text-white font-bold' 
+                                    : 'bg-gray-600 text-white hover:bg-gray-500'
+                            }`,
+                            key: page
+                        }, page)
+                    ),
+                    
+                    // Bouton Suivant
+                    React.createElement('button', {
+                        onClick: () => onPageChange(currentPage + 1),
+                        disabled: currentPage === totalPages,
+                        className: `px-3 py-1 rounded ${
+                            currentPage === totalPages 
+                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+                                : 'bg-gray-600 text-white hover:bg-gray-500'
+                        }`,
+                        key: 'next'
+                    }, 'Suivant ▶️'),
+                    
+                    // Bouton Dernière page
+                    React.createElement('button', {
+                        onClick: () => onPageChange(totalPages),
+                        disabled: currentPage === totalPages,
+                        className: `px-3 py-1 rounded ${
+                            currentPage === totalPages 
+                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+                                : 'bg-gray-600 text-white hover:bg-gray-500'
+                        }`,
+                        key: 'last'
+                    }, 'Dernière ⏭️')
+                ]
+            ),
+            
+            // Informations de pagination
+            React.createElement('div', {
+                className: 'text-gray-400 text-sm',
+                key: 'page-info'
+            }, `Page ${currentPage} sur ${totalPages}`)
+        ]
     );
 };
 
@@ -1008,131 +706,6 @@ const DescriptionBox = ({ analysisType }) => {
       ...desc.sections.map((section, index) => renderSection(section, index))
     ]
   );
-};
-
-// Composant Pagination réutilisable
-const Pagination = ({ currentPage, totalPages, onPageChange, itemsPerPage, onItemsPerPageChange }) => {
-    const pages = [];
-    const maxVisiblePages = 5;
-    
-    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-    
-    if (endPage - startPage + 1 < maxVisiblePages) {
-        startPage = Math.max(1, endPage - maxVisiblePages + 1);
-    }
-    
-    for (let i = startPage; i <= endPage; i++) {
-        pages.push(i);
-    }
-    
-    return React.createElement('div', {
-        className: 'flex flex-col md:flex-row items-center justify-between gap-4 mt-6 p-4 bg-gray-800 rounded-lg'
-    },
-        [
-            // Sélecteur d'items par page
-            React.createElement('div', {
-                className: 'flex items-center gap-3',
-                key: 'items-per-page'
-            },
-                [
-                    React.createElement('span', {
-                        className: 'text-gray-400 text-sm',
-                        key: 'label'
-                    }, 'Lignes par page:'),
-                    
-                    React.createElement('select', {
-                        value: itemsPerPage,
-                        onChange: (e) => onItemsPerPageChange(Number(e.target.value)),
-                        className: 'bg-gray-700 text-white px-3 py-1 rounded border border-gray-600',
-                        key: 'select'
-                    },
-                        [25, 50, 100, 200].map(value =>
-                            React.createElement('option', {
-                                value: value,
-                                key: value
-                            }, value)
-                        )
-                    )
-                ]
-            ),
-            
-            // Contrôles de pagination
-            React.createElement('div', {
-                className: 'flex items-center gap-2',
-                key: 'pagination-controls'
-            },
-                [
-                    // Bouton Première page
-                    React.createElement('button', {
-                        onClick: () => onPageChange(1),
-                        disabled: currentPage === 1,
-                        className: `px-3 py-1 rounded ${
-                            currentPage === 1 
-                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
-                                : 'bg-gray-600 text-white hover:bg-gray-500'
-                        }`,
-                        key: 'first'
-                    }, '⏮️ Première'),
-                    
-                    // Bouton Précédent
-                    React.createElement('button', {
-                        onClick: () => onPageChange(currentPage - 1),
-                        disabled: currentPage === 1,
-                        className: `px-3 py-1 rounded ${
-                            currentPage === 1 
-                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
-                                : 'bg-gray-600 text-white hover:bg-gray-500'
-                        }`,
-                        key: 'prev'
-                    }, '◀️ Précédent'),
-                    
-                    // Numéros de page
-                    ...pages.map(page =>
-                        React.createElement('button', {
-                            onClick: () => onPageChange(page),
-                            className: `px-3 py-1 rounded ${
-                                page === currentPage 
-                                    ? 'bg-blue-600 text-white font-bold' 
-                                    : 'bg-gray-600 text-white hover:bg-gray-500'
-                            }`,
-                            key: page
-                        }, page)
-                    ),
-                    
-                    // Bouton Suivant
-                    React.createElement('button', {
-                        onClick: () => onPageChange(currentPage + 1),
-                        disabled: currentPage === totalPages,
-                        className: `px-3 py-1 rounded ${
-                            currentPage === totalPages 
-                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
-                                : 'bg-gray-600 text-white hover:bg-gray-500'
-                        }`,
-                        key: 'next'
-                    }, 'Suivant ▶️'),
-                    
-                    // Bouton Dernière page
-                    React.createElement('button', {
-                        onClick: () => onPageChange(totalPages),
-                        disabled: currentPage === totalPages,
-                        className: `px-3 py-1 rounded ${
-                            currentPage === totalPages 
-                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
-                                : 'bg-gray-600 text-white hover:bg-gray-500'
-                        }`,
-                        key: 'last'
-                    }, 'Dernière ⏭️')
-                ]
-            ),
-            
-            // Informations de pagination
-            React.createElement('div', {
-                className: 'text-gray-400 text-sm',
-                key: 'page-info'
-            }, `Page ${currentPage} sur ${totalPages}`)
-        ]
-    );
 };
 
 // Composant Onglet Buffett 
@@ -2026,6 +1599,435 @@ const ValueTrapTab = ({
 };
 
 
+// COMPOSANT PRINCIPAL - InvestmentApp
+const InvestmentApp = () => {
+    const [activeTab, setActiveTab] = useState('buffett');
+    const [buffettData, setBuffettData] = useState([]);
+    const [cashFlowData, setCashFlowData] = useState([]);
+    const [valueTrapData, setValueTrapData] = useState([]);
+    const [shortRiskData, setShortRiskData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [filter, setFilter] = useState('ALL');
+    const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+    const [globalSearch, setGlobalSearch] = useState('');
+        
+    // PAGINATION
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(100);
+    const [totalPages, setTotalPages] = useState(1);
+
+    // DONNÉES FILTRÉES
+    const filteredBuffettData = filter === 'ALL' 
+        ? buffettData 
+        : buffettData.filter(item => item.buffett_rating && item.buffett_rating.includes(filter));
+
+    const filteredCashFlowData = cashFlowData || [];
+    const filteredValueTrapData = valueTrapData || [];
+    const filteredShortRiskData = shortRiskData || [];
+
+    // 🔥 CORRECTION : UNE SEULE DÉFINITION de getSortedAndFilteredData
+    const getSortedAndFilteredData = (data) => {
+        if (!data) return [];
+        
+        // Filtrage par recherche globale
+        let filteredData = data;
+        if (globalSearch) {
+            const searchLower = globalSearch.toLowerCase();
+            filteredData = data.filter(item => 
+                Object.values(item).some(value => 
+                    value && value.toString().toLowerCase().includes(searchLower)
+                )
+            );
+        }
+    
+        // Tri
+        if (sortConfig.key) {
+            filteredData = [...filteredData].sort((a, b) => {
+                let aValue = a[sortConfig.key];
+                let bValue = b[sortConfig.key];
+    
+                // Gestion des valeurs nulles/undefined
+                if (aValue === null || aValue === undefined) aValue = '';
+                if (bValue === null || bValue === undefined) bValue = '';
+    
+                // Conversion en nombre si possible
+                if (!isNaN(parseFloat(aValue)) && !isNaN(parseFloat(bValue))) {
+                    aValue = parseFloat(aValue);
+                    bValue = parseFloat(bValue);
+                }
+    
+                if (aValue < bValue) {
+                    return sortConfig.direction === 'asc' ? -1 : 1;
+                }
+                if (aValue > bValue) {
+                    return sortConfig.direction === 'asc' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+    
+        return filteredData;
+    };
+  
+    // FONCTION PAGINATION
+    const getPaginatedData = (data) => {
+        if (!data || data.length === 0) return [];
+        
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        return data.slice(startIndex, endIndex);
+    };
+
+    // CALCUL DES PAGES
+    useEffect(() => {
+        let dataLength = 0;
+        switch (activeTab) {
+            case 'buffett': dataLength = filteredBuffettData.length; break;
+            case 'cashflow': dataLength = filteredCashFlowData.length; break;
+            case 'valuetrap': dataLength = filteredValueTrapData.length; break;
+            case 'shortrisk': dataLength = filteredShortRiskData.length; break;
+            default: dataLength = 0;
+        }
+        setTotalPages(Math.ceil(dataLength / itemsPerPage));
+        
+        // Revenir à la page 1 quand les données changent
+        setCurrentPage(1);
+    }, [filteredBuffettData, filteredCashFlowData, filteredValueTrapData, filteredShortRiskData, activeTab, itemsPerPage]);
+   
+    // FONCTION DE TRI
+    const handleSort = (key) => {
+        let direction = 'asc';
+        if (sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setSortConfig({ key, direction });
+    };
+
+    // FONCTION DE RECHERCHE GLOBALE
+    const handleGlobalSearch = (searchTerm) => {
+        setGlobalSearch(searchTerm);
+    };
+
+    const fetchAllData = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+
+            // Charger toutes les données en parallèle
+            const [buffettResponse, cashFlowResponse, valueTrapResponse, shortRiskResponse] = await Promise.all([
+                fetch(`${API_BASE_URL}/buffett-scores`),
+                fetch(`${API_BASE_URL}/cash-flow-momentum`),
+                fetch(`${API_BASE_URL}/value-trap-detector`),
+                fetch(`${API_BASE_URL}/short-risk-detector`)
+            ]);
+
+            // Vérifier les réponses
+            if (!buffettResponse.ok) throw new Error('Erreur Buffett API');
+            if (!cashFlowResponse.ok) throw new Error('Erreur Cash Flow API');
+            if (!valueTrapResponse.ok) throw new Error('Erreur Value Trap API');
+            if (!shortRiskResponse.ok) throw new Error('Erreur Short Risk API');
+
+            // Convertir en JSON
+            const [buffettResult, cashFlowResult, valueTrapResult, shortRiskResult] = await Promise.all([
+                buffettResponse.json(),
+                cashFlowResponse.json(),
+                valueTrapResponse.json(),
+                shortRiskResponse.json()
+            ]);
+
+            setBuffettData(buffettResult);
+            setCashFlowData(cashFlowResult);
+            setValueTrapData(valueTrapResult);
+            setShortRiskData(shortRiskResult);
+
+        } catch (err) {
+            console.error('Erreur de chargement:', err);
+            setError(`Erreur de connexion: ${err.message}. Vérifiez que le serveur backend est démarré.`);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchAllData();
+    }, []);
+
+  
+
+
+    // Fonctions de style (inchangées)
+    const getBuffettRatingColor = (rating) => {
+        if (rating.includes('ELITE')) return 'bg-gradient-yellow';
+        if (rating.includes('STRONG')) return 'bg-gradient-green';
+        if (rating.includes('DECENT')) return 'bg-gradient-blue';
+        return 'bg-gradient-red';
+    };
+
+    const getValueColor = (value, excellent, good) => {
+        if (value >= excellent) return 'text-green-400 font-bold';
+        if (value >= good) return 'text-yellow-400 font-bold';
+        return 'text-red-400 font-bold';
+    };
+
+    const getCashFlowColor = (value, type) => {
+        if (type === 'margin') {
+            if (value > 0.3) return 'text-green-400 font-bold';
+            if (value > 0.15) return 'text-yellow-400 font-bold';
+            return 'text-red-400 font-bold';
+        } else if (type === 'yield') {
+            if (value > 0.06) return 'text-green-400 font-bold';
+            if (value > 0.03) return 'text-yellow-400 font-bold';
+            return 'text-red-400 font-bold';
+        }
+    };
+
+    const getValueGradeColor = (grade) => {
+        if (grade.includes('ELITE_VALUE')) return 'value-badge-elite';
+        if (grade.includes('SOLID_VALUE')) return 'value-badge-solid';
+        if (grade.includes('VALUE_TRAP')) return 'value-badge-trap';
+        if (grade.includes('POTENTIAL_VALUE')) return 'value-badge-potential';
+        if (grade.includes('DEEP_VALUE')) return 'value-badge-deep';
+        return 'value-badge-speculative';
+    };
+
+    const getValueScoreColor = (score) => {
+        if (score > 30) return 'score-excellent';
+        if (score > 20) return 'score-good';
+        if (score > 10) return 'score-average';
+        return 'score-poor';
+    };
+
+    const getShortSignalColor = (signal) => {
+        if (signal.includes('DANGEROUS_DEBT')) return 'risk-badge-danger';
+        if (signal.includes('INTEREST_CRISIS')) return 'risk-badge-crisis';
+        if (signal.includes('LIQUIDITY_PROBLEM')) return 'risk-badge-liquidity';
+        if (signal.includes('BURNING_CASH')) return 'risk-badge-cashburn';
+        if (signal.includes('DOUBLE_TROUBLE')) return 'risk-badge-trouble';
+        if (signal.includes('MICRO_CAP_DISTRESS')) return 'risk-badge-distress';
+        return 'risk-badge-watch';
+    };
+
+    const getRiskScoreColor = (score) => {
+        if (score >= 8) return 'risk-score-critical';
+        if (score >= 5) return 'risk-score-high';
+        if (score >= 3) return 'risk-score-medium';
+        return 'risk-score-low';
+    };
+
+    const getMetricColor = (value, metric) => {
+        if (metric === 'debt_to_equity') {
+            return value > 3 ? 'metric-danger' : value > 2 ? 'metric-warning' : 'metric-ok';
+        }
+        if (metric === 'interest_coverage') {
+            return value < 1 ? 'metric-danger' : value < 1.5 ? 'metric-warning' : 'metric-ok';
+        }
+        if (metric === 'current_ratio') {
+            return value < 0.8 ? 'metric-danger' : value < 1 ? 'metric-warning' : 'metric-ok';
+        }
+        if (metric === 'net_income') {
+            return value < 0 ? 'metric-danger' : 'metric-ok';
+        }
+        if (metric === 'operating_cash_flow') {
+            return value < 0 ? 'metric-danger' : 'metric-ok';
+        }
+        return 'metric-ok';
+    };
+
+    const formatMillions = (value) => {
+        if (value === null || value === undefined) return 'N/A';
+        if (value < 0) {
+            return `-$${Math.abs(value / 1000000).toFixed(1)}M`;
+        }
+        return `$${(value / 1000000).toFixed(1)}M`;
+    };
+
+    const formatPercent = (value) => {
+        if (value === null || value === undefined) return 'N/A';
+        return `${(value * 100).toFixed(1)}%`;
+    };
+
+    if (error) {
+        return React.createElement('div', { 
+            className: 'min-h-screen bg-gray-900 flex items-center justify-center text-white' 
+        },
+            React.createElement('div', { className: 'text-center' },
+                [
+                    React.createElement('h2', { 
+                        className: 'text-2xl mb-4 text-red-400',
+                        key: 'error-title'
+                    }, '❌ Erreur de Connexion'),
+                    React.createElement('p', { 
+                        className: 'mb-4',
+                        key: 'error-message' 
+                    }, error),
+                    React.createElement('button', {
+                        key: 'retry-btn',
+                        onClick: fetchAllData,
+                        className: 'px-6 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors'
+                    }, '🔄 Réessayer')
+                ]
+            )
+        );
+    }
+
+    if (loading) {
+        return React.createElement('div', { 
+            className: 'min-h-screen bg-gray-900 flex items-center justify-center' 
+        },
+            React.createElement('div', { className: 'text-center text-white' },
+                [
+                    React.createElement('div', { 
+                        className: 'animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto mb-4',
+                        key: 'spinner'
+                    }),
+                    React.createElement('p', { key: 'text' }, 'Chargement des données depuis la base de données...')
+                ]
+            )
+        );
+    }
+
+ return React.createElement('div', { className: 'min-h-screen bg-gray-900 text-white p-4' },
+        React.createElement('div', { className: 'max-w-7xl mx-auto' },
+            [
+                // En-tête
+                React.createElement('div', { key: 'header' },
+                    [
+                        React.createElement('h1', { 
+                            className: 'text-3xl font-bold mb-2',
+                            key: 'title'
+                        }, '📊 Analyse Investissement - Données Réelles'),
+                        React.createElement('p', { 
+                            className: 'text-gray-400 mb-6',
+                            key: 'subtitle' 
+                        }, 'Données en direct depuis PostgreSQL'),
+                        React.createElement('div', { 
+                            className: 'bg-green-500 text-white p-3 rounded-lg mb-4',
+                            key: 'live-warning'
+                        }, '✅ Connecté à la base de données en temps réel')
+                    ]
+                ),
+                
+                // Onglets
+                React.createElement('div', { 
+                    className: 'tabs-container',
+                    key: 'tabs'
+                },
+                    React.createElement('div', { className: 'tabs' },
+                        [
+                            React.createElement('button', {
+                                key: 'buffett',
+                                onClick: () => setActiveTab('buffett'),
+                                className: `tab ${activeTab === 'buffett' ? 'active' : ''}`
+                            }, `📈 Score Buffett (${buffettData.length})`),
+                            React.createElement('button', {
+                                key: 'cashflow',
+                                onClick: () => setActiveTab('cashflow'),
+                                className: `tab ${activeTab === 'cashflow' ? 'active' : ''}`
+                            }, `💰 Cash Flow (${cashFlowData.length})`),
+                            React.createElement('button', {
+                                key: 'valuetrap',
+                                onClick: () => setActiveTab('valuetrap'),
+                                className: `tab ${activeTab === 'valuetrap' ? 'active' : ''}`
+                            }, `🎯 Value Trap (${valueTrapData.length})`),
+                            React.createElement('button', {
+                                key: 'shortrisk',
+                                onClick: () => setActiveTab('shortrisk'),
+                                className: `tab ${activeTab === 'shortrisk' ? 'active' : ''}`
+                            }, `🚨 Short Risk (${shortRiskData.length})`)
+                        ]
+                    )
+                ),
+
+                  // Contenu des onglets
+          activeTab === 'buffett' 
+              ? React.createElement('div', { key: 'buffett-tab' },
+                  [
+                      React.createElement(DescriptionBox, {
+                          key: 'description',
+                          analysisType: 'buffett'
+                      }),
+                      React.createElement(BuffettTab, {
+                          key: 'table',
+                          data: filteredBuffettData,
+                          filter: filter,
+                          onFilterChange: setFilter,
+                          getRatingColor: getBuffettRatingColor,
+                          getValueColor: getValueColor,
+                          sortConfig: sortConfig,
+                          onSort: handleSort,
+                          searchTerm: globalSearch,
+                          onSearch: handleGlobalSearch,
+                          getSortedAndFilteredData: getSortedAndFilteredData,
+                          getPaginatedData: getPaginatedData,
+                          currentPage: currentPage,
+                          totalPages: totalPages,
+                          onPageChange: setCurrentPage,
+                          itemsPerPage: itemsPerPage,
+                          onItemsPerPageChange: setItemsPerPage
+                      })
+                  ]
+              )
+              : activeTab === 'cashflow'
+              ? React.createElement(CashFlowTab, {
+                  key: 'cashflow-tab',
+                  data: filteredCashFlowData,
+                  getCashFlowColor: getCashFlowColor,
+                  formatMillions: formatMillions,
+                  formatPercent: formatPercent,
+                  sortConfig: sortConfig,
+                  onSort: handleSort,
+                  searchTerm: globalSearch,
+                  onSearch: handleGlobalSearch,
+                  getSortedAndFilteredData: getSortedAndFilteredData,
+                  getPaginatedData: getPaginatedData,
+                  currentPage: currentPage,
+                  totalPages: totalPages,
+                  onPageChange: setCurrentPage,
+                  itemsPerPage: itemsPerPage,
+                  onItemsPerPageChange: setItemsPerPage
+              })
+              : activeTab === 'valuetrap'
+              ? React.createElement(ValueTrapTab, {
+                  key: 'valuetrap-tab',
+                  data: filteredValueTrapData,
+                  getValueGradeColor: getValueGradeColor,
+                  getValueScoreColor: getValueScoreColor,
+                  sortConfig: sortConfig,
+                  onSort: handleSort,
+                  searchTerm: globalSearch,
+                  onSearch: handleGlobalSearch,
+                  getSortedAndFilteredData: getSortedAndFilteredData,
+                  getPaginatedData: getPaginatedData,
+                  currentPage: currentPage,
+                  totalPages: totalPages,
+                  onPageChange: setCurrentPage,
+                  itemsPerPage: itemsPerPage,
+                  onItemsPerPageChange: setItemsPerPage
+              })
+              : React.createElement(ShortRiskTab, {
+                  key: 'shortrisk-tab',
+                  data: filteredShortRiskData,
+                  getShortSignalColor: getShortSignalColor,
+                  getRiskScoreColor: getRiskScoreColor,
+                  getMetricColor: getMetricColor,
+                  formatMillions: formatMillions,
+                  sortConfig: sortConfig,
+                  onSort: handleSort,
+                  searchTerm: globalSearch,
+                  onSearch: handleGlobalSearch,
+                  getSortedAndFilteredData: getSortedAndFilteredData,
+                  getPaginatedData: getPaginatedData,
+                  currentPage: currentPage,
+                  totalPages: totalPages,
+                  onPageChange: setCurrentPage,
+                  itemsPerPage: itemsPerPage,
+                  onItemsPerPageChange: setItemsPerPage
+              })
+            ]
+        )
+    );
+};
 
 // Rendu de l'application
 const root = ReactDOM.createRoot(document.getElementById('root'));
