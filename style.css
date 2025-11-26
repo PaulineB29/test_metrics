@@ -302,8 +302,3 @@ body {
 .accordion-content[style*="display: block"] {
   animation: slideDown 0.3s ease;
 }
-
-/* Indicateurs de métriques dangereuses */
-.metric-danger { color: #dc2626; font-weight: bold; background: #fef2f2; padding: 2px 6px; border-radius: 4px; }
-.metric-warning { color: #d97706; font-weight: bold; background: #fffbeb; padding: 2px 6px; border-radius: 4px; }
-.metric-ok { color: #059669; font-weight: bold; background: #f0fdf4; padding: 2px 6px; border-radius: 4px; }
