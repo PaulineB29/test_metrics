@@ -411,11 +411,6 @@ const SortableHeader = ({ column, sortConfig, onSort, children }) => {
     );
 };
 
-  // Filtrage pour les autres onglets (par défaut tous)
-    const filteredCashFlowData = cashFlowData;
-    const filteredValueTrapData = valueTrapData;
-    const filteredShortRiskData = shortRiskData;
-
     // Fonctions de style (inchangées)
     const getBuffettRatingColor = (rating) => {
         if (rating.includes('ELITE')) return 'bg-gradient-yellow';
