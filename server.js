@@ -54,7 +54,7 @@ app.get('/health', async (req, res) => {
 app.get('/api/buffett-scores', async (req, res) => {
   try {
     const query = `
-      SELECT 
+      SELECT DISTINCT ON (e.symbole)
         e.symbole,
         e.nom,
         e.secteur,
@@ -62,23 +62,25 @@ app.get('/api/buffett-scores', async (req, res) => {
         a.roic,
         a."debtToEquity" as debt_to_equity,
         a."netMargin" as net_margin,
-        CASE 
-          WHEN a.roe > 15 AND a.roic > 12 AND a."debtToEquity" < 2 
-               AND a."netMargin" > 8 THEN '⭐ ELITE'
-          WHEN a.roe > 10 AND a.roic > 8 AND a."debtToEquity" < 3 
-               AND a."netMargin" > 5 THEN '✅ STRONG'  
-          WHEN a.roe > 5 AND a.roic > 5 AND a."debtToEquity" < 5 
-               AND a."netMargin" > 0 THEN '🟡 DECENT'
-          ELSE '🔴 WEAK'
+        CASE
+            WHEN a.roe > 20 AND a.roic > 15 AND a."debtToEquity" < 1.5
+                 AND a."netMargin" > 15 THEN '⭐ ELITE'
+            WHEN a.roe > 12 AND a.roic > 10 AND a."debtToEquity" < 2
+                 AND a."netMargin" > 8 THEN '✅ STRONG'
+            WHEN a.roe > 8 AND a.roic > 6 AND a."debtToEquity" < 3
+                 AND a."netMargin" > 3 THEN '🟡 DECENT'
+            ELSE '🔴 WEAK'
         END as buffett_rating
-      FROM analyses_buffett a
-      JOIN entreprises e ON a.entreprise_id = e.id
-      WHERE a.roe > 0 
-        AND a.roe BETWEEN 5 AND 50
-        AND a.roic BETWEEN 5 AND 40
-        AND a."netMargin" BETWEEN 0 AND 40
-      ORDER BY a.roe DESC, a.roic DESC
-      LIMIT 100;
+    FROM analyses_buffett a
+    JOIN entreprises e ON a.entreprise_id = e.id
+    WHERE a.roe > 0
+      AND a.roe BETWEEN 1 AND 500       
+      AND a.roic BETWEEN 1 AND 200        
+      AND a."netMargin" BETWEEN -10 AND 80  
+      AND a."debtToEquity" IS NOT NULL
+      AND a."debtToEquity" < 15         
+    ORDER BY e.symbole, a.roe DESC, a.roic DESC;
+
     `;
     const result = await pool.query(query);
     res.json(result.rows);
