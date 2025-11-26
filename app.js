@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'https://esm.sh/react@18'
 import ReactDOM from 'https://esm.sh/react-dom@18/client'
 
 // URL de base de l'API
-const API_BASE_URL = 'https://buffett-api.onrender.com/api';
+const API_BASE_URL = 'https://test-metrics-hwmp.onrender.com/api';
 
 const InvestmentApp = () => {
     const [activeTab, setActiveTab] = useState('buffett');
