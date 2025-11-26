@@ -287,7 +287,7 @@ const InvestmentApp = () => {
             ]
         )
     );
-}
+};
 
 // Composant Onglet Buffett (inchangé)
 const BuffettTab = ({ data, filter, onFilterChange, getRatingColor, getValueColor }) => {
