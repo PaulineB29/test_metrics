@@ -127,37 +127,41 @@ app.get('/api/cash-flow-momentum', async (req, res) => {
 app.get('/api/value-trap-detector', async (req, res) => {
   try {
     const query = `
-      SELECT 
-        e.symbole,
-        e.nom,
-        e.secteur,
-        a."peRatio" as pe_ratio,
-        a."pbRatio" as pb_ratio,
-        a."priceToFCF" as price_to_fcf,
-        a."evToEbitda",
-        a.roe,
-        a.roic,
-        ROUND(SQRT(22.5 * a."peRatio" * a."pbRatio")::numeric, 2) as graham_multiple,
-        CASE 
-          WHEN a."peRatio" < 8 AND a."pbRatio" < 1 AND a.roe > 15 AND a.roic > 12 THEN '⭐ ELITE_VALUE'
-          WHEN a."peRatio" < 12 AND a."pbRatio" < 1.5 AND a.roe > 12 AND a.roic > 10 THEN '✅ SOLID_VALUE'
-          WHEN a."peRatio" < 6 AND a."pbRatio" < 0.8 AND a.roe < 8 THEN '⚠️ VALUE_TRAP'
-          WHEN a."peRatio" < 15 AND a."pbRatio" < 2 AND a.roe > 8 THEN '📊 POTENTIAL_VALUE'
-          WHEN a."peRatio" < a."pbRatio" * 10 THEN '🎯 DEEP_VALUE'
-          ELSE '🚫 SPECULATIVE'
-        END as value_grade,
-        ROUND(
-          (a.roe / NULLIF(a."peRatio", 0.1)) * 
-          (1 / NULLIF(GREATEST(a."pbRatio", 0.3), 5)) * 
-          CASE WHEN a.roic > a.roe * 0.8 THEN 1.2 ELSE 1 END
-        , 2) as value_score
+      SELECT
+          e.symbole,
+          e.nom,
+          e.secteur,
+          a."peRatio" as pe_ratio,
+          a."pbRatio" as pb_ratio,
+          a."priceToFCF" as price_to_fcf,
+          a."evToEbitda",
+          a.roe,
+          a.roic,
+          -- GRAHAM NUMBER CORRIGÉ (approximation)
+          ROUND(SQRT(22.5 * a."peRatio" * a."pbRatio")::numeric, 2) as graham_multiple,
+          -- SCORE VALUE AMÉLIORÉ
+          CASE
+              WHEN a."peRatio" < 8 AND a."pbRatio" < 1 AND a.roe > 15 AND a.roic > 12 THEN '⭐ ELITE_VALUE'
+              WHEN a."peRatio" < 12 AND a."pbRatio" < 1.5 AND a.roe > 12 AND a.roic > 10 THEN '✅ SOLID_VALUE'
+              WHEN a."peRatio" < 6 AND a."pbRatio" < 0.8 AND a.roe < 8 THEN '⚠️ VALUE_TRAP'
+              WHEN a."peRatio" < 15 AND a."pbRatio" < 2 AND a.roe > 8 THEN '📊 POTENTIAL_VALUE'
+              WHEN a."peRatio" < a."pbRatio" * 10 THEN '🎯 DEEP_VALUE'
+              ELSE '🚫 SPECULATIVE'
+          END as value_grade,
+          -- SCORE AMÉLIORÉ : ROE/P/E + marge de sécurité P/B
+          ROUND(
+              (a.roe / NULLIF(a."peRatio", 0.1)) *
+              (1 / NULLIF(GREATEST(a."pbRatio", 0.3), 5)) *  -- Évite division par trop petit
+              CASE WHEN a.roic > a.roe * 0.8 THEN 1.2 ELSE 1 END  -- Bonus qualité
+          , 2) as value_score
       FROM analyses_buffett a
       JOIN entreprises e ON a.entreprise_id = e.id
-      WHERE a."peRatio" BETWEEN 4 AND 25
-        AND a."pbRatio" BETWEEN 0.3 AND 3
-        AND a.roe > 6
-        AND a."priceToFCF" BETWEEN 5 AND 30
-        AND a.roic > 5
+      WHERE a."peRatio" BETWEEN 4 AND 25  -- Plage élargie
+        AND a."pbRatio" BETWEEN 0.3 AND 3  -- Plage élargie
+        AND a.roe > 6  -- Rentabilité minimale
+        AND a."priceToFCF" BETWEEN 5 AND 30  -- FCF yield raisonnable
+        AND a.roic > 5  -- Efficacité capitalistique
+        AND a.roic > a.roe * 0.7  -- Cohérence ROE/ROIC
       ORDER BY value_score DESC, a."peRatio" ASC
       LIMIT 50;
     `;
