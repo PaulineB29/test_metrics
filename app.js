@@ -162,7 +162,16 @@ const InvestmentApp = () => {
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
     const [globalSearch, setGlobalSearch] = useState('');
     const [currentData, setCurrentData] = useState([]);
-  
+
+    // 🔥 AJOUTER : Définir les fonctions de filtrage AVANT le useEffect
+    const filteredBuffettData = filter === 'ALL' 
+        ? buffettData 
+        : buffettData.filter(item => item.buffett_rating.includes(filter));
+
+    const filteredCashFlowData = cashFlowData;
+    const filteredValueTrapData = valueTrapData;
+    const filteredShortRiskData = shortRiskData;
+
     useEffect(() => {
         switch (activeTab) {
             case 'buffett':
@@ -239,7 +248,51 @@ const InvestmentApp = () => {
 
         return filteredData;
     };
+  const fetchAllData = async () => {
+        try {
+            setLoading(true);
+            setError(null);
 
+            // Charger toutes les données en parallèle
+            const [buffettResponse, cashFlowResponse, valueTrapResponse, shortRiskResponse] = await Promise.all([
+                fetch(`${API_BASE_URL}/buffett-scores`),
+                fetch(`${API_BASE_URL}/cash-flow-momentum`),
+                fetch(`${API_BASE_URL}/value-trap-detector`),
+                fetch(`${API_BASE_URL}/short-risk-detector`)
+            ]);
+
+            // Vérifier les réponses
+            if (!buffettResponse.ok) throw new Error('Erreur Buffett API');
+            if (!cashFlowResponse.ok) throw new Error('Erreur Cash Flow API');
+            if (!valueTrapResponse.ok) throw new Error('Erreur Value Trap API');
+            if (!shortRiskResponse.ok) throw new Error('Erreur Short Risk API');
+
+            // Convertir en JSON
+            const [buffettResult, cashFlowResult, valueTrapResult, shortRiskResult] = await Promise.all([
+                buffettResponse.json(),
+                cashFlowResponse.json(),
+                valueTrapResponse.json(),
+                shortRiskResponse.json()
+            ]);
+
+            setBuffettData(buffettResult);
+            setCashFlowData(cashFlowResult);
+            setValueTrapData(valueTrapResult);
+            setShortRiskData(shortRiskResult);
+
+        } catch (err) {
+            console.error('Erreur de chargement:', err);
+            setError(`Erreur de connexion: ${err.message}. Vérifiez que le serveur backend est démarré.`);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+  useEffect(() => {
+        fetchAllData();
+    }, []);
+
+  
   // Composant Barre de Recherche Globale
 const GlobalSearchBar = ({ searchTerm, onSearch, dataCount }) => {
     return React.createElement('div', { 
@@ -302,45 +355,7 @@ const SortableHeader = ({ column, sortConfig, onSort, children }) => {
         ]
     );
 };
-  const fetchAllData = async () => {
-        try {
-            setLoading(true);
-            setError(null);
 
-            // Charger toutes les données en parallèle
-            const [buffettResponse, cashFlowResponse, valueTrapResponse, shortRiskResponse] = await Promise.all([
-                fetch(`${API_BASE_URL}/buffett-scores`),
-                fetch(`${API_BASE_URL}/cash-flow-momentum`),
-                fetch(`${API_BASE_URL}/value-trap-detector`),
-                fetch(`${API_BASE_URL}/short-risk-detector`)
-            ]);
-
-            // Vérifier les réponses
-            if (!buffettResponse.ok) throw new Error('Erreur Buffett API');
-            if (!cashFlowResponse.ok) throw new Error('Erreur Cash Flow API');
-            if (!valueTrapResponse.ok) throw new Error('Erreur Value Trap API');
-            if (!shortRiskResponse.ok) throw new Error('Erreur Short Risk API');
-
-            // Convertir en JSON
-            const [buffettResult, cashFlowResult, valueTrapResult, shortRiskResult] = await Promise.all([
-                buffettResponse.json(),
-                cashFlowResponse.json(),
-                valueTrapResponse.json(),
-                shortRiskResponse.json()
-            ]);
-
-            setBuffettData(buffettResult);
-            setCashFlowData(cashFlowResult);
-            setValueTrapData(valueTrapResult);
-            setShortRiskData(shortRiskResult);
-
-        } catch (err) {
-            console.error('Erreur de chargement:', err);
-            setError(`Erreur de connexion: ${err.message}. Vérifiez que le serveur backend est démarré.`);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     
     
