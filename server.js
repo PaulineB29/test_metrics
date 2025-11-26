@@ -207,8 +207,7 @@ app.get('/api/short-risk-detector', async (req, res) => {
       WHERE (a."debtToEquity" > 2 OR a."interestCoverage" < 1.5 OR a."currentRatio" < 1 OR df.net_income < 0 OR df.operating_cash_flow < 0)
         AND df.market_cap > 50000000
       ORDER BY risk_score DESC, a."debtToEquity" DESC
-      LIMIT 100;
-    `;
+      `;
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (error) {
