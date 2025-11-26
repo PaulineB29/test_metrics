@@ -5,143 +5,147 @@ import ReactDOM from 'https://esm.sh/react-dom@18/client'
 const API_BASE_URL = 'https://test-metrics-hwmp.onrender.com/api';
 
 const ANALYSIS_DESCRIPTIONS = {
-      buffett: {
-        title: "📈 Buffett Quality Score - Explication pour les Investisseurs",
-        sections: [
-          {
-            title: "🎯 L'Héritage de Warren Buffett",
-            content: "Cette analyse applique les principes fondamentaux du plus grand investisseur de tous les temps : Warren Buffett. Elle identifie les entreprises d'exception selon sa philosophie : 'Achetez des entreprises merveilleuses à des prix raisonnables.'"
-          },
-          {
-            title: "📊 Les 4 Piliers de la Qualité Buffett",
-            type: "columns",
-            items: [
-              {
-                emoji: "💰",
-                title: "Rentabilité (ROE)",
-                description: "Return on Equity : Ce que l'entreprise gagne avec l'argent des actionnaires",
-                quote: "Buffett dit : 'Je cherche des entreprises qui génèrent au moins 15% de ROE'"
-              },
-              {
-                emoji: "🏭", 
-                title: "Efficacité (ROIC)",
-                description: "Return on Invested Capital : Efficacité de tous les capitaux investis",
-                note: "Pourquoi c'est important : Mesure la qualité du management"
-              },
-              {
-                emoji: "⚖️",
-                title: "Solidité (Dette/Equity)", 
-                description: "Dette par rapport aux capitaux propres : Résistance aux crises",
-                rule: "La règle d'or : Moins de dette = plus de résilience"
-              },
-              {
-                emoji: "💸",
-                title: "Marge (Net Margin)",
-                description: "Marge nette : Pourcentage de bénéfice sur chaque vente", 
-                indicator: "L'indicateur : Pouvoir de fixation des prix et avantage concurrentiel"
-              }
-            ]
-          },
-          {
-            title: "🏆 Notre Système de Notation",
-            type: "table",
-            headers: ["Rating", "Signification", "Critères"],
-            rows: [
-              ["⭐ ELITE", "Excellence absolue", "ROE > 20%, ROIC > 15%, Dette < 1.5x, Marge > 15%"],
-              ["✅ STRONG", "Très haute qualité", "ROE > 12%, ROIC > 10%, Dette < 2x, Marge > 8%"],
-              ["🟡 DECENT", "Bonne qualité", "ROE > 8%, ROIC > 6%, Dette < 3x, Marge > 3%"],
-              ["🔴 WEAK", "À améliorer", "Ne répond pas aux critères de qualité"]
-            ]
-          },
-          {
-            title: "💡 La Philosophie Buffett en Action",
-            type: "comparison", 
-            good: {
-              title: "Ce que Buffett recherche :",
-              items: [
-                "✅ Avantage concurrentiel durable (marges élevées)",
-                "✅ Management compétent (ROIC élevé)",
-                "✅ Peu de dette (résistance aux crises)", 
-                "✅ Rentabilité constante (ROE stable)"
-              ]
-            },
-            bad: {
-              title: "Ce qu'il évite :",
-              items: [
-                "❌ Entreprises cycliques sans avantage concurrentiel",
-                "❌ Dette excessive",
-                "❌ Marges faibles ou erratiques",
-                "❌ Management médiocre"
-              ]
-            }
-          },
-          {
-            title: "🎯 Comment Utiliser Ces Résultats",
-            type: "usage",
-            items: [
-              {
-                target: "Pour les investisseurs long terme",
-                action: "→ Ciblez ⭐ ELITE et ✅ STRONG pour votre portefeuille de base"
-              },
-              {
-                target: "Pour les investisseurs valeur", 
-                action: "→ Étudiez 🟡 DECENT pour trouver des opportunités de revalorisation"
-              },
-              {
-                target: "Pour tous les investisseurs",
-                action: "→ Évitez 🔴 WEAK sauf analyse approfondie"
-              }
-            ]
-          },
-          {
-            title: "🚨 Points de Vigilance",
-            type: "warnings",
-            limitations: {
-              title: "Les limites de l'analyse :",
-              items: [
-                "📊 Données historiques (le passé ne garantit pas le futur)",
-                "🌍 Contexte sectoriel (certains secteurs ont naturellement plus de dette)",
-                "🔄 Évolutions récentes (vérifiez les dernières actualités)"
-              ]
-            },
-            complements: {
-              title: "Les compléments nécessaires :",
-              items: [
-                "📈 Croissance future (les bons chiffres doivent continuer)",
-                "🏢 Avantage concurrentiel (est-il durable ?)",
-                "👨‍💼 Qualité du management (intégrité et compétence)"
-              ]
-            }
-          },
-          {
-            type: "quote",
-            content: "🌟 Le Secret de Buffett",
-            quote: "\"Quand vous trouvez une entreprise exceptionnelle, gardez-la longtemps. Le temps est l'ami des merveilleuses entreprises.\"",
-            note: "Cette analyse vous donne la première étape : identifier ces entreprises exceptionnelles."
-          },
-          {
-            type: "final-note",
-            content: "Utilisez ces résultats comme point de départ pour vos recherches, pas comme décision finale d'investissement. La qualité durable paie toujours à long terme ! 📈💰"
-          }
-        ]
+  buffett: {
+    title: "Buffett Quality Score - Explication pour les Investisseurs",
+    sections: [
+      {
+        title: "L'Héritage de Warren Buffett",
+        content: "Cette analyse applique les principes fondamentaux du plus grand investisseur de tous les temps : Warren Buffett. Elle identifie les entreprises d'exception selon sa philosophie : 'Achetez des entreprises merveilleuses à des prix raisonnables.'",
+        expanded: true // ← Premier élément ouvert par défaut
       },
+      {
+        title: "Les 4 Piliers de la Qualité Buffett",
+        type: "columns",
+        items: [
+          {
+            title: "Rentabilité (ROE)",
+            description: "Return on Equity : Ce que l'entreprise gagne avec l'argent des actionnaires",
+            quote: "Buffett dit : 'Je cherche des entreprises qui génèrent au moins 15% de ROE'"
+          },
+          {
+            title: "Efficacité (ROIC)",
+            description: "Return on Invested Capital : Efficacité de tous les capitaux investis",
+            note: "Pourquoi c'est important : Mesure la qualité du management"
+          },
+          {
+            title: "Solidité (Dette/Equity)", 
+            description: "Dette par rapport aux capitaux propres : Résistance aux crises",
+            rule: "La règle d'or : Moins de dette = plus de résilience"
+          },
+          {
+            title: "Marge (Net Margin)",
+            description: "Marge nette : Pourcentage de bénéfice sur chaque vente", 
+            indicator: "L'indicateur : Pouvoir de fixation des prix et avantage concurrentiel"
+          }
+        ],
+        expanded: false
+      },
+      {
+        title: "Notre Système de Notation",
+        type: "table",
+        headers: ["Rating", "Signification", "Critères"],
+        rows: [
+          ["⭐ ELITE", "Excellence absolue", "ROE > 20%, ROIC > 15%, Dette < 1.5x, Marge > 15%"],
+          ["✅ STRONG", "Très haute qualité", "ROE > 12%, ROIC > 10%, Dette < 2x, Marge > 8%"],
+          ["🟡 DECENT", "Bonne qualité", "ROE > 8%, ROIC > 6%, Dette < 3x, Marge > 3%"],
+          ["🔴 WEAK", "À améliorer", "Ne répond pas aux critères de qualité"]
+        ],
+        expanded: false
+      },
+      {
+        title: "La Philosophie Buffett en Action",
+        type: "comparison", 
+        good: {
+          title: "Ce que Buffett recherche :",
+          items: [
+            "✅ Avantage concurrentiel durable (marges élevées)",
+            "✅ Management compétent (ROIC élevé)",
+            "✅ Peu de dette (résistance aux crises)", 
+            "✅ Rentabilité constante (ROE stable)"
+          ]
+        },
+        bad: {
+          title: "Ce qu'il évite :",
+          items: [
+            "❌ Entreprises cycliques sans avantage concurrentiel",
+            "❌ Dette excessive",
+            "❌ Marges faibles ou erratiques",
+            "❌ Management médiocre"
+          ]
+        },
+        expanded: false
+      },
+      {
+        title: "Comment Utiliser Ces Résultats",
+        type: "usage",
+        items: [
+          {
+            target: "Pour les investisseurs long terme",
+            action: "→ Ciblez ⭐ ELITE et ✅ STRONG pour votre portefeuille de base"
+          },
+          {
+            target: "Pour les investisseurs valeur", 
+            action: "→ Étudiez 🟡 DECENT pour trouver des opportunités de revalorisation"
+          },
+          {
+            target: "Pour tous les investisseurs",
+            action: "→ Évitez 🔴 WEAK sauf analyse approfondie"
+          }
+        ],
+        expanded: false
+      },
+      {
+        title: "Points de Vigilance",
+        type: "warnings",
+        limitations: {
+          title: "Les limites de l'analyse :",
+          items: [
+            "Données historiques (le passé ne garantit pas le futur)",
+            "Contexte sectoriel (certains secteurs ont naturellement plus de dette)",
+            "Évolutions récentes (vérifiez les dernières actualités)"
+          ]
+        },
+        complements: {
+          title: "Les compléments nécessaires :",
+          items: [
+            "Croissance future (les bons chiffres doivent continuer)",
+            "Avantage concurrentiel (est-il durable ?)",
+            "Qualité du management (intégrité et compétence)"
+          ]
+        },
+        expanded: false
+      },
+      {
+        type: "quote",
+        content: "🌟 Le Secret de Buffett",
+        quote: "\"Quand vous trouvez une entreprise exceptionnelle, gardez-la longtemps. Le temps est l'ami des merveilleuses entreprises.\"",
+        note: "Cette analyse vous donne la première étape : identifier ces entreprises exceptionnelles.",
+        expanded: false
+      },
+      {
+        type: "final-note",
+        content: "Utilisez ces résultats comme point de départ pour vos recherches, pas comme décision finale d'investissement. La qualité durable paie toujours à long terme ! 📈💰",
+        expanded: false
+      }
+    ]
+  },
       // Ajouter les autres analyses plus tard
       cashflow: {
-        title: "💰 Cash Flow - Les Générateurs de Trésorerie",
+        title: "Cash Flow - Les Générateurs de Trésorerie",
         sections: [
           {
-            title: "🎯 Ce que cette analyse mesure",
+            title: "Ce que cette analyse mesure",
             content: "Cette analyse identifie les entreprises qui génèrent d'excellents flux de trésorerie - le véritable 'oxygène' d'une entreprise."
           }
           // ... (vous pourrez compléter plus tard)
         ]
       },
       valuetrap: {
-        title: "🎯 Value Trap Detector - Éviter les Fausses Bonnes Affaires",
+        title: "Value Trap Detector - Éviter les Fausses Bonnes Affaires",
         sections: [] // À compléter
       },
       shortrisk: {
-        title: "🔍 Short Risk - Détecteur de Détresse",
+        title: "Short Risk - Détecteur de Détresse",
         sections: [] // À compléter
       }
     };
