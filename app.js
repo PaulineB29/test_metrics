@@ -541,7 +541,7 @@ const SortableHeader = ({ column, sortConfig, onSort, children }) => {
                   activeTab === 'buffett' 
                     ? React.createElement('div', { key: 'buffett-tab' },
                         [
-                          React.createElement(DescriptionBox, {
+                          React.createElement(Desc, {
                             key: 'description',
                             analysisType: 'buffett'
                           }),
@@ -606,74 +606,6 @@ const DescriptionBox = ({ analysisType }) => {
       ...prev,
       [index]: !prev[index]
     }));
-  };
-
-  const renderSection = (section, index) => {
-    const isExpanded = expandedSections[index];
-    
-    // Si c'est le premier élément (toujours visible)
-    if (index === 0) {
-      return React.createElement('div', { 
-        className: 'mb-6',
-        key: `default-${index}`
-      },
-        [
-          section.title && React.createElement('h3', { 
-            className: 'text-lg font-bold mb-3 text-white',
-            key: 'title'
-          }, section.title),
-          
-          React.createElement('p', {
-            className: 'text-gray-300 leading-relaxed',
-            key: 'content'
-          }, section.content)
-        ]
-      );
-    }
-
-    // Pour les autres sections (menu déroulant)
-    return React.createElement('div', { 
-      className: 'mb-2',
-      key: `accordion-${index}`
-    },
-      [
-        // Bouton d'en-tête cliquable
-        React.createElement('button', {
-          onClick: () => toggleSection(index),
-          className: `w-full text-left p-4 rounded-lg transition-all ${
-            isExpanded ? 'bg-gray-750' : 'bg-gray-800 hover:bg-gray-750'
-          }`,
-          key: 'header'
-        },
-          [
-            React.createElement('div', {
-              className: 'flex justify-between items-center',
-              key: 'header-content'
-            },
-              [
-                React.createElement('h3', {
-                  className: 'font-bold text-white',
-                  key: 'title'
-                }, section.title),
-                
-                React.createElement('span', {
-                  className: 'text-xl',
-                  key: 'arrow'
-                }, isExpanded ? '▼' : '▶')
-              ]
-            )
-          ]
-        ),
-        
-        // Contenu déroulant
-        isExpanded && React.createElement('div', {
-          className: 'mt-2 p-4 bg-gray-800 rounded-lg',
-          key: 'content'
-        },
-          renderSectionContent(section)
-        )
-      ]
-    );
   };
 
   const renderSectionContent = (section) => {
@@ -759,10 +691,10 @@ const DescriptionBox = ({ analysisType }) => {
           )
         );
 
-            case "comparison":
+      case "comparison":
         return React.createElement('div', { 
           className: 'bg-gray-750 rounded-lg p-6 mb-6',
-          key: `comparison-${index}`
+          key: 'comparison'
         },
           [
             React.createElement('h3', { 
@@ -820,7 +752,7 @@ const DescriptionBox = ({ analysisType }) => {
       case "usage":
         return React.createElement('div', { 
           className: 'bg-gray-750 rounded-lg p-6 mb-6',
-          key: `usage-${index}`
+          key: 'usage'
         },
           [
             React.createElement('h3', { 
@@ -851,7 +783,7 @@ const DescriptionBox = ({ analysisType }) => {
       case "warnings":
         return React.createElement('div', { 
           className: 'bg-yellow-900/20 rounded-lg p-6 mb-6 border border-yellow-500',
-          key: `warnings-${index}`
+          key: 'warnings'
         },
           [
             React.createElement('h3', { 
@@ -905,7 +837,7 @@ const DescriptionBox = ({ analysisType }) => {
       case "quote":
         return React.createElement('div', { 
           className: 'bg-purple-900/30 rounded-lg p-6 mb-6 text-center border border-purple-500',
-          key: `quote-${index}`
+          key: 'quote'
         },
           [
             React.createElement('h3', { 
@@ -928,35 +860,101 @@ const DescriptionBox = ({ analysisType }) => {
       case "final-note":
         return React.createElement('div', { 
           className: 'bg-blue-900/30 rounded-lg p-4 mb-4 text-center',
-          key: `final-${index}`
+          key: 'final-note'
         },
           React.createElement('p', {
             className: 'text-blue-200 font-semibold'
           }, section.content)
         );
 
-            default:
-            return React.createElement('p', {
-              className: 'text-gray-300 leading-relaxed',
-              key: 'default-content'
-            }, section.content);
-        }
-      };
+      default:
+        return React.createElement('p', {
+          className: 'text-gray-300 leading-relaxed',
+          key: 'default-content'
+        }, section.content);
+    }
+  };
+
+  const renderSection = (section, index) => {
+    const isExpanded = expandedSections[index];
     
-            return React.createElement('div', { 
-              className: 'bg-gray-800 rounded-lg p-6 mb-8 border-l-4 border-blue-500'
+    // Si c'est le premier élément (toujours visible)
+    if (index === 0) {
+      return React.createElement('div', { 
+        className: 'mb-6',
+        key: `default-${index}`
+      },
+        [
+          section.title && React.createElement('h3', { 
+            className: 'text-lg font-bold mb-3 text-white',
+            key: 'title'
+          }, section.title),
+          
+          React.createElement('p', {
+            className: 'text-gray-300 leading-relaxed',
+            key: 'content'
+          }, section.content)
+        ]
+      );
+    }
+
+    // Pour les autres sections (menu déroulant)
+    return React.createElement('div', { 
+      className: 'mb-2',
+      key: `accordion-${index}`
+    },
+      [
+        // Bouton d'en-tête cliquable
+        React.createElement('button', {
+          onClick: () => toggleSection(index),
+          className: `w-full text-left p-4 rounded-lg transition-all ${
+            isExpanded ? 'bg-gray-750' : 'bg-gray-800 hover:bg-gray-750'
+          }`,
+          key: 'header'
+        },
+          [
+            React.createElement('div', {
+              className: 'flex justify-between items-center',
+              key: 'header-content'
             },
               [
-                React.createElement('h2', { 
-                  className: 'text-2xl font-bold mb-6 text-white text-center',
-                  key: 'main-title'
-                }, desc.title),
+                React.createElement('h3', {
+                  className: 'font-bold text-white',
+                  key: 'title'
+                }, section.title),
                 
-                ...desc.sections.map((section, index) => renderSection(section, index))
+                React.createElement('span', {
+                  className: 'text-xl',
+                  key: 'arrow'
+                }, isExpanded ? '▼' : '▶')
               ]
-            );
-          };
-    }
+            )
+          ]
+        ),
+        
+        // Contenu déroulant
+        isExpanded && React.createElement('div', {
+          className: 'mt-2 p-4 bg-gray-800 rounded-lg',
+          key: 'content'
+        },
+          renderSectionContent(section)
+        )
+      ]
+    );
+  };
+
+  return React.createElement('div', { 
+    className: 'bg-gray-800 rounded-lg p-6 mb-8 border-l-4 border-blue-500'
+  },
+    [
+      React.createElement('h2', { 
+        className: 'text-2xl font-bold mb-6 text-white text-center',
+        key: 'main-title'
+      }, desc.title),
+      
+      ...desc.sections.map((section, index) => renderSection(section, index))
+    ]
+  );
 };
 
   return React.createElement('div', { 
