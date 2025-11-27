@@ -271,23 +271,19 @@ const Pagination = ({ currentPage, totalPages, onPageChange, itemsPerPage, onIte
                     React.createElement('button', {
                         onClick: () => onPageChange(1),
                         disabled: currentPage === 1,
-                        className: `px-3 py-2 rounded-lg font-medium transition-all 
-                            currentPage === 1 
-                                ? 'bg-gray-900 text-gray-500 cursor-not-allowed border border-gray-700' 
-                                : 'bg-black text-white hover:bg-gray-800 border border-gray-600 hover:border-gray-500'
-                        }`,
-                        key: 'first'
+                        className: `px-3 py-2 rounded-lg font-medium transition-all ${currentPage === 1 
+                            ? 'bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-700' 
+                            : 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-600 hover:border-gray-500'}`,
+                    key: 'first'
                     }, '⏮️'),
                     
                     // Bouton Précédent
                     React.createElement('button', {
                         onClick: () => onPageChange(currentPage - 1),
                         disabled: currentPage === 1,
-                        className: `px-3 py-2 rounded-lg font-medium transition-all
-                            currentPage === 1 
-                                ? 'bg-gray-900 text-gray-500 cursor-not-allowed border border-gray-700' 
-                                : 'bg-black text-white hover:bg-gray-800 border border-gray-600 hover:border-gray-500'
-                        }`,
+                        className: `px-3 py-2 rounded-lg font-medium transition-all ${currentPage === 1 
+                            ? 'bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-700' 
+                            : 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-600 hover:border-gray-500'}`,
                         key: 'prev'
                     }, '◀️'),
                     
@@ -295,11 +291,9 @@ const Pagination = ({ currentPage, totalPages, onPageChange, itemsPerPage, onIte
                     ...pages.map(page =>
                         React.createElement('button', {
                             onClick: () => onPageChange(page),
-                            className: `px-3 py-2 rounded-lg font-medium transition-all 
-                                page === currentPage 
-                                ? 'bg-gray-900 text-gray-500 cursor-not-allowed border border-gray-700' 
-                                : 'bg-black text-white hover:bg-gray-800 border border-gray-600 hover:border-gray-500'
-                             }`,
+                        className: `px-3 py-2 rounded-lg font-medium transition-all ${currentPage === 1 
+                            ? 'bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-700' 
+                            : 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-600 hover:border-gray-500'}`,
                             key: page
                         }, page)
                     ),
@@ -308,11 +302,9 @@ const Pagination = ({ currentPage, totalPages, onPageChange, itemsPerPage, onIte
                     React.createElement('button', {
                         onClick: () => onPageChange(currentPage + 1),
                         disabled: currentPage === totalPages,
-                        className: `px-3 py-2 rounded-lg font-medium transition-all
-                            currentPage === totalPages 
-                                ? 'bg-gray-900 text-gray-500 cursor-not-allowed border border-gray-700' 
-                                : 'bg-black text-white hover:bg-gray-800 border border-gray-600 hover:border-gray-500'
-                        }`,
+                        className: `px-3 py-2 rounded-lg font-medium transition-all ${currentPage === 1 
+                            ? 'bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-700' 
+                            : 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-600 hover:border-gray-500'}`,
                         key: 'next'
                     }, '▶️'),
                     
@@ -320,11 +312,9 @@ const Pagination = ({ currentPage, totalPages, onPageChange, itemsPerPage, onIte
                     React.createElement('button', {
                         onClick: () => onPageChange(totalPages),
                         disabled: currentPage === totalPages,
-                        className: `px-3 py-2 rounded-lg font-medium transition-all
-                            currentPage === totalPages 
-                                ? 'bg-gray-900 text-gray-500 cursor-not-allowed border border-gray-700' 
-                                : 'bg-black text-white hover:bg-gray-800 border border-gray-600 hover:border-gray-500'
-                        }`,
+                        className: `px-3 py-2 rounded-lg font-medium transition-all ${currentPage === 1 
+                            ? 'bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-700' 
+                            : 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-600 hover:border-gray-500'}`,
                         key: 'last'
                     }, '⏭️')
                 ]
