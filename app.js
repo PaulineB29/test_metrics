@@ -1061,11 +1061,11 @@ const BuffettTab = ({
 
             // COMPTEUR
             React.createElement('div', { 
-                className: 'mt-4 text-gray-400 text-sm',
-                key: 'counter'
-            }, 
-                `📊 ${filteredData.length} entreprise(s) ${filter !== 'ALL' ? getBuffettFilterLabel(filter) : ''} ${sectorFilter !== 'Tous secteurs' ? `dans ${sectorFilter}` : ''} - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} à ${Math.min(currentPage * itemsPerPage, filteredData.length)}`
-            )
+              className: 'mt-4 text-gray-400 text-sm',
+              key: 'counter'
+          }, 
+              `${filteredData.length} résultats - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} à ${Math.min(currentPage * itemsPerPage, filteredData.length)}`
+          )
         ]
     );
 };
