@@ -926,8 +926,6 @@ const BuffettTab = ({
         const endIndex = startIndex + itemsPerPage;
         return data.slice(startIndex, endIndex);
     };
-
-    const sortedAndFilteredData = getSortedAndFilteredData(data);
     
     // Appliquer les filtres qualité ET secteur
     const filteredData = sortedAndFilteredData.filter(item => {
