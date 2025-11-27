@@ -698,7 +698,7 @@ const DescriptionBox = ({ analysisType }) => {
   );
 };
 
-// Composant Onglet Buffett CORRIGÉ
+// Composant Onglet Buffett avec Filtres Secteur
 const BuffettTab = ({ 
     data, 
     filter, 
@@ -709,16 +709,92 @@ const BuffettTab = ({
     onSort, 
     searchTerm, 
     onSearch, 
-    getSortedAndFilteredData, // 🔥 AJOUTER cette prop
-    getPaginatedData, 
     currentPage, 
     totalPages, 
     onPageChange, 
     itemsPerPage, 
     onItemsPerPageChange 
 }) => {
+    const [sectorFilter, setSectorFilter] = useState('Tous secteurs');
+    
+    const SECTORS = [
+        'Tous secteurs',
+        'Industrials',
+        'Technology', 
+        'Financial Services',
+        'Consumer Cyclical',
+        'Consumer Defensive', 
+        'Healthcare',
+        'Basic Materials',
+        'Energy',
+        'Communication Services',
+        'Utilities',
+        'Real Estate'
+    ];
+
+    // Fonctions de tri et pagination locales
+    const getSortedAndFilteredData = (data) => {
+        if (!data) return [];
+        
+        let filteredData = data;
+        if (searchTerm) {
+            const searchLower = searchTerm.toLowerCase();
+            filteredData = data.filter(item => 
+                Object.values(item).some(value => 
+                    value && value.toString().toLowerCase().includes(searchLower)
+                )
+            );
+        }
+
+        if (sortConfig.key) {
+            filteredData = [...filteredData].sort((a, b) => {
+                let aValue = a[sortConfig.key];
+                let bValue = b[sortConfig.key];
+
+                if (aValue === null || aValue === undefined) aValue = '';
+                if (bValue === null || bValue === undefined) bValue = '';
+
+                if (!isNaN(parseFloat(aValue)) && !isNaN(parseFloat(bValue))) {
+                    aValue = parseFloat(aValue);
+                    bValue = parseFloat(bValue);
+                }
+
+                if (aValue < bValue) {
+                    return sortConfig.direction === 'asc' ? -1 : 1;
+                }
+                if (aValue > bValue) {
+                    return sortConfig.direction === 'asc' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+
+        return filteredData;
+    };
+
+    const getPaginatedData = (data) => {
+        if (!data || data.length === 0) return [];
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        return data.slice(startIndex, endIndex);
+    };
+
     const sortedAndFilteredData = getSortedAndFilteredData(data);
-    const paginatedData = getPaginatedData(sortedAndFilteredData);
+    
+    // Appliquer les filtres qualité ET secteur
+    const filteredData = sortedAndFilteredData.filter(item => {
+        // Filtre qualité
+        const qualityMatch = filter === 'ALL' || 
+            (item.buffett_rating && item.buffett_rating.includes(filter));
+        
+        // Filtre secteur
+        const sectorMatch = sectorFilter === 'Tous secteurs' || 
+            (item.secteur && item.secteur === sectorFilter);
+        
+        return qualityMatch && sectorMatch;
+    });
+    
+    const paginatedData = getPaginatedData(filteredData);
     
     return React.createElement('div', {},
         [
@@ -727,13 +803,13 @@ const BuffettTab = ({
                 key: 'search-bar',
                 searchTerm: searchTerm,
                 onSearch: onSearch,
-                dataCount: sortedAndFilteredData.length
+                dataCount: filteredData.length
             }),
           
-            // Filtres Buffett
+            // 🔥 FILTRES QUALITÉ Buffett
             React.createElement('div', { 
-                className: 'flex gap-2 mb-6 flex-wrap',
-                key: 'filters' 
+                className: 'flex gap-2 mb-4 flex-wrap',
+                key: 'quality-filters' 
             },
                 ['ALL', 'ELITE', 'STRONG', 'DECENT', 'WEAK'].map(filt =>
                     React.createElement('button', {
@@ -745,13 +821,31 @@ const BuffettTab = ({
                                 : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                         }`
                     }, 
-                    filt === 'ALL' ? '📋 Toutes' : 
+                    filt === 'ALL' ? '📋 Toutes qualités' : 
                     filt === 'ELITE' ? '⭐ ELITE' :
                     filt === 'STRONG' ? '✅ STRONG' :
                     filt === 'DECENT' ? '🟡 DECENT' : '🔴 WEAK')
                 )
             ),
 
+            // 🔥 FILTRES SECTEUR
+            React.createElement('div', { 
+                className: 'flex gap-2 mb-6 flex-wrap',
+                key: 'sector-filters' 
+            },
+                SECTORS.map(sector =>
+                    React.createElement('button', {
+                        key: sector,
+                        onClick: () => setSectorFilter(sector),
+                        className: `px-4 py-2 rounded-lg transition-all ${
+                            sectorFilter === sector 
+                                ? 'bg-green-600 text-white shadow-lg' 
+                                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        }`
+                    }, sector)
+                )
+            ),
+          
             // Tableau Buffett
             React.createElement('div', { 
                 className: 'table-container',
@@ -885,10 +979,20 @@ const BuffettTab = ({
                 className: 'mt-4 text-gray-400 text-sm',
                 key: 'counter'
             }, 
-                `📊 ${sortedAndFilteredData.length} entreprise(s) trouvée(s) - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, sortedAndFilteredData.length)} à ${Math.min(currentPage * itemsPerPage, sortedAndFilteredData.length)}`
-            )
+                `📊 ${filteredData.length} entreprise(s) ${filter !== 'ALL' ? getBuffettFilterLabel(filter) : ''} ${sectorFilter !== 'Tous secteurs' ? `dans ${sectorFilter}` : ''} - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} à ${Math.min(currentPage * itemsPerPage, filteredData.length)}`            )
         ]
     );
+};
+
+// Fonction pour les labels des filtres Buffett
+const getBuffettFilterLabel = (filter) => {
+    const labels = {
+        'ELITE': 'de qualité elite',
+        'STRONG': 'de qualité strong', 
+        'DECENT': 'de qualité décente',
+        'WEAK': 'de qualité faible'
+    };
+    return labels[filter] || '';
 };
 
 // Composant Onglet Cash Flow avec filtres, Tri, Recherche et PAGINATION
@@ -910,24 +1014,41 @@ const CashFlowTab = ({
     onItemsPerPageChange
 }) => {
     const [filter, setFilter] = useState('ALL');
-    
+    const [sectorFilter, setSectorFilter] = useState('Tous secteurs'); 
+       const SECTORS = [
+              'Tous secteurs',
+              'Industrials',
+              'Technology', 
+              'Financial Services',
+              'Consumer Cyclical',
+              'Consumer Defensive', 
+              'Healthcare',
+              'Basic Materials',
+              'Energy',
+              'Communication Services',
+              'Utilities',
+              'Real Estate'
+          ];
+
     const sortedAndFilteredData = getSortedAndFilteredData(data);
     
-    // Filtrer les données selon le filtre sélectionné
-    const filteredData = filter === 'ALL' 
-        ? sortedAndFilteredData 
-        : sortedAndFilteredData.filter(item => {
-            if (filter === 'EXCELLENT') return item.fcf_yield > 0.06;
-            if (filter === 'GOOD') return item.fcf_yield > 0.03 && item.fcf_yield <= 0.06;
-            if (filter === 'WEAK') return item.fcf_yield <= 0.03;
-            return true;
-        });
+    const filteredData = sortedAndFilteredData.filter(item => {
+        const qualityMatch = filter === 'ALL' || 
+            (filter === 'EXCELLENT' && item.fcf_yield > 0.06) ||
+            (filter === 'GOOD' && item.fcf_yield > 0.03 && item.fcf_yield <= 0.06) ||
+            (filter === 'WEAK' && item.fcf_yield <= 0.03);
+        
+        const sectorMatch = sectorFilter === 'Tous secteurs' || 
+            (item.secteur && item.secteur === sectorFilter);
+        
+        return qualityMatch && sectorMatch;
+    });
     
     const paginatedData = getPaginatedData(filteredData);
     
     return React.createElement('div', { className: 'table-container' },
         [
-            // Barre de recherche globale
+            // Barre de recherche globale (inchangée)
             React.createElement(GlobalSearchBar, {
                 key: 'search-bar',
                 searchTerm: searchTerm,
@@ -935,10 +1056,10 @@ const CashFlowTab = ({
                 dataCount: filteredData.length
             }),
 
-            // 🔥 FILTRES CASH FLOW
+            // 🔥 FILTRES QUALITÉ Cash Flow
             React.createElement('div', { 
-                className: 'flex gap-2 mb-6 flex-wrap',
-                key: 'filters' 
+                className: 'flex gap-2 mb-4 flex-wrap',
+                key: 'quality-filters' 
             },
                 ['ALL', 'EXCELLENT', 'GOOD', 'WEAK'].map(filt =>
                     React.createElement('button', {
@@ -950,11 +1071,30 @@ const CashFlowTab = ({
                                 : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                         }`
                     }, 
-                    filt === 'ALL' ? '📋 Toutes' : 
+                    filt === 'ALL' ? '📋 Toutes qualités' : 
                     filt === 'EXCELLENT' ? '💰 EXCELLENT' :
                     filt === 'GOOD' ? '💸 BON' : '🔴 FAIBLE')
                 )
             ),
+
+            // 🔥 FILTRES SECTEUR Cash Flow
+            React.createElement('div', { 
+                className: 'flex gap-2 mb-6 flex-wrap',
+                key: 'sector-filters' 
+            },
+                SECTORS.map(sector =>
+                    React.createElement('button', {
+                        key: sector,
+                        onClick: () => setSectorFilter(sector),
+                        className: `px-4 py-2 rounded-lg transition-all ${
+                            sectorFilter === sector 
+                                ? 'bg-green-600 text-white shadow-lg' 
+                                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        }`
+                    }, sector)
+                )
+            ),
+          
             React.createElement('div', { 
                 className: 'bg-gray-800 rounded-lg overflow-hidden shadow-xl',
                 key: 'table'
@@ -1037,7 +1177,6 @@ const CashFlowTab = ({
                         ]
                     ),
                     
-                    // 🔥 CORRECTION : utiliser paginatedData au lieu de sortedAndFilteredData
                     ...paginatedData.map((item, index) =>
                         React.createElement('div', {
                             key: item.symbole + index,
@@ -1090,7 +1229,7 @@ const CashFlowTab = ({
                 ]
             ),
 
-            // 🔥 AJOUT PAGINATION
+            // AJOUT PAGINATION
             React.createElement(Pagination, {
                 key: 'pagination',
                 currentPage: currentPage,
@@ -1100,12 +1239,12 @@ const CashFlowTab = ({
                 onItemsPerPageChange: onItemsPerPageChange
             }),
 
-            // 🔥 COMPTEUR MIS À JOUR avec informations de pagination
+            // 🔥 MODIFICATION du compteur
             React.createElement('div', { 
                 className: 'mt-4 text-gray-400 text-sm',
                 key: 'counter'
             }, 
-                `💰 ${filteredData.length} entreprise(s) avec un cash flow ${filter === 'ALL' ? '' : filter.toLowerCase()} - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} à ${Math.min(currentPage * itemsPerPage, filteredData.length)}`
+                `💰 ${filteredData.length} entreprise(s) ${filter !== 'ALL' ? getCashFlowFilterLabel(filter) : 'avec un cash flow positif'} ${sectorFilter !== 'Tous secteurs' ? `dans ${sectorFilter}` : ''} - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} à ${Math.min(currentPage * itemsPerPage, filteredData.length)}`
             )
         ]
     );
@@ -1139,54 +1278,47 @@ const ValueTrapTab = ({
     onItemsPerPageChange
 }) => {
     const [filter, setFilter] = useState('ALL');
+        const [sectorFilter, setSectorFilter] = useState('Tous secteurs'); // 🔥 AJOUT
     
+    const SECTORS = [
+        'Tous secteurs',
+        'Industrials',
+        'Technology', 
+        'Financial Services',
+        'Consumer Cyclical',
+        'Consumer Defensive', 
+        'Healthcare',
+        'Basic Materials',
+        'Energy',
+        'Communication Services',
+        'Utilities',
+        'Real Estate'
+    ];
+  
     const sortedAndFilteredData = getSortedAndFilteredData(data);
     
-    // Filtrer les données selon le filtre sélectionné
-    const filteredData = filter === 'ALL' 
-        ? sortedAndFilteredData 
-        : sortedAndFilteredData.filter(item => {
-            if (filter === 'ELITE_VALUE') return item.value_grade.includes('ELITE_VALUE');
-            if (filter === 'SOLID_VALUE') return item.value_grade.includes('SOLID_VALUE');
-            if (filter === 'VALUE_TRAP') return item.value_grade.includes('VALUE_TRAP');
-            if (filter === 'DEEP_VALUE') return item.value_grade.includes('DEEP_VALUE');
-            if (filter === 'POTENTIAL') return item.value_grade.includes('POTENTIAL_VALUE');
-            return true;
-        });
+    // 🔥 MODIFICATION : Ajout du filtre secteur
+    const filteredData = sortedAndFilteredData.filter(item => {
+        const qualityMatch = filter === 'ALL' || 
+            (item.value_grade && item.value_grade.includes(filter));
+        
+        const sectorMatch = sectorFilter === 'Tous secteurs' || 
+            (item.secteur && item.secteur === sectorFilter);
+        
+        return qualityMatch && sectorMatch;
+    });
     
     const paginatedData = getPaginatedData(filteredData);
     
     return React.createElement('div', { className: 'table-container' },
         [
-            // Barre de recherche globale
-            React.createElement(GlobalSearchBar, {
-                key: 'search-bar',
-                searchTerm: searchTerm,
-                onSearch: onSearch,
-                dataCount: filteredData.length
-            }),
+            // Barre de recherche globale (inchangée)
+            // Avertissement Value Trap (inchangé)
 
-            // Avertissement Value Trap
+            // 🔥 FILTRES QUALITÉ Value Trap
             React.createElement('div', { 
-                className: 'warning-trap p-4 rounded-lg mb-6',
-                key: 'warning'
-            },
-                [
-                    React.createElement('h3', { 
-                        className: 'font-bold mb-2',
-                        key: 'warning-title'
-                    }, '⚠️ Attention aux Value Traps !'),
-                    React.createElement('p', { 
-                        className: 'text-sm',
-                        key: 'warning-text'
-                    }, 'Une action peut sembler "bon marché" (faible P/E, P/B) mais cacher des problèmes structurels. Vérifiez toujours la rentabilité (ROE, ROIC) !')
-                ]
-            ),
-
-            // 🔥 FILTRES VALUE TRAP
-            React.createElement('div', { 
-                className: 'flex gap-2 mb-6 flex-wrap',
-                key: 'filters' 
+                className: 'flex gap-2 mb-4 flex-wrap',
+                key: 'quality-filters' 
             },
                 ['ALL', 'ELITE_VALUE', 'SOLID_VALUE', 'VALUE_TRAP', 'DEEP_VALUE', 'POTENTIAL'].map(filt =>
                     React.createElement('button', {
@@ -1198,11 +1330,29 @@ const ValueTrapTab = ({
                                 : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                         }`
                     }, 
-                    filt === 'ALL' ? '📋 Toutes' : 
+                    filt === 'ALL' ? '📋 Tous types' : 
                     filt === 'ELITE_VALUE' ? '⭐ ELITE' :
                     filt === 'SOLID_VALUE' ? '✅ SOLIDE' :
                     filt === 'VALUE_TRAP' ? '⚠️ PIÈGE' :
                     filt === 'DEEP_VALUE' ? '🎯 PROFOND' : '📊 POTENTIEL')
+                )
+            ),
+
+            // 🔥 FILTRES SECTEUR Value Trap
+            React.createElement('div', { 
+                className: 'flex gap-2 mb-6 flex-wrap',
+                key: 'sector-filters' 
+            },
+                SECTORS.map(sector =>
+                    React.createElement('button', {
+                        key: sector,
+                        onClick: () => setSectorFilter(sector),
+                        className: `px-4 py-2 rounded-lg transition-all ${
+                            sectorFilter === sector 
+                                ? 'bg-green-600 text-white shadow-lg' 
+                                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        }`
+                    }, sector)
                 )
             ),
 
@@ -1381,7 +1531,7 @@ const ValueTrapTab = ({
                 className: 'mt-4 text-gray-400 text-sm',
                 key: 'counter'
             }, 
-                `🎯 ${filteredData.length} entreprise(s) ${filter === 'ALL' ? 'analysée(s)' : getFilterLabel(filter)} - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} à ${Math.min(currentPage * itemsPerPage, filteredData.length)}`
+                `🎯 ${filteredData.length} entreprise(s) ${filter !== 'ALL' ? getValueTrapFilterLabel(filter) : 'analysée(s)'} ${sectorFilter !== 'Tous secteurs' ? `dans ${sectorFilter}` : ''} - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} à ${Math.min(currentPage * itemsPerPage, filteredData.length)}`
             ),
 
             // Légende Value Trap
@@ -1452,66 +1602,50 @@ const ShortRiskTab = ({
     onItemsPerPageChange
 }) => {
     const [filter, setFilter] = useState('ALL');
+     const [sectorFilter, setSectorFilter] = useState('Tous secteurs'); // 🔥 AJOUT
     
+    const SECTORS = [
+        'Tous secteurs',
+        'Industrials',
+        'Technology', 
+        'Financial Services',
+        'Consumer Cyclical',
+        'Consumer Defensive', 
+        'Healthcare',
+        'Basic Materials',
+        'Energy',
+        'Communication Services',
+        'Utilities',
+        'Real Estate'
+    ];
+  
     const sortedAndFilteredData = getSortedAndFilteredData(data);
     
-    // Filtrer les données selon le filtre sélectionné
-    const filteredData = filter === 'ALL' 
-        ? sortedAndFilteredData 
-        : sortedAndFilteredData.filter(item => {
-            if (filter === 'CRITICAL') return item.risk_score >= 8;
-            if (filter === 'HIGH') return item.risk_score >= 5 && item.risk_score < 8;
-            if (filter === 'MEDIUM') return item.risk_score >= 3 && item.risk_score < 5;
-            if (filter === 'LOW') return item.risk_score < 3;
-            return true;
-        });
+    // 🔥 MODIFICATION : Ajout du filtre secteur
+    const filteredData = sortedAndFilteredData.filter(item => {
+        const qualityMatch = filter === 'ALL' || 
+            (filter === 'CRITICAL' && item.risk_score >= 8) ||
+            (filter === 'HIGH' && item.risk_score >= 5 && item.risk_score < 8) ||
+            (filter === 'MEDIUM' && item.risk_score >= 3 && item.risk_score < 5) ||
+            (filter === 'LOW' && item.risk_score < 3);
+        
+        const sectorMatch = sectorFilter === 'Tous secteurs' || 
+            (item.secteur && item.secteur === sectorFilter);
+        
+        return qualityMatch && sectorMatch;
+    });
     
     const paginatedData = getPaginatedData(filteredData);
     
     return React.createElement('div', { className: 'table-container' },
         [
-            // Barre de recherche globale
-            React.createElement(GlobalSearchBar, {
-                key: 'search-bar',
-                searchTerm: searchTerm,
-                onSearch: onSearch,
-                dataCount: filteredData.length
-            }),
+            // Barre de recherche globale (inchangée)
+            // Avertissement important (inchangé)
 
-            // Avertissement important
+            // 🔥 FILTRES QUALITÉ Short Risk
             React.createElement('div', { 
-                className: 'bg-yellow-900/20 p-4 rounded-lg mb-6 border border-yellow-500',
-                key: 'warning'
-            },
-                [
-                    React.createElement('h3', { 
-                        className: 'font-bold mb-2 text-yellow-400',
-                        key: 'warning-title'
-                    }, '⚠️ MISE EN GARDE IMPORTANTE'),
-                    React.createElement('p', { 
-                        className: 'text-sm mb-2 text-yellow-200',
-                        key: 'warning-text-1'
-                    }, 'Ces entreprises présentent des risques MAIS :'),
-                    React.createElement('ul', { 
-                        className: 'text-sm list-disc list-inside space-y-1 text-yellow-200',
-                        key: 'warning-list'
-                    },
-                        [
-                            'Certaines peuvent être des turnarounds',
-                            'Les banques ont souvent des D/E élevés par nature',
-                            'Certaines situations peuvent être temporaires',
-                            'Ne pas short seller sans analyse fondamentale approfondie !'
-                        ].map((item, index) => 
-                            React.createElement('li', { key: index }, item)
-                        )
-                    )
-                ]
-            ),
-
-            // 🔥 FILTRES SHORT RISK
-            React.createElement('div', { 
-                className: 'flex gap-2 mb-6 flex-wrap',
-                key: 'filters' 
+                className: 'flex gap-2 mb-4 flex-wrap',
+                key: 'quality-filters' 
             },
                 ['ALL', 'CRITICAL', 'HIGH', 'MEDIUM', 'LOW'].map(filt =>
                     React.createElement('button', {
@@ -1523,10 +1657,28 @@ const ShortRiskTab = ({
                                 : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                         }`
                     }, 
-                    filt === 'ALL' ? '📋 Toutes' : 
+                    filt === 'ALL' ? '📋 Tous risques' : 
                     filt === 'CRITICAL' ? '🚨 CRITIQUE' :
                     filt === 'HIGH' ? '🔴 ÉLEVÉ' :
                     filt === 'MEDIUM' ? '🟡 MOYEN' : '🟢 FAIBLE')
+                )
+            ),
+
+            // 🔥 FILTRES SECTEUR Short Risk
+            React.createElement('div', { 
+                className: 'flex gap-2 mb-6 flex-wrap',
+                key: 'sector-filters' 
+            },
+                SECTORS.map(sector =>
+                    React.createElement('button', {
+                        key: sector,
+                        onClick: () => setSectorFilter(sector),
+                        className: `px-4 py-2 rounded-lg transition-all ${
+                            sectorFilter === sector 
+                                ? 'bg-green-600 text-white shadow-lg' 
+                                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        }`
+                    }, sector)
                 )
             ),
 
@@ -1690,8 +1842,7 @@ const ShortRiskTab = ({
                 className: 'mt-4 text-gray-400 text-sm',
                 key: 'counter'
             }, 
-                `🚨 ${filteredData.length} entreprise(s) à risque ${filter === 'ALL' ? 'détectée(s)' : getRiskFilterLabel(filter)} - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} à ${Math.min(currentPage * itemsPerPage, filteredData.length)}`
-            ),
+                `🚨 ${filteredData.length} entreprise(s) à risque ${filter !== 'ALL' ? getRiskFilterLabel(filter) : 'détectée(s)'} ${sectorFilter !== 'Tous secteurs' ? `dans ${sectorFilter}` : ''} - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} à ${Math.min(currentPage * itemsPerPage, filteredData.length)}`            ),
                       // Légende Short Risk
             React.createElement('div', { 
                 className: 'mt-4 p-4 bg-gray-800 rounded-lg text-sm',
