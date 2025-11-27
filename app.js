@@ -774,7 +774,7 @@ const BuffettTab = ({
     totalPages, 
     onPageChange, 
     itemsPerPage, 
-    onItemsPerPageChange
+    onItemsPerPageChange,
     totalItems
 }) => {
     const [sectorFilter, setSectorFilter] = useState('Tous secteurs');
@@ -924,7 +924,7 @@ const BuffettTab = ({
                                     React.createElement('label', {
                                         className: 'dropdown-label',
                                         key: 'quality-label'
-                                    }, 'Filtrer par scrore'),
+                                    }, 'Filtrer par score'),
                                     
                                     React.createElement('select', {
                                         value: filter,
@@ -1098,15 +1098,14 @@ const BuffettTab = ({
                 key: 'pagination',
                 currentPage: currentPage,
                 totalPages: totalPages,
-                onPageChange: setCurrentPage,
+                onPageChange: onPageChange, 
                 itemsPerPage: itemsPerPage,
-                onItemsPerPageChange: setItemsPerPage,
+                onItemsPerPageChange: onItemsPerPageChange, 
                 totalItems: filteredData.length
-            }),
-          )
-        ]
-    );
-};
+            })
+         ]
+      );
+  };
 
 // Composant Onglet Cash Flow avec filtres, Tri, Recherche et PAGINATION
 const CashFlowTab = ({ 
@@ -1124,7 +1123,7 @@ const CashFlowTab = ({
     totalPages,
     onPageChange,
     itemsPerPage,
-    onItemsPerPageChange
+    onItemsPerPageChange,
     totalItems 
 }) => {
     const [filter, setFilter] = useState('ALL');
@@ -1349,14 +1348,14 @@ const CashFlowTab = ({
                 key: 'pagination',
                 currentPage: currentPage,
                 totalPages: totalPages,
-                onPageChange: setCurrentPage,
+                onPageChange: onPageChange, 
                 itemsPerPage: itemsPerPage,
-                onItemsPerPageChange: setItemsPerPage,
+                onItemsPerPageChange: onItemsPerPageChange, 
                 totalItems: filteredData.length
-            }),
-        ]
-    );
-};
+            })
+         ]
+      );
+  };
 
       // Fonction utilitaire pour les labels des filtres Cash Flow
       const getCashFlowFilterLabel = (filter) => {
@@ -1383,7 +1382,7 @@ const ValueTrapTab = ({
     totalPages,
     onPageChange,
     itemsPerPage,
-    onItemsPerPageChange
+    onItemsPerPageChange,
     totalItems 
 }) => {
     const [filter, setFilter] = useState('ALL');
@@ -1628,17 +1627,17 @@ const ValueTrapTab = ({
 
             // Pagination et compteur
             React.createElement(Pagination, {
-              key: 'pagination',
-              currentPage: currentPage,
-              totalPages: totalPages,
-              onPageChange: setCurrentPage,
-              itemsPerPage: itemsPerPage,
-              onItemsPerPageChange: setItemsPerPage,
-              totalItems: filteredData.length
-            }),
-          ]
-      )
- };
+                key: 'pagination',
+                currentPage: currentPage,
+                totalPages: totalPages,
+                onPageChange: onPageChange, 
+                itemsPerPage: itemsPerPage,
+                onItemsPerPageChange: onItemsPerPageChange, 
+                totalItems: filteredData.length
+            })
+         ]
+      );
+  };
 
         // Fonction utilitaire pour les labels des filtres
         const getFilterLabel = (filter) => {
@@ -1670,7 +1669,7 @@ const ShortRiskTab = ({
     totalPages,
     onPageChange,
     itemsPerPage,
-    onItemsPerPageChange
+    onItemsPerPageChange,
     totalItems 
 }) => {
     const [filter, setFilter] = useState('ALL');
@@ -1905,15 +1904,14 @@ const ShortRiskTab = ({
                 key: 'pagination',
                 currentPage: currentPage,
                 totalPages: totalPages,
-                onPageChange: setCurrentPage,
+                onPageChange: onPageChange, 
                 itemsPerPage: itemsPerPage,
-                onItemsPerPageChange: setItemsPerPage,
+                onItemsPerPageChange: onItemsPerPageChange, 
                 totalItems: filteredData.length
-            }),
-
-                ]
-            )
-};
+            })
+         ]
+      );
+  };
         // Fonction utilitaire pour les labels des filtres de risque
         const getRiskFilterLabel = (filter) => {
             const labels = {
@@ -2305,7 +2303,7 @@ const InvestmentApp = () => {
                           totalPages: totalPages,
                           onPageChange: setCurrentPage,
                           itemsPerPage: itemsPerPage,
-                          onItemsPerPageChange: setItemsPerPage
+                          onItemsPerPageChange: setItemsPerPage,
                           totalItems: filteredBuffettData.length
                       })
                   ]
@@ -2327,8 +2325,8 @@ const InvestmentApp = () => {
                   totalPages: totalPages,
                   onPageChange: setCurrentPage,
                   itemsPerPage: itemsPerPage,
-                  onItemsPerPageChange: setItemsPerPage
-                  totalItems: filteredBuffettData.length
+                  onItemsPerPageChange: setItemsPerPage,
+                  totalItems: filteredCashFlowtData.length
               })
               : activeTab === 'valuetrap'
               ? React.createElement(ValueTrapTab, {
@@ -2346,8 +2344,8 @@ const InvestmentApp = () => {
                   totalPages: totalPages,
                   onPageChange: setCurrentPage,
                   itemsPerPage: itemsPerPage,
-                  onItemsPerPageChange: setItemsPerPage
-                  totalItems: filteredBuffettData.length
+                  onItemsPerPageChange: setItemsPerPage,
+                  totalItems: filteredvaluetrapData.length
               })
               : React.createElement(ShortRiskTab, {
                   key: 'shortrisk-tab',
@@ -2366,8 +2364,8 @@ const InvestmentApp = () => {
                   totalPages: totalPages,
                   onPageChange: setCurrentPage,
                   itemsPerPage: itemsPerPage,
-                  onItemsPerPageChange: setItemsPerPage
-                  totalItems: filteredBuffettData.length
+                  onItemsPerPageChange: setItemsPerPage,
+                  totalItems: filteredShortRiskData.length
               })
             ]
         )
