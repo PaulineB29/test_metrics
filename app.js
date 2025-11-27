@@ -9,8 +9,8 @@ const ANALYSIS_DESCRIPTIONS = {
     title: "Buffett Quality Score - Explication pour les Investisseurs",
     sections: [
       {
-        title: "L'Héritage de Warren Buffett",
-        content: "Cette analyse applique les principes fondamentaux du plus grand investisseur de tous les temps : Warren Buffett. Elle identifie les entreprises d'exception selon sa philosophie : 'Achetez des entreprises merveilleuses à des prix raisonnables.'",
+        title: " L'Héritage de Warren Buffett",
+        content: " Cette analyse applique les principes fondamentaux du plus grand investisseur de tous les temps : Warren Buffett. Elle identifie les entreprises d'exception selon sa philosophie :  'Achetez des entreprises merveilleuses à des prix raisonnables.'",
         expanded: true // ← Premier élément ouvert par défaut
       },
       {
@@ -649,12 +649,7 @@ const DescriptionBox = ({ analysisType }) => {
             React.createElement('span', {
               className: 'font-bold text-white text-lg',
               key: 'button-text'
-            }, '📋 Détail de la méthodologie'),
-            
-            React.createElement('span', {
-              className: 'text-xl',
-              key: 'arrow'
-            }, isExpanded ? '▼' : '▶')
+            }, 'Détail de la méthodologie'),
           ]
         )
       ),
