@@ -213,118 +213,149 @@ const SortableHeader = ({ column, sortConfig, onSort, children }) => {
     );
 };
 
-// Composant Pagination réutilisable
-const Pagination = ({ currentPage, totalPages, onPageChange, itemsPerPage, onItemsPerPageChange }) => {
-    const pages = [];
-    const maxVisiblePages = 4;
+const Pagination = ({ 
+    currentPage, 
+    totalPages, 
+    onPageChange, 
+    itemsPerPage, 
+    onItemsPerPageChange,
+    totalItems 
+}) => {
+    // Calculs dérivés
+    const startItem = Math.min((currentPage - 1) * itemsPerPage + 1, totalItems);
+    const endItem = Math.min(currentPage * itemsPerPage, totalItems);
     
-    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-    
-    if (endPage - startPage + 1 < maxVisiblePages) {
-        startPage = Math.max(1, endPage - maxVisiblePages + 1);
-    }
-    
-    for (let i = startPage; i <= endPage; i++) {
-        pages.push(i);
-    }
-    
-    return React.createElement('div', {
-        className: 'flex flex-col md:flex-row items-center justify-between gap-4 mt-6 p-4 bg-gray-800 rounded-lg'
-    },
+    // Génération des numéros de page à afficher (max 6 pages)
+    const getPageNumbers = () => {
+        const pages = [];
+        const maxVisiblePages = 6;
+        
+        if (totalPages <= maxVisiblePages) {
+            // Si moins de 6 pages, afficher toutes
+            for (let i = 1; i <= totalPages; i++) {
+                pages.push(i);
+            }
+        } else {
+            // Logique pour afficher un sous-ensemble de pages
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            // Ajuster si on est proche du début
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                pages.push(i);
+            }
+        }
+        
+        return pages;
+    };
+
+    const pageNumbers = getPageNumbers();
+
+    return React.createElement('div', { key: 'pagination' },
         [
-            // Sélecteur d'items par page
+            // SECTION 1 : Barre de Pagination Principale
             React.createElement('div', {
-                className: 'flex items-center gap-3',
-                key: 'items-per-page'
+                className: 'pagination-container',
+                key: 'pagination-main'
             },
                 [
-                    React.createElement('span', {
-                        className: 'text-gray-300 text-sm font-medium',
-                        key: 'label'
-                    }, 'Lignes par page:'),
-                    
-                    React.createElement('select', {
-                        value: itemsPerPage,
-                        onChange: (e) => onItemsPerPageChange(Number(e.target.value)),
-                        className: 'bg-gray-800 text-white px-3 py-2 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none',
-                        key: 'select'
+                    // Partie Gauche - Sélecteur de lignes
+                    React.createElement('div', {
+                        className: 'pagination-left',
+                        key: 'pagination-left'
                     },
-                        [20, 50, 100, 200].map(value =>
-                            React.createElement('option', {
-                                value: value,
-                                key: value,
-                                className: 'bg-gray-800'
-                            }, value)
-                        )
-                    )
-                ]
-            ),
-            
-            // Contrôles de pagination
-            React.createElement('div', {
-                className: 'flex items-center gap-2',
-                key: 'pagination-controls'
-            },
-                [
-                    // Bouton Première page
-                    React.createElement('button', {
-                        onClick: () => onPageChange(1),
-                        className: `px-3 py-2 rounded-lg font-medium transition-all ${currentPage === 1 
-                            ? 'bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-700' 
-                            : 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-600 hover:border-gray-500'}`,
-                    key: 'first'
-                    }, '⏮️'),
-                    
-                    // Bouton Précédent
-                    React.createElement('button', {
-                        onClick: () => onPageChange(currentPage - 1),
-                        className: `px-3 py-2 rounded-lg font-medium transition-all ${currentPage === 1 
-                            ? 'bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-700' 
-                            : 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-600 hover:border-gray-500'}`,
-                        key: 'prev'
-                    }, '◀️'),
-                    
-                    // Numéros de page
-                    ...pages.map(page =>
-                        React.createElement('button', {
-                            onClick: () => onPageChange(page),
-                        className: `px-4 py-2 rounded-lg font-medium transition-all border ${page === currentPage 
-                            ? 'bg-blue-600 text-white font-bold border-blue-500'  // ← SUPPRIMÉ shadow-lg
-                            : 'bg-gray-800 text-gray-200 hover:bg-gray-700 border-gray-600 hover:border-gray-500'}`,
-                            key: page
-                        }, page)
+                        [
+                            React.createElement('span', {
+                                className: 'pagination-label',
+                                key: 'label'
+                            }, 'Lignes par page:'),
+                            
+                            React.createElement('select', {
+                                value: itemsPerPage,
+                                onChange: (e) => onItemsPerPageChange(Number(e.target.value)),
+                                className: 'pagination-select',
+                                key: 'select'
+                            },
+                                [20, 50, 100].map(value =>
+                                    React.createElement('option', {
+                                        value: value,
+                                        key: value,
+                                        className: 'bg-slate-800'
+                                    }, value)
+                                )
+                            )
+                        ]
                     ),
-                    
-                    // Bouton Suivant
-                    React.createElement('button', {
-                        onClick: () => onPageChange(currentPage + 1),                        
-                        className: `px-3 py-2 rounded-lg font-medium transition-all ${currentPage === 1 
-                            ? 'bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-700' 
-                            : 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-600 hover:border-gray-500'}`,
-                        key: 'next'
-                    }, '▶️'),
-                    
-                    // Bouton Dernière page
-                    React.createElement('button', {
-                        onClick: () => onPageChange(totalPages),
-                        className: `px-3 py-2 rounded-lg font-medium transition-all ${currentPage === 1 
-                            ? 'bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-700' 
-                            : 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-600 hover:border-gray-500'}`,
-                        key: 'last'
-                    }, '⏭️')
+
+                    // Partie Centre - Navigation de pages
+                    React.createElement('div', {
+                        className: 'pagination-center',
+                        key: 'pagination-center'
+                    },
+                        [
+                            // Bouton Première page
+                            React.createElement('button', {
+                                onClick: () => onPageChange(1),
+                                disabled: currentPage === 1,
+                                className: 'pagination-button',
+                                key: 'first'
+                            }, '««'),
+
+                            // Bouton Page précédente
+                            React.createElement('button', {
+                                onClick: () => onPageChange(Math.max(1, currentPage - 1)),
+                                disabled: currentPage === 1,
+                                className: 'pagination-button',
+                                key: 'prev'
+                            }, '«'),
+
+                            // Numéros de page
+                            ...pageNumbers.map(page =>
+                                React.createElement('button', {
+                                    onClick: () => onPageChange(page),
+                                    className: `pagination-page-button ${page === currentPage ? 'active' : ''}`,
+                                    key: page
+                                }, page)
+                            ),
+
+                            // Bouton Page suivante
+                            React.createElement('button', {
+                                onClick: () => onPageChange(Math.min(totalPages, currentPage + 1)),
+                                disabled: currentPage === totalPages,
+                                className: 'pagination-button',
+                                key: 'next'
+                            }, '»'),
+
+                            // Bouton Dernière page
+                            React.createElement('button', {
+                                onClick: () => onPageChange(totalPages),
+                                disabled: currentPage === totalPages,
+                                className: 'pagination-button',
+                                key: 'last'
+                            }, '»»')
+                        ]
+                    ),
+
+                    // Partie Droite - Indicateur de page
+                    React.createElement('div', {
+                        className: 'pagination-right',
+                        key: 'pagination-right'
+                    }, `Page ${currentPage} sur ${totalPages}`)
                 ]
             ),
-            
-            // Informations de pagination
+
+            // SECTION 2 : Barre d'Information (Footer)
             React.createElement('div', {
-                className: 'text-gray-300 text-sm font-medium',
-                key: 'page-info'
-            }, `Page ${currentPage} sur ${totalPages}`)
+                className: 'pagination-footer',
+                key: 'pagination-footer'
+            }, `${totalItems} entreprise(s) - Affichage ${startItem} à ${endItem}`)
         ]
     );
 };
-
 const DescriptionBox = ({ analysisType }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   
@@ -743,7 +774,8 @@ const BuffettTab = ({
     totalPages, 
     onPageChange, 
     itemsPerPage, 
-    onItemsPerPageChange 
+    onItemsPerPageChange
+    totalItems
 }) => {
     const [sectorFilter, setSectorFilter] = useState('Tous secteurs');
     
@@ -1066,17 +1098,11 @@ const BuffettTab = ({
                 key: 'pagination',
                 currentPage: currentPage,
                 totalPages: totalPages,
-                onPageChange: onPageChange,
+                onPageChange: setCurrentPage,
                 itemsPerPage: itemsPerPage,
-                onItemsPerPageChange: onItemsPerPageChange
+                onItemsPerPageChange: setItemsPerPage,
+                totalItems: filteredData.length
             }),
-
-            // COMPTEUR
-            React.createElement('div', { 
-              className: 'mt-4 text-gray-400 text-sm',
-              key: 'counter'
-          }, 
-              `${filteredData.length} résultats - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} à ${Math.min(currentPage * itemsPerPage, filteredData.length)}`
           )
         ]
     );
@@ -1099,6 +1125,7 @@ const CashFlowTab = ({
     onPageChange,
     itemsPerPage,
     onItemsPerPageChange
+    totalItems 
 }) => {
     const [filter, setFilter] = useState('ALL');
     const [sectorFilter, setSectorFilter] = useState('Tous secteurs'); 
@@ -1322,18 +1349,11 @@ const CashFlowTab = ({
                 key: 'pagination',
                 currentPage: currentPage,
                 totalPages: totalPages,
-                onPageChange: onPageChange,
+                onPageChange: setCurrentPage,
                 itemsPerPage: itemsPerPage,
-                onItemsPerPageChange: onItemsPerPageChange
+                onItemsPerPageChange: setItemsPerPage,
+                totalItems: filteredData.length
             }),
-
-            // 🔥 MODIFICATION du compteur
-            React.createElement('div', { 
-                className: 'mt-4 text-gray-400 text-sm',
-                key: 'counter'
-            }, 
-                `💰 ${filteredData.length} entreprise(s) ${filter !== 'ALL' ? getCashFlowFilterLabel(filter) : 'avec un cash flow positif'} ${sectorFilter !== 'Tous secteurs' ? `dans ${sectorFilter}` : ''} - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} à ${Math.min(currentPage * itemsPerPage, filteredData.length)}`
-            )
         ]
     );
 };
@@ -1364,6 +1384,7 @@ const ValueTrapTab = ({
     onPageChange,
     itemsPerPage,
     onItemsPerPageChange
+    totalItems 
 }) => {
     const [filter, setFilter] = useState('ALL');
         const [sectorFilter, setSectorFilter] = useState('Tous secteurs'); // 🔥 AJOUT
@@ -1607,55 +1628,17 @@ const ValueTrapTab = ({
 
             // Pagination et compteur
             React.createElement(Pagination, {
-                key: 'pagination',
-                currentPage: currentPage,
-                totalPages: totalPages,
-                onPageChange: onPageChange,
-                itemsPerPage: itemsPerPage,
-                onItemsPerPageChange: onItemsPerPageChange
+              key: 'pagination',
+              currentPage: currentPage,
+              totalPages: totalPages,
+              onPageChange: setCurrentPage,
+              itemsPerPage: itemsPerPage,
+              onItemsPerPageChange: setItemsPerPage,
+              totalItems: filteredData.length
             }),
-
-            React.createElement('div', { 
-                className: 'mt-4 text-gray-400 text-sm',
-                key: 'counter'
-            }, 
-                `🎯 ${filteredData.length} entreprise(s) ${filter !== 'ALL' ? getValueTrapFilterLabel(filter) : 'analysée(s)'} ${sectorFilter !== 'Tous secteurs' ? `dans ${sectorFilter}` : ''} - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} à ${Math.min(currentPage * itemsPerPage, filteredData.length)}`
-            ),
-
-            // Légende Value Trap
-            React.createElement('div', { 
-                className: 'mt-4 p-4 bg-gray-800 rounded-lg text-sm',
-                key: 'legend'
-            },
-                [
-                    React.createElement('h3', { 
-                        className: 'font-bold mb-2',
-                        key: 'legend-title'
-                    }, '📋 Légende Value Trap:'),
-                    React.createElement('div', { 
-                        className: 'grid grid-cols-2 gap-2 text-xs',
-                        key: 'legend-content'
-                    },
-                        [
-                            React.createElement('div', { key: 'elite' }, 
-                                '• ⭐ ELITE_VALUE: P/E < 8, P/B < 1, ROE > 15%'),
-                            React.createElement('div', { key: 'solid' }, 
-                                '• ✅ SOLID_VALUE: P/E < 12, P/B < 1.5, ROE > 12%'),
-                            React.createElement('div', { key: 'trap' }, 
-                                '• ⚠️ VALUE_TRAP: P/E < 6, P/B < 0.8, ROE < 8%'),
-                            React.createElement('div', { key: 'deep' }, 
-                                '• 🎯 DEEP_VALUE: P/E < P/B × 10'),
-                            React.createElement('div', { key: 'potential' }, 
-                                '• 📊 POTENTIAL_VALUE: P/E < 15, P/B < 2, ROE > 8%'),
-                            React.createElement('div', { key: 'speculative' }, 
-                                '• 🚫 SPECULATIVE: Autres cas')
-                        ]
-                    )
-                ]
-            )
-        ]
-    );
-};
+          ]
+      )
+ };
 
         // Fonction utilitaire pour les labels des filtres
         const getFilterLabel = (filter) => {
@@ -1688,6 +1671,7 @@ const ShortRiskTab = ({
     onPageChange,
     itemsPerPage,
     onItemsPerPageChange
+    totalItems 
 }) => {
     const [filter, setFilter] = useState('ALL');
      const [sectorFilter, setSectorFilter] = useState('Tous secteurs'); // 🔥 AJOUT
@@ -1921,53 +1905,14 @@ const ShortRiskTab = ({
                 key: 'pagination',
                 currentPage: currentPage,
                 totalPages: totalPages,
-                onPageChange: onPageChange,
+                onPageChange: setCurrentPage,
                 itemsPerPage: itemsPerPage,
-                onItemsPerPageChange: onItemsPerPageChange
+                onItemsPerPageChange: setItemsPerPage,
+                totalItems: filteredData.length
             }),
 
-            React.createElement('div', { 
-                className: 'mt-4 text-gray-400 text-sm',
-                key: 'counter'
-            }, 
-                `🚨 ${filteredData.length} entreprise(s) à risque ${filter !== 'ALL' ? getRiskFilterLabel(filter) : 'détectée(s)'} ${sectorFilter !== 'Tous secteurs' ? `dans ${sectorFilter}` : ''} - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} à ${Math.min(currentPage * itemsPerPage, filteredData.length)}`            ),
-                      // Légende Short Risk
-            React.createElement('div', { 
-                className: 'mt-4 p-4 bg-gray-800 rounded-lg text-sm',
-                key: 'legend'
-            },
-                [
-                    React.createElement('h3', { 
-                        className: 'font-bold mb-2 text-white',
-                        key: 'legend-title'
-                    }, '📋 Légende Risques:'),
-                    React.createElement('div', { 
-                        className: 'grid grid-cols-2 gap-2 text-xs',
-                        key: 'legend-content'
-                    },
-                        [
-                            React.createElement('div', { key: 'dangerous-debt' }, 
-                                '• 🚨 DANGEROUS_DEBT: D/E > 4 (ou > 8 pour banques)'),
-                            React.createElement('div', { key: 'interest-crisis' }, 
-                                '• 🔥 INTEREST_CRISIS: Coverage intérêt < 1'),
-                            React.createElement('div', { key: 'liquidity' }, 
-                                '• 💧 LIQUIDITY_PROBLEM: Current ratio < 0.8'),
-                            React.createElement('div', { key: 'cash-burn' }, 
-                                '• 💰 BURNING_CASH: Net income & cash flow négatifs'),
-                            React.createElement('div', { key: 'double-trouble' }, 
-                                '• ⚡ DOUBLE_TROUBLE: D/E > 2 ET coverage < 2'),
-                            React.createElement('div', { key: 'micro-cap' }, 
-                                '• 📉 MICRO_CAP_DISTRESS: Perte + petit chiffre affaires'),
-                            React.createElement('div', { key: 'score-critical' }, 
-                                '• 🔴 Score 8-15: Risque critique'),
-                            React.createElement('div', { key: 'score-high' }, 
-                                '• 🟡 Score 5-7: Risque élevé')
-                        ]
-                    )
                 ]
             )
-        ]
-    );
 };
         // Fonction utilitaire pour les labels des filtres de risque
         const getRiskFilterLabel = (filter) => {
@@ -2361,6 +2306,7 @@ const InvestmentApp = () => {
                           onPageChange: setCurrentPage,
                           itemsPerPage: itemsPerPage,
                           onItemsPerPageChange: setItemsPerPage
+                          totalItems: filteredBuffettData.length
                       })
                   ]
               )
@@ -2382,6 +2328,7 @@ const InvestmentApp = () => {
                   onPageChange: setCurrentPage,
                   itemsPerPage: itemsPerPage,
                   onItemsPerPageChange: setItemsPerPage
+                  totalItems: filteredBuffettData.length
               })
               : activeTab === 'valuetrap'
               ? React.createElement(ValueTrapTab, {
@@ -2400,6 +2347,7 @@ const InvestmentApp = () => {
                   onPageChange: setCurrentPage,
                   itemsPerPage: itemsPerPage,
                   onItemsPerPageChange: setItemsPerPage
+                  totalItems: filteredBuffettData.length
               })
               : React.createElement(ShortRiskTab, {
                   key: 'shortrisk-tab',
@@ -2419,6 +2367,7 @@ const InvestmentApp = () => {
                   onPageChange: setCurrentPage,
                   itemsPerPage: itemsPerPage,
                   onItemsPerPageChange: setItemsPerPage
+                  totalItems: filteredBuffettData.length
               })
             ]
         )
