@@ -891,7 +891,7 @@ const BuffettTab = ({
     );
 };
 
-// Composant Onglet Cash Flow avec Tri, Recherche et PAGINATION
+// Composant Onglet Cash Flow avec filtres, Tri, Recherche et PAGINATION
 const CashFlowTab = ({ 
     data, 
     getCashFlowColor, 
@@ -909,8 +909,21 @@ const CashFlowTab = ({
     itemsPerPage,
     onItemsPerPageChange
 }) => {
+    const [filter, setFilter] = useState('ALL');
+    
     const sortedAndFilteredData = getSortedAndFilteredData(data);
-    const paginatedData = getPaginatedData(sortedAndFilteredData); // 🔥 AJOUT PAGINATION
+    
+    // Filtrer les données selon le filtre sélectionné
+    const filteredData = filter === 'ALL' 
+        ? sortedAndFilteredData 
+        : sortedAndFilteredData.filter(item => {
+            if (filter === 'EXCELLENT') return item.fcf_yield > 0.06;
+            if (filter === 'GOOD') return item.fcf_yield > 0.03 && item.fcf_yield <= 0.06;
+            if (filter === 'WEAK') return item.fcf_yield <= 0.03;
+            return true;
+        });
+    
+    const paginatedData = getPaginatedData(filteredData);
     
     return React.createElement('div', { className: 'table-container' },
         [
@@ -919,9 +932,29 @@ const CashFlowTab = ({
                 key: 'search-bar',
                 searchTerm: searchTerm,
                 onSearch: onSearch,
-                dataCount: sortedAndFilteredData.length
+                dataCount: filteredData.length
             }),
 
+            // 🔥 FILTRES CASH FLOW
+            React.createElement('div', { 
+                className: 'flex gap-2 mb-6 flex-wrap',
+                key: 'filters' 
+            },
+                ['ALL', 'EXCELLENT', 'GOOD', 'WEAK'].map(filt =>
+                    React.createElement('button', {
+                        key: filt,
+                        onClick: () => setFilter(filt),
+                        className: `px-4 py-2 rounded-lg transition-all ${
+                            filter === filt 
+                                ? 'bg-blue-600 text-white shadow-lg' 
+                                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        }`
+                    }, 
+                    filt === 'ALL' ? '📋 Toutes' : 
+                    filt === 'EXCELLENT' ? '💰 EXCELLENT' :
+                    filt === 'GOOD' ? '💸 BON' : '🔴 FAIBLE')
+                )
+            ),
             React.createElement('div', { 
                 className: 'bg-gray-800 rounded-lg overflow-hidden shadow-xl',
                 key: 'table'
@@ -1072,13 +1105,23 @@ const CashFlowTab = ({
                 className: 'mt-4 text-gray-400 text-sm',
                 key: 'counter'
             }, 
-                `💰 ${sortedAndFilteredData.length} entreprise(s) avec un cash flow positif - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, sortedAndFilteredData.length)} à ${Math.min(currentPage * itemsPerPage, sortedAndFilteredData.length)}`
+                `💰 ${filteredData.length} entreprise(s) avec un cash flow ${filter === 'ALL' ? '' : filter.toLowerCase()} - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} à ${Math.min(currentPage * itemsPerPage, filteredData.length)}`
             )
         ]
     );
 };
 
-// Composant Onglet Value Trap Detector avec Tri, Recherche et PAGINATION
+      // Fonction utilitaire pour les labels des filtres Cash Flow
+      const getCashFlowFilterLabel = (filter) => {
+          const labels = {
+              'EXCELLENT': 'avec un cash flow excellent',
+              'GOOD': 'avec un bon cash flow', 
+              'WEAK': 'avec un cash flow faible'
+          };
+          return labels[filter] || '';
+      };
+
+// Composant Onglet Value Trap Detector avec Filtres, Tri, Recherche et PAGINATION
 const ValueTrapTab = ({ 
     data, 
     getValueGradeColor, 
@@ -1095,8 +1138,23 @@ const ValueTrapTab = ({
     itemsPerPage,
     onItemsPerPageChange
 }) => {
+    const [filter, setFilter] = useState('ALL');
+    
     const sortedAndFilteredData = getSortedAndFilteredData(data);
-    const paginatedData = getPaginatedData(sortedAndFilteredData); // 🔥 AJOUT PAGINATION
+    
+    // Filtrer les données selon le filtre sélectionné
+    const filteredData = filter === 'ALL' 
+        ? sortedAndFilteredData 
+        : sortedAndFilteredData.filter(item => {
+            if (filter === 'ELITE_VALUE') return item.value_grade.includes('ELITE_VALUE');
+            if (filter === 'SOLID_VALUE') return item.value_grade.includes('SOLID_VALUE');
+            if (filter === 'VALUE_TRAP') return item.value_grade.includes('VALUE_TRAP');
+            if (filter === 'DEEP_VALUE') return item.value_grade.includes('DEEP_VALUE');
+            if (filter === 'POTENTIAL') return item.value_grade.includes('POTENTIAL_VALUE');
+            return true;
+        });
+    
+    const paginatedData = getPaginatedData(filteredData);
     
     return React.createElement('div', { className: 'table-container' },
         [
@@ -1105,7 +1163,7 @@ const ValueTrapTab = ({
                 key: 'search-bar',
                 searchTerm: searchTerm,
                 onSearch: onSearch,
-                dataCount: sortedAndFilteredData.length
+                dataCount: filteredData.length
             }),
 
             // Avertissement Value Trap
@@ -1123,6 +1181,29 @@ const ValueTrapTab = ({
                         key: 'warning-text'
                     }, 'Une action peut sembler "bon marché" (faible P/E, P/B) mais cacher des problèmes structurels. Vérifiez toujours la rentabilité (ROE, ROIC) !')
                 ]
+            ),
+
+            // 🔥 FILTRES VALUE TRAP
+            React.createElement('div', { 
+                className: 'flex gap-2 mb-6 flex-wrap',
+                key: 'filters' 
+            },
+                ['ALL', 'ELITE_VALUE', 'SOLID_VALUE', 'VALUE_TRAP', 'DEEP_VALUE', 'POTENTIAL'].map(filt =>
+                    React.createElement('button', {
+                        key: filt,
+                        onClick: () => setFilter(filt),
+                        className: `px-4 py-2 rounded-lg transition-all ${
+                            filter === filt 
+                                ? 'bg-blue-600 text-white shadow-lg' 
+                                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        }`
+                    }, 
+                    filt === 'ALL' ? '📋 Toutes' : 
+                    filt === 'ELITE_VALUE' ? '⭐ ELITE' :
+                    filt === 'SOLID_VALUE' ? '✅ SOLIDE' :
+                    filt === 'VALUE_TRAP' ? '⚠️ PIÈGE' :
+                    filt === 'DEEP_VALUE' ? '🎯 PROFOND' : '📊 POTENTIEL')
+                )
             ),
 
             // Tableau Value Trap
@@ -1286,7 +1367,7 @@ const ValueTrapTab = ({
                 ]
             ),
 
-            // 🔥 AJOUT PAGINATION
+            // Pagination et compteur
             React.createElement(Pagination, {
                 key: 'pagination',
                 currentPage: currentPage,
@@ -1296,12 +1377,11 @@ const ValueTrapTab = ({
                 onItemsPerPageChange: onItemsPerPageChange
             }),
 
-            // 🔥 COMPTEUR MIS À JOUR avec informations de pagination
             React.createElement('div', { 
                 className: 'mt-4 text-gray-400 text-sm',
                 key: 'counter'
             }, 
-                `🎯 ${sortedAndFilteredData.length} entreprise(s) analysée(s) - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, sortedAndFilteredData.length)} à ${Math.min(currentPage * itemsPerPage, sortedAndFilteredData.length)}`
+                `🎯 ${filteredData.length} entreprise(s) ${filter === 'ALL' ? 'analysée(s)' : getFilterLabel(filter)} - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} à ${Math.min(currentPage * itemsPerPage, filteredData.length)}`
             ),
 
             // Légende Value Trap
@@ -1338,30 +1418,55 @@ const ValueTrapTab = ({
         ]
     );
 };
-  
+
+        // Fonction utilitaire pour les labels des filtres
+        const getFilterLabel = (filter) => {
+            const labels = {
+                'ELITE_VALUE': 'de qualité elite',
+                'SOLID_VALUE': 'de qualité solide', 
+                'VALUE_TRAP': 'potentiels pièges',
+                'DEEP_VALUE': 'de valeur profonde',
+                'POTENTIAL': 'à potentiel'
+            };
+            return labels[filter] || '';
+        };
 
 
-      // Composant Onglet Short Risk Detector avec Tri et Recherche
-      const ShortRiskTab = ({ 
-          data, 
-          getShortSignalColor, 
-          getRiskScoreColor, 
-          getMetricColor, 
-          formatMillions, 
-          sortConfig, 
-          onSort, 
-          searchTerm, 
-          onSearch, 
-          getSortedAndFilteredData,
-          getPaginatedData,
-          currentPage,
-          totalPages,
-          onPageChange,
-          itemsPerPage,
-          onItemsPerPageChange
-      }) => {
+      // Composant Onglet Short Risk Detector avec Filtres, Tri et Recherche
+const ShortRiskTab = ({ 
+    data, 
+    getShortSignalColor, 
+    getRiskScoreColor, 
+    getMetricColor, 
+    formatMillions, 
+    sortConfig, 
+    onSort, 
+    searchTerm, 
+    onSearch, 
+    getSortedAndFilteredData,
+    getPaginatedData,
+    currentPage,
+    totalPages,
+    onPageChange,
+    itemsPerPage,
+    onItemsPerPageChange
+}) => {
+    const [filter, setFilter] = useState('ALL');
+    
     const sortedAndFilteredData = getSortedAndFilteredData(data);
-    const paginatedData = getPaginatedData(sortedAndFilteredData);
+    
+    // Filtrer les données selon le filtre sélectionné
+    const filteredData = filter === 'ALL' 
+        ? sortedAndFilteredData 
+        : sortedAndFilteredData.filter(item => {
+            if (filter === 'CRITICAL') return item.risk_score >= 8;
+            if (filter === 'HIGH') return item.risk_score >= 5 && item.risk_score < 8;
+            if (filter === 'MEDIUM') return item.risk_score >= 3 && item.risk_score < 5;
+            if (filter === 'LOW') return item.risk_score < 3;
+            return true;
+        });
+    
+    const paginatedData = getPaginatedData(filteredData);
     
     return React.createElement('div', { className: 'table-container' },
         [
@@ -1370,7 +1475,7 @@ const ValueTrapTab = ({
                 key: 'search-bar',
                 searchTerm: searchTerm,
                 onSearch: onSearch,
-                dataCount: sortedAndFilteredData.length
+                dataCount: filteredData.length
             }),
 
             // Avertissement important
@@ -1401,6 +1506,28 @@ const ValueTrapTab = ({
                         )
                     )
                 ]
+            ),
+
+            // 🔥 FILTRES SHORT RISK
+            React.createElement('div', { 
+                className: 'flex gap-2 mb-6 flex-wrap',
+                key: 'filters' 
+            },
+                ['ALL', 'CRITICAL', 'HIGH', 'MEDIUM', 'LOW'].map(filt =>
+                    React.createElement('button', {
+                        key: filt,
+                        onClick: () => setFilter(filt),
+                        className: `px-4 py-2 rounded-lg transition-all ${
+                            filter === filt 
+                                ? 'bg-blue-600 text-white shadow-lg' 
+                                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        }`
+                    }, 
+                    filt === 'ALL' ? '📋 Toutes' : 
+                    filt === 'CRITICAL' ? '🚨 CRITIQUE' :
+                    filt === 'HIGH' ? '🔴 ÉLEVÉ' :
+                    filt === 'MEDIUM' ? '🟡 MOYEN' : '🟢 FAIBLE')
+                )
             ),
 
             // Tableau Short Risk
@@ -1549,23 +1676,22 @@ const ValueTrapTab = ({
                 ]
             ),
 
-              // 🔥 AJOUTER PAGINATION à la fin de ShortRiskTab
-              React.createElement(Pagination, {
-                  key: 'pagination',
-                  currentPage: currentPage,
-                  totalPages: totalPages,
-                  onPageChange: onPageChange,
-                  itemsPerPage: itemsPerPage,
-                  onItemsPerPageChange: onItemsPerPageChange
-              }),
-              
-              // 🔥 COMPTEUR MIS À JOUR
-              React.createElement('div', { 
-                  className: 'mt-4 text-gray-400 text-sm',
-                  key: 'counter'
-              }, 
-                  `🚨 ${sortedAndFilteredData.length} entreprise(s) à risque détectée(s) - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, sortedAndFilteredData.length)} à ${Math.min(currentPage * itemsPerPage, sortedAndFilteredData.length)}`
-              ),
+              / Pagination et compteur
+            React.createElement(Pagination, {
+                key: 'pagination',
+                currentPage: currentPage,
+                totalPages: totalPages,
+                onPageChange: onPageChange,
+                itemsPerPage: itemsPerPage,
+                onItemsPerPageChange: onItemsPerPageChange
+            }),
+
+            React.createElement('div', { 
+                className: 'mt-4 text-gray-400 text-sm',
+                key: 'counter'
+            }, 
+                `🚨 ${filteredData.length} entreprise(s) à risque ${filter === 'ALL' ? 'détectée(s)' : getRiskFilterLabel(filter)} - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} à ${Math.min(currentPage * itemsPerPage, filteredData.length)}`
+            ),
                       // Légende Short Risk
             React.createElement('div', { 
                 className: 'mt-4 p-4 bg-gray-800 rounded-lg text-sm',
@@ -1604,7 +1730,16 @@ const ValueTrapTab = ({
         ]
     );
 };
-
+        // Fonction utilitaire pour les labels des filtres de risque
+        const getRiskFilterLabel = (filter) => {
+            const labels = {
+                'CRITICAL': 'critique',
+                'HIGH': 'élevé', 
+                'MEDIUM': 'moyen',
+                'LOW': 'faible'
+            };
+            return labels[filter] || '';
+        };
 
 // COMPOSANT PRINCIPAL - InvestmentApp
 const InvestmentApp = () => {
