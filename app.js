@@ -343,18 +343,18 @@ const DescriptionBox = ({ analysisType }) => {
           },
             section.items.map((item, idx) =>
               React.createElement('div', {
-                className: 'bg-gray-700 p-4 rounded-lg',
+                className: 'glass rounded-xl p-4 transition-all hover:scale-105',
                 key: idx
               },
                 [
                   React.createElement('div', { 
-                    className: 'text-2xl mb-2',
-                    key: 'emoji'
+                    className: 'text-blue-400 font-bold text-lg mb-3',
+                    key: 'icon'
                   }, 
-                    item.title.includes('ROE') ? '📊' :
-                    item.title.includes('ROIC') ? '⚙️' :
-                    item.title.includes('Dette') ? '🏛️' :
-                    item.title.includes('Marge') ? '💰' : '📈'
+                    item.title.includes('ROE') ? 'R' :
+                    item.title.includes('ROIC') ? 'E' :
+                    item.title.includes('Dette') ? 'D' :
+                    item.title.includes('Marge') ? 'M' : 'Q'
                   ),
                   
                   React.createElement('h4', { 
@@ -363,7 +363,7 @@ const DescriptionBox = ({ analysisType }) => {
                   }, item.title),
                   
                   React.createElement('p', {
-                    className: 'text-gray-300 text-sm mb-2',
+                    className: 'text-gray-300 text-sm mb-3',
                     key: 'desc'
                   }, item.description),
                   
@@ -385,17 +385,17 @@ const DescriptionBox = ({ analysisType }) => {
       case "table":
         return React.createElement('div', { key: 'table-content' },
           React.createElement('div', {
-            className: 'overflow-x-auto',
+            className: 'overflow-x-auto rounded-lg',
           },
             React.createElement('table', { 
-              className: 'w-full text-sm',
+              className: 'w-full text-sm glass rounded-lg overflow-hidden',
             },
               [
                 React.createElement('thead', { key: 'head' },
-                  React.createElement('tr', { className: 'bg-gray-600' },
+                  React.createElement('tr', { className: 'bg-gray-700' },
                     section.headers.map((header, idx) =>
                       React.createElement('th', {
-                        className: 'px-4 py-2 text-left font-semibold',
+                        className: 'px-4 py-3 text-left font-semibold text-gray-200',
                         key: idx
                       }, header)
                     )
@@ -405,12 +405,12 @@ const DescriptionBox = ({ analysisType }) => {
                 React.createElement('tbody', { key: 'body' },
                   section.rows.map((row, rowIdx) =>
                     React.createElement('tr', {
-                      className: rowIdx % 2 === 0 ? 'bg-gray-700' : 'bg-gray-650',
+                      className: rowIdx % 2 === 0 ? 'bg-gray-800' : 'bg-gray-750',
                       key: rowIdx
                     },
                       row.map((cell, cellIdx) =>
                         React.createElement('td', {
-                          className: 'px-4 py-2 border-b border-gray-600',
+                          className: 'px-4 py-3 border-b border-gray-700',
                           key: cellIdx
                         }, cell)
                       )
@@ -424,7 +424,7 @@ const DescriptionBox = ({ analysisType }) => {
 
       case "comparison":
         return React.createElement('div', { 
-          className: 'bg-gray-750 rounded-lg p-6 mb-6',
+          className: 'glass rounded-xl p-6 mb-6',
           key: 'comparison'
         },
           [
@@ -438,9 +438,8 @@ const DescriptionBox = ({ analysisType }) => {
               key: 'comparison-grid'
             },
               [
-                // Colonne "Ce qu'il faut faire"
                 React.createElement('div', {
-                  className: 'bg-green-900/30 p-4 rounded-lg border border-green-500',
+                  className: 'bg-green-900/20 p-4 rounded-lg border border-green-500/30',
                   key: 'good'
                 },
                   [
@@ -452,14 +451,19 @@ const DescriptionBox = ({ analysisType }) => {
                       React.createElement('div', {
                         className: 'flex items-center text-green-300 text-sm mb-2',
                         key: `good-${idx}`
-                      }, item)
+                      }, 
+                        React.createElement('span', {
+                          className: 'text-green-400 mr-2 font-bold',
+                          key: 'check'
+                        }, '✓'),
+                        item
+                      )
                     )
                   ]
                 ),
                 
-                // Colonne "Ce qu'il faut éviter"
                 React.createElement('div', {
-                  className: 'bg-red-900/30 p-4 rounded-lg border border-red-500',
+                  className: 'bg-red-900/20 p-4 rounded-lg border border-red-500/30',
                   key: 'bad'
                 },
                   [
@@ -471,7 +475,13 @@ const DescriptionBox = ({ analysisType }) => {
                       React.createElement('div', {
                         className: 'flex items-center text-red-300 text-sm mb-2',
                         key: `bad-${idx}`
-                      }, item)
+                      },
+                        React.createElement('span', {
+                          className: 'text-red-400 mr-2 font-bold',
+                          key: 'cross'
+                        }, '✗'),
+                        item
+                      )
                     )
                   ]
                 )
@@ -480,9 +490,10 @@ const DescriptionBox = ({ analysisType }) => {
           ]
         );
 
+      // ... autres cas restent similaires mais sans emojis
       case "usage":
         return React.createElement('div', { 
-          className: 'bg-gray-750 rounded-lg p-6 mb-6',
+          className: 'glass rounded-xl p-6 mb-6',
           key: 'usage'
         },
           [
@@ -493,18 +504,18 @@ const DescriptionBox = ({ analysisType }) => {
             
             ...section.items.map((item, idx) =>
               React.createElement('div', {
-                className: 'mb-3 p-3 bg-gray-700 rounded-lg',
+                className: 'mb-3 p-3 bg-gray-800/50 rounded-lg border border-gray-700',
                 key: `usage-${idx}`
               },
                 [
                   React.createElement('div', {
-                    className: 'font-semibold text-blue-300 mb-1',
+                    className: 'font-semibold text-blue-400 mb-1',
                     key: 'target'
                   }, item.target),
                   React.createElement('div', {
                     className: 'text-white',
                     key: 'action'
-                  }, item.action)
+                  }, item.action.replace('→', '→'))
                 ]
               )
             )
@@ -513,7 +524,7 @@ const DescriptionBox = ({ analysisType }) => {
 
       case "warnings":
         return React.createElement('div', { 
-          className: 'bg-yellow-900/20 rounded-lg p-6 mb-6 border border-yellow-500',
+          className: 'bg-yellow-900/10 rounded-xl p-6 mb-6 border border-yellow-500/30',
           key: 'warnings'
         },
           [
@@ -539,7 +550,13 @@ const DescriptionBox = ({ analysisType }) => {
                       React.createElement('div', {
                         className: 'flex items-center text-yellow-200 text-sm mb-2',
                         key: `limit-${idx}`
-                      }, item)
+                      }, 
+                        React.createElement('span', {
+                          className: 'text-yellow-400 mr-2',
+                          key: 'bullet'
+                        }, '•'),
+                        item
+                      )
                     )
                   ]
                 ),
@@ -556,7 +573,13 @@ const DescriptionBox = ({ analysisType }) => {
                       React.createElement('div', {
                         className: 'flex items-center text-blue-200 text-sm mb-2',
                         key: `comp-${idx}`
-                      }, item)
+                      },
+                        React.createElement('span', {
+                          className: 'text-blue-400 mr-2',
+                          key: 'bullet'
+                        }, '•'),
+                        item
+                      )
                     )
                   ]
                 )
@@ -567,7 +590,7 @@ const DescriptionBox = ({ analysisType }) => {
 
       case "quote":
         return React.createElement('div', { 
-          className: 'bg-purple-900/30 rounded-lg p-6 mb-6 text-center border border-purple-500',
+          className: 'bg-purple-900/20 rounded-xl p-6 mb-6 text-center border border-purple-500/30',
           key: 'quote'
         },
           [
@@ -590,11 +613,11 @@ const DescriptionBox = ({ analysisType }) => {
 
       case "final-note":
         return React.createElement('div', { 
-          className: 'bg-blue-900/30 rounded-lg p-4 mb-4 text-center',
+          className: 'bg-blue-900/20 rounded-lg p-4 mb-4 text-center border border-blue-500/30',
           key: 'final-note'
         },
           React.createElement('p', {
-            className: 'text-blue-200 font-semibold'
+            className: 'text-blue-300 font-semibold'
           }, section.content)
         );
 
@@ -606,60 +629,87 @@ const DescriptionBox = ({ analysisType }) => {
     }
   };
 
-  // Rendu principal avec un seul bouton
   return React.createElement('div', { 
-    className: 'bg-gray-800 rounded-lg p-6 mb-8 border-l-4 border-blue-500'
+    className: 'glass rounded-2xl p-6 mb-8'
   },
     [
-      // Titre principal (toujours visible)
-      React.createElement('h2', { 
-        className: 'text-2xl font-bold mb-6 text-white text-center',
-        key: 'main-title'
-      }, desc.title),
-      
-      // Première section (toujours visible)
+      // Header avec icône et titre
       React.createElement('div', { 
-        className: 'mb-6',
-        key: 'first-section'
+        className: 'flex items-center gap-4 mb-6',
+        key: 'header'
       },
         [
-          desc.sections[0].title && React.createElement('h3', { 
-            className: 'text-lg font-bold mb-3 text-white',
-            key: 'title'
-          }, desc.sections[0].title),
+          React.createElement('div', {
+            className: 'header-icon',
+            key: 'icon'
+          }, 'Q'),
           
-          React.createElement('p', {
-            className: 'text-gray-300 leading-relaxed',
-            key: 'content'
-          }, desc.sections[0].content)
+          React.createElement('h1', { 
+            className: 'text-2xl font-bold text-white',
+            key: 'title'
+          }, desc.title)
+        ]
+      ),
+      
+      // Carte explicative avec gradient
+      React.createElement('div', { 
+        className: 'gradient-card p-6 mb-6',
+        key: 'explanation-card'
+      },
+        [
+          React.createElement('div', {
+            className: 'flex items-start gap-4',
+            key: 'card-content'
+          },
+            [
+              React.createElement('div', {
+                className: 'border-left-blue h-12',
+                key: 'blue-bar'
+              }),
+              
+              React.createElement('div', { key: 'text-content' },
+                [
+                  React.createElement('h2', { 
+                    className: 'text-xl font-bold mb-3 text-white',
+                    key: 'card-title'
+                  }, desc.sections[0].title),
+                  
+                  React.createElement('p', {
+                    className: 'text-gray-300 leading-relaxed',
+                    key: 'card-text'
+                  }, desc.sections[0].content)
+                ]
+              )
+            ]
+          )
         ]
       ),
 
       // Bouton "Détail de la méthodologie"
-      React.createElement('div', {
-        className: 'mb-4',
+      React.createElement('button', {
+        onClick: toggleExpanded,
+        className: 'btn-primary w-full flex justify-between items-center mb-4',
         key: 'toggle-button'
       },
-        React.createElement('button', {
-          onClick: toggleExpanded,
-          className: 'w-full text-left p-4 rounded-lg bg-gray-750 hover:bg-gray-700 transition-all flex justify-between items-center',
-          key: 'header'
-        },
-          [
-            React.createElement('span', {
-              className: 'font-bold text-white text-lg',
-              key: 'button-text'
-            }, 'Détail de la méthodologie'),
-          ]
-        )
+        [
+          React.createElement('span', {
+            className: 'font-bold text-white',
+            key: 'button-text'
+          }, 'Détail de la méthodologie'),
+          
+          React.createElement('span', {
+            className: 'transition-transform',
+            key: 'arrow',
+            style: { transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }
+          }, '▼')
+        ]
       ),
       
       // Contenu déroulant de la méthodologie
       isExpanded && React.createElement('div', {
-        className: 'mt-2 p-4 bg-gray-800 rounded-lg space-y-6',
+        className: 'expandable-section p-6 space-y-6',
         key: 'methodology-content'
       },
-        // Afficher toutes les sections sauf la première (déjà affichée)
         desc.sections.slice(1).map((section, index) =>
           React.createElement('div', {
             key: `section-${index + 1}`,
@@ -667,7 +717,7 @@ const DescriptionBox = ({ analysisType }) => {
           },
             [
               section.title && React.createElement('h3', { 
-                className: 'text-lg font-bold mb-3 text-white',
+                className: 'text-lg font-bold mb-3 text-white border-l-4 border-blue-500 pl-3',
                 key: 'title'
               }, section.title),
               
@@ -2167,21 +2217,36 @@ const InvestmentApp = () => {
             [
                 // En-tête
                 React.createElement('div', { key: 'header' },
+    [
+        React.createElement('div', { 
+            className: 'glass rounded-2xl p-8 mb-8',
+            key: 'main-header'
+        },
+            [
+                React.createElement('div', {
+                    className: 'flex items-center gap-4 mb-4',
+                    key: 'title-section'
+                },
                     [
-                        React.createElement('h1', { 
-                            className: 'text-3xl font-bold mb-2',
-                            key: 'title'
-                        }, '📊 Analyse Investissement - Données Réelles'),
-                        React.createElement('p', { 
-                            className: 'text-gray-400 mb-6',
-                            key: 'subtitle' 
-                        }, 'Données en direct depuis PostgreSQL'),
-                        React.createElement('div', { 
-                            className: 'bg-green-500 text-white p-3 rounded-lg mb-4',
-                            key: 'live-warning'
-                        }, '✅ Connecté à la base de données en temps réel')
+                        React.createElement('div', {
+                            className: 'header-icon text-xl',
+                            key: 'main-icon'
+                        }, 'B'),
+                        
+                        React.createElement('div', { key: 'title-text' },
+                            [
+                                React.createElement('h1', { 
+                                    className: 'text-3xl font-bold mb-2 text-white',
+                                    key: 'main-title'
+                                }, 'Buffett Quality Score - Analyse Investissement'),
+                            ]
+                        )
                     ]
-                ),
+                ),                
+            ]
+        )
+    ]
+),
                 
                 // Onglets
                 React.createElement('div', { 
@@ -2190,26 +2255,30 @@ const InvestmentApp = () => {
                 },
                     React.createElement('div', { className: 'tabs' },
                         [
+                            // Dans les onglets, remplacez par :
                             React.createElement('button', {
                                 key: 'buffett',
                                 onClick: () => setActiveTab('buffett'),
                                 className: `tab ${activeTab === 'buffett' ? 'active' : ''}`
-                            }, `📈 Score Buffett (${buffettData.length})`),
+                            }, `Qualité Buffett (${buffettData.length})`),
+                            
                             React.createElement('button', {
                                 key: 'cashflow',
                                 onClick: () => setActiveTab('cashflow'),
                                 className: `tab ${activeTab === 'cashflow' ? 'active' : ''}`
-                            }, `💰 Cash Flow (${cashFlowData.length})`),
+                            }, `Cash Flow (${cashFlowData.length})`),
+                            
                             React.createElement('button', {
                                 key: 'valuetrap',
                                 onClick: () => setActiveTab('valuetrap'),
                                 className: `tab ${activeTab === 'valuetrap' ? 'active' : ''}`
-                            }, `🎯 Value Trap (${valueTrapData.length})`),
+                            }, `Value Trap (${valueTrapData.length})`),
+                            
                             React.createElement('button', {
                                 key: 'shortrisk',
                                 onClick: () => setActiveTab('shortrisk'),
                                 className: `tab ${activeTab === 'shortrisk' ? 'active' : ''}`
-                            }, `🚨 Short Risk (${shortRiskData.length})`)
+                            }, `Short Risk (${shortRiskData.length})`)
                         ]
                     )
                 ),
