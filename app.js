@@ -2233,19 +2233,10 @@ const InvestmentApp = () => {
                                             className: 'text-3xl font-bold mb-2 text-white',
                                             key: 'main-title'
                                         }, 'Analyse d\'entreprises'),
-                                        React.createElement('p', { 
-                                            className: 'text-gray-400',
-                                            key: 'subtitle' 
-                                        }, 'Données en direct depuis PostgreSQL - Outil professionnel d\'analyse boursière')
                                     ]
                                 )
                             ]
                         ),
-                        
-                        React.createElement('div', { 
-                            className: 'status-connected p-4 rounded-lg',
-                            key: 'live-warning'
-                        }, 'CONNECTÉ - Base de données en temps réel')
                     ]
                 )
             ]
