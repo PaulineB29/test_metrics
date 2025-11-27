@@ -392,21 +392,13 @@ body {
     height: 2rem;
     animation: spin 1s linear infinite;
 }
-/* Ajoutez ces nouvelles classes au CSS */
-.glass-header {
-  background: rgba(30, 41, 59, 0.7);
-  backdrop-filter: blur(10px);
-  border-radius: 1rem;
-  padding: 2rem;
-  margin-bottom: 0;
-}
 
 .glass-main {
-  background: rgba(30, 41, 59, 0.7);
-  backdrop-filter: blur(10px);
-  border-radius: 1rem;
-  padding: 0 1.5rem;
-  margin-bottom: 2rem;
+    background: linear-gradient(135deg, rgb(44 53 67 / 80%), rgb(23 40 67));
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .gradient-card-custom {
@@ -457,32 +449,35 @@ body {
   margin-bottom: 1rem;
 }
 
+/* Icône recherche */
 .search-icon {
-  position: absolute;
-  left: 1rem;
-  color: #94a3b8;
-  pointer-events: none;
+    position: absolute;
+    left: 1rem;
+    color: #94a3b8; /* Couleur plus neutre */
+    pointer-events: none;
+    font-size: 0.875rem;
 }
 
 .search-input {
-  width: 100%;
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(100, 116, 139, 0.5);
-  border-radius: 0.75rem;
-  padding: 1rem 1rem 1rem 3rem;
-  color: white;
-  font-size: 0.875rem;
-  transition: all 0.3s ease;
+    width: 100%;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(100, 116, 139, 0.5);
+    border-radius: 0.75rem;
+    padding: 1rem 1rem 1rem 3rem;
+    color: white;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    margin-right: 0.3125rem; /* 5px */
+}
+
+.search-input::placeholder {
+    color: #64748b;
 }
 
 .search-input:focus {
   outline: none;
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.search-input::placeholder {
-  color: #64748b;
 }
 
 .results-counter {
