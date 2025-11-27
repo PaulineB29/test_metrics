@@ -247,7 +247,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, itemsPerPage, onIte
                     React.createElement('select', {
                         value: itemsPerPage,
                         onChange: (e) => onItemsPerPageChange(Number(e.target.value)),
-                        className: 'bg-black text-white px-3 py-2 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none',
+                        className: 'bg-gray-800 text-white px-3 py-2 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none',
                         key: 'select'
                     },
                         [20, 50, 100, 200].map(value =>
@@ -270,7 +270,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange, itemsPerPage, onIte
                     // Bouton Première page
                     React.createElement('button', {
                         onClick: () => onPageChange(1),
-                        disabled: currentPage === 1,
                         className: `px-3 py-2 rounded-lg font-medium transition-all ${currentPage === 1 
                             ? 'bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-700' 
                             : 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-600 hover:border-gray-500'}`,
@@ -280,7 +279,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange, itemsPerPage, onIte
                     // Bouton Précédent
                     React.createElement('button', {
                         onClick: () => onPageChange(currentPage - 1),
-                        disabled: currentPage === 1,
                         className: `px-3 py-2 rounded-lg font-medium transition-all ${currentPage === 1 
                             ? 'bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-700' 
                             : 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-600 hover:border-gray-500'}`,
@@ -291,17 +289,16 @@ const Pagination = ({ currentPage, totalPages, onPageChange, itemsPerPage, onIte
                     ...pages.map(page =>
                         React.createElement('button', {
                             onClick: () => onPageChange(page),
-                        className: `px-3 py-2 rounded-lg font-medium transition-all ${currentPage === 1 
-                            ? 'bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-700' 
-                            : 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-600 hover:border-gray-500'}`,
+                        className: `px-4 py-2 rounded-lg font-medium transition-all border ${page === currentPage 
+                            ? 'bg-blue-600 text-white font-bold border-blue-500'  // ← SUPPRIMÉ shadow-lg
+                            : 'bg-gray-800 text-gray-200 hover:bg-gray-700 border-gray-600 hover:border-gray-500'}`,
                             key: page
                         }, page)
                     ),
                     
                     // Bouton Suivant
                     React.createElement('button', {
-                        onClick: () => onPageChange(currentPage + 1),
-                        disabled: currentPage === totalPages,
+                        onClick: () => onPageChange(currentPage + 1),                        
                         className: `px-3 py-2 rounded-lg font-medium transition-all ${currentPage === 1 
                             ? 'bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-700' 
                             : 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-600 hover:border-gray-500'}`,
@@ -311,7 +308,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange, itemsPerPage, onIte
                     // Bouton Dernière page
                     React.createElement('button', {
                         onClick: () => onPageChange(totalPages),
-                        disabled: currentPage === totalPages,
                         className: `px-3 py-2 rounded-lg font-medium transition-all ${currentPage === 1 
                             ? 'bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-700' 
                             : 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-600 hover:border-gray-500'}`,
