@@ -1282,9 +1282,7 @@ const CashFlowTab = ({
           // logique de filtrage
       });
     }, [sortedAndFilteredData, filter, sectorFilter]);
-  
-    const sortedAndFilteredData = getSortedAndFilteredData(data);
-    
+      
     const filteredData = sortedAndFilteredData.filter(item => {
         const qualityMatch = filter === 'ALL' || 
             (filter === 'EXCELLENT' && item.fcf_yield > 0.06) ||
