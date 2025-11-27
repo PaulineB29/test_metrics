@@ -537,3 +537,169 @@ body {
   background: #1e293b;
   color: white;
 }
+/* Styles pour la méthodologie */
+.section-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-left: 0.75rem;
+    border-left-width: 4px;
+}
+
+.section-title-green {
+    color: white;
+    border-left-color: #10b981;
+}
+
+.section-title-yellow {
+    color: white;
+    border-left-color: #f59e0b;
+}
+
+.section-title-blue {
+    color: white;
+    border-left-color: #3b82f6;
+}
+
+.section-title-purple {
+    color: white;
+    border-left-color: #8b5cf6;
+}
+
+.section-title-red {
+    color: white;
+    border-left-color: #ef4444;
+}
+
+.pillar-card {
+    background: rgba(30, 41, 59, 0.5);
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(100, 116, 139, 0.3);
+}
+
+.pillar-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.pillar-text {
+    color: #94a3b8;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+.pillar-quote {
+    color: #cbd5e1;
+    font-size: 0.875rem;
+    font-style: italic;
+    border-left: 2px solid;
+    padding-left: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.rating-table {
+    width: 100%;
+    font-size: 0.875rem;
+    background: rgba(30, 41, 59, 0.5);
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.rating-table th {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    color: #94a3b8;
+    border-bottom: 1px solid #334155;
+    font-weight: 600;
+}
+
+.rating-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+}
+
+.philosophy-card {
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+}
+
+.philosophy-good {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.philosophy-bad {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.philosophy-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.usage-card {
+    background: rgba(30, 41, 59, 0.5);
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(100, 116, 139, 0.3);
+}
+
+.usage-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #60a5fa;
+}
+
+.warning-column {
+    background: rgba(30, 41, 59, 0.5);
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(100, 116, 139, 0.3);
+}
+
+.warning-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.secret-section {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.secret-title {
+    font-size: 1.25rem;
+    color: white;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.secret-quote {
+    color: #cbd5e1;
+    font-style: italic;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+}
+
+.secret-text {
+    color: #94a3b8;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+.list-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: #cbd5e1;
+    font-size: 0.875rem;
+}
