@@ -879,6 +879,16 @@ const BuffettTab = ({
         { value: 'WEAK', label: 'WEAK' }
     ];
 
+    const sortedAndFilteredData = React.useMemo(() => {
+        return getSortedAndFilteredData(data);
+    }, [data, searchTerm, sortConfig]);
+    
+    const filteredData = React.useMemo(() => {
+        return sortedAndFilteredData.filter(item => {
+            // logique de filtrage
+        });
+    }, [sortedAndFilteredData, filter, sectorFilter]);
+  
     // Fonctions de tri et pagination locales
     const getSortedAndFilteredData = (data) => {
         if (!data) return [];
@@ -1185,7 +1195,6 @@ const BuffettTab = ({
   };
 
 // Composant Onglet Cash Flow avec filtres, Tri, Recherche et PAGINATION
-// Composant Onglet Cash Flow avec le même design que Buffett
 const CashFlowTab = ({ 
     data, 
     getCashFlowColor, 
@@ -1273,6 +1282,16 @@ const CashFlowTab = ({
         return data.slice(startIndex, endIndex);
     };
 
+    const sortedAndFilteredData = React.useMemo(() => {
+      return getSortedAndFilteredData(data);
+    }, [data, searchTerm, sortConfig]);
+  
+    const filteredData = React.useMemo(() => {
+      return sortedAndFilteredData.filter(item => {
+          // logique de filtrage
+      });
+    }, [sortedAndFilteredData, filter, sectorFilter]);
+  
     const sortedAndFilteredData = getSortedAndFilteredData(data);
     
     const filteredData = sortedAndFilteredData.filter(item => {
@@ -1295,11 +1314,11 @@ const CashFlowTab = ({
         return '🔴 FAIBLE';
     };
 
-    const getCashFlowRatingColor = (item) => {
-        if (item.fcf_yield > 0.06) return 'bg-gradient-purple';
-        if (item.fcf_yield > 0.03) return 'bg-gradient-teal';
-        return 'bg-gradient-red';
-    };
+            const getCashFlowRatingColor = (item) => {
+                if (item.fcf_yield > 0.06) return 'bg-green-600';
+                if (item.fcf_yield > 0.03) return 'bg-blue-600';
+                return 'bg-red-600';
+            };
 
     return React.createElement('div', {},
         [
@@ -1633,6 +1652,16 @@ const ValueTrapTab = ({
         return filteredData;
     };
 
+    const sortedAndFilteredData = React.useMemo(() => {
+        return getSortedAndFilteredData(data);
+    }, [data, searchTerm, sortConfig]);
+    
+    const filteredData = React.useMemo(() => {
+        return sortedAndFilteredData.filter(item => {
+            // logique de filtrage
+        });
+    }, [sortedAndFilteredData, filter, sectorFilter]);
+  
     const getPaginatedData = (data) => {
         if (!data || data.length === 0) return [];
         const startIndex = (currentPage - 1) * itemsPerPage;
@@ -1643,13 +1672,13 @@ const ValueTrapTab = ({
     const sortedAndFilteredData = getSortedAndFilteredData(data);
     
     const filteredData = sortedAndFilteredData.filter(item => {
-        const qualityMatch = filter === 'ALL' || 
-            (item.value_grade && item.value_grade.includes(filter));
-        
-        const sectorMatch = sectorFilter === 'Tous secteurs' || 
-            (item.secteur && item.secteur === sectorFilter);
-        
-        return qualityMatch && sectorMatch;
+    const qualityMatch = filter === 'ALL' || 
+        (item.value_grade && item.value_grade.includes(filter));
+    
+    const sectorMatch = sectorFilter === 'Tous secteurs' || 
+        (item.secteur && item.secteur === sectorFilter);
+    
+    return qualityMatch && sectorMatch;
     });
     
     const paginatedData = getPaginatedData(filteredData);
@@ -2016,6 +2045,16 @@ const ShortRiskTab = ({
         return filteredData;
     };
 
+     const sortedAndFilteredData = React.useMemo(() => {
+        return getSortedAndFilteredData(data);
+    }, [data, searchTerm, sortConfig]);
+    
+    const filteredData = React.useMemo(() => {
+        return sortedAndFilteredData.filter(item => {
+            // logique de filtrage
+        });
+    }, [sortedAndFilteredData, filter, sectorFilter]);
+  
     const getPaginatedData = (data) => {
         if (!data || data.length === 0) return [];
         const startIndex = (currentPage - 1) * itemsPerPage;
@@ -2279,7 +2318,11 @@ const ShortRiskTab = ({
                                             key: 'risk-score'
                                         }, item.risk_score),
                                         React.createElement('div', { 
-                                            className: `px-3 py-2 rounded-full text-xs font-bold text-center text-white ${getShortSignalColor(item.short_signal)}`,
+                                            className: `px-3 py-2 rounded-full text-xs font-bold text-center text-white ${
+                                                item.risk_score >= 8 ? 'bg-red-600' : 
+                                                item.risk_score >= 5 ? 'bg-orange-600' : 
+                                                'bg-yellow-600'
+                                            }`,
                                             key: 'signal'
                                         }, item.short_signal)
                                     ]
@@ -2626,6 +2669,8 @@ const InvestmentApp = () => {
                             React.createElement(BuffettTab, {
                                 key: 'table',
                                 data: filteredBuffettData,
+                                filter: buffettFilter, // ← AJOUTER
+                                onFilterChange: setBuffettFilter, // ← AJOUTER
                                 getRatingColor: getBuffettRatingColor,
                                 getValueColor: getValueColor,
                                 sortConfig: sortConfig,
