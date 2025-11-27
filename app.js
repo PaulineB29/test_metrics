@@ -1227,6 +1227,18 @@ const CashFlowTab = ({
         'Real Estate'
     ];
 
+        const getCashFlowRating = (item) => {
+        if (item.fcf_yield > 0.06) return '💰 EXCELLENT';
+        if (item.fcf_yield > 0.03) return '💸 BON';
+        return '🔴 FAIBLE';
+    };
+
+      const getCashFlowRatingColor = (item) => {
+        if (item.fcf_yield > 0.06) return 'bg-green-600';
+        if (item.fcf_yield > 0.03) return 'bg-blue-600';
+        return 'bg-red-600';
+    };
+        
     const getSortedAndFilteredData = (data) => {
         if (!data) return [];
         
@@ -1294,17 +1306,6 @@ const CashFlowTab = ({
       const paginatedData = React.useMemo(() => {
         return getPaginatedData(filteredData);
     }, [filteredData, currentPage, itemsPerPage]);
-
-      const getCashFlowRating = (item) => {
-        if (item.fcf_yield > 0.06) return '💰 EXCELLENT';
-        if (item.fcf_yield > 0.03) return '💸 BON';
-        return '🔴 FAIBLE';
-    };
-
-      const getCashFlowRatingColor = (item) => {
-        if (item.fcf_yield > 0.06) return 'bg-green-600';
-        if (item.fcf_yield > 0.03) return 'bg-blue-600';
-        return 'bg-red-600';
 
       return React.createElement('div', {},
         [
