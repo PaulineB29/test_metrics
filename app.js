@@ -250,7 +250,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, itemsPerPage, onIte
                         className: 'bg-gray-700 text-white px-3 py-1 rounded border border-gray-600',
                         key: 'select'
                     },
-                        [25, 50, 100, 200].map(value =>
+                        [20, 50, 100, 200].map(value =>
                             React.createElement('option', {
                                 value: value,
                                 key: value
@@ -1756,7 +1756,7 @@ const InvestmentApp = () => {
         
     // PAGINATION
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(100);
+    const [itemsPerPage, setItemsPerPage] = useState(20);
     const [totalPages, setTotalPages] = useState(1);
 
     // DONNÉES FILTRÉES
