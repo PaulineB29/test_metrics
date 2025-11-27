@@ -392,3 +392,52 @@ body {
     height: 2rem;
     animation: spin 1s linear infinite;
 }
+/* Ajoutez ces nouvelles classes au CSS */
+.glass-header {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 0;
+}
+
+.glass-main {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  padding: 0 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.gradient-card-custom {
+  background: linear-gradient(135deg, rgb(44 53 67 / 80%), rgb(23 40 67));
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+  padding: 1.5rem;
+}
+
+.btn-primary-custom {
+  background: rgb(71 85 109 / 80%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  width: 100%;
+  text-align: left;
+  margin-top: 0.625rem;
+}
+
+.btn-primary-custom:hover {
+  background: rgb(85 99 123 / 80%);
+  transform: translateY(-1px);
+}
+
+.tab-gradient.active {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+}
