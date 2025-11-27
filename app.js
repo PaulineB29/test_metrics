@@ -1828,7 +1828,7 @@ const ShortRiskTab = ({
                 ]
             ),
 
-              / Pagination et compteur
+            // Pagination et compteur
             React.createElement(Pagination, {
                 key: 'pagination',
                 currentPage: currentPage,
