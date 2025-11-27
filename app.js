@@ -629,58 +629,50 @@ const DescriptionBox = ({ analysisType }) => {
     }
   };
 
- return React.createElement('div', { 
-    className: 'glass-main'
-  },
-    [
-      // Header avec titre seulement (sans icône)
-      React.createElement('div', { 
-        className: 'flex items-center gap-4 mb-6',
-        key: 'header'
-      },
-        [
-          React.createElement('h1', { 
-            className: 'text-xl text-white', // Réduit la taille et enlève le gras
-            key: 'title'
-          }, 'Buffett Quality Score')
-        ]
-      ),
-      
-      // Carte explicative avec le nouveau gradient
-      React.createElement('div', { 
-        className: 'gradient-card-custom',
-        key: 'explanation-card'
-      },
-        [
-          React.createElement('div', {
-            className: 'flex items-start gap-4',
-            key: 'card-content'
-          },
-            [
-              React.createElement('div', {
-                className: 'border-left-blue h-12',
-                key: 'blue-bar'
-              }),
-              
-              React.createElement('div', { key: 'text-content' },
-                [
-                  React.createElement('h2', { 
-                    className: 'text-lg mb-3 text-white', // Réduit la taille et enlève le gras
-                    key: 'card-title'
-                  }, 'L\'Héritage de Warren Buffett'),
-                  
-                  React.createElement('p', {
-                    className: 'text-gray-300 leading-relaxed text-sm', // Réduit légèrement la taille
-                    key: 'card-text'
-                  }, desc.sections[0].content)
-                ]
-              )
-            ]
-          ),
-          // Bouton "Détail de la méthodologie"
-          React.createElement('button', {
+      return React.createElement('div', { 
+          className: 'glass-main'
+        },
+          [
+            // Titre seulement (suppression de la div flex)
+            React.createElement('h1', { 
+              className: 'text-xl text-white mb-6',
+              key: 'title'
+            }, 'Buffett Quality Score'),
+            
+            // Carte explicative
+            React.createElement('div', { 
+              key: 'explanation-card'
+            },
+              [
+                React.createElement('div', {
+                  className: 'flex items-start gap-4',
+                  key: 'card-content'
+                },
+                  [
+                    React.createElement('div', {
+                      className: 'border-left-blue h-12',
+                      key: 'blue-bar'
+                    }),
+                    
+                    React.createElement('div', { key: 'text-content' },
+                      [
+                        React.createElement('h2', { 
+                          className: 'text-lg mb-3 text-white',
+                          key: 'card-title'
+                        }, 'L\'Héritage de Warren Buffett'),
+                        
+                        React.createElement('p', {
+                          className: 'text-gray-300 leading-relaxed text-sm',
+                          key: 'card-text'
+                        }, desc.sections[0].content)
+                      ]
+                    )
+                  ]
+                ),
+             // Bouton
+              React.createElement('button', {
                 onClick: toggleExpanded,
-                className: 'btn-primary-custom flex justify-between items-center',
+                className: 'btn-primary-custom flex justify-between items-center mt-4',
                 key: 'toggle-button'
               },
                 [
@@ -696,10 +688,10 @@ const DescriptionBox = ({ analysisType }) => {
                   }, '▼')
                 ]
               )
-        ]
-      ),
+            ]
+          ),
       
-      // Contenu déroulant de la méthodologie
+     // Contenu déroulant
       isExpanded && React.createElement('div', {
         className: 'expandable-section p-6 space-y-6 mt-4',
         key: 'methodology-content'
@@ -759,7 +751,7 @@ const BuffettTab = ({
     ];
 
     const QUALITY_FILTERS = [
-        { value: 'ALL', label: 'Toutes qualités' },
+        { value: 'ALL', label: 'Tous scores' },
         { value: 'ELITE', label: 'ELITE' },
         { value: 'STRONG', label: 'STRONG' },
         { value: 'DECENT', label: 'DECENT' },
@@ -855,11 +847,11 @@ const BuffettTab = ({
                             React.createElement('div', {
                                 className: 'search-icon',
                                 key: 'search-icon'
-                            }, '🔍'),
+                            }, '🔍'), // Icône plus simple
                             
                             React.createElement('input', {
                                 type: 'text',
-                                placeholder: 'Rechercher dans toutes les entreprises...',
+                                placeholder: 'Rechercher entreprises', // Texte simplifié
                                 value: searchTerm,
                                 onChange: (e) => onSearch(e.target.value),
                                 className: 'search-input',
@@ -888,7 +880,7 @@ const BuffettTab = ({
                                     React.createElement('label', {
                                         className: 'dropdown-label',
                                         key: 'quality-label'
-                                    }, 'Filtrer par qualité'),
+                                    }, 'Filtrer par scrore'),
                                     
                                     React.createElement('select', {
                                         value: filter,
@@ -1155,7 +1147,7 @@ const CashFlowTab = ({
                                 : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                         }`
                     }, 
-                    filt === 'ALL' ? '📋 Toutes qualités' : 
+                    filt === 'ALL' ? '📋 Tous scores' : 
                     filt === 'EXCELLENT' ? '💰 EXCELLENT' :
                     filt === 'GOOD' ? '💸 BON' : '🔴 FAIBLE')
                 )
@@ -2288,7 +2280,7 @@ const InvestmentApp = () => {
                                 React.createElement('div', { key: 'title-text' },
                                     [
                                         React.createElement('h1', { 
-                                            className: 'text-3xl font-bold mb-2 text-white',
+                                            className: 'text-3xl font-bold text-white mb-8',
                                             key: 'main-title'
                                         }, 'Analyse d\'entreprises'),
                                     ]
