@@ -191,12 +191,12 @@ body {
 
 /* Nouveaux styles pour les onglets */
 .tabs-container {
-    background: rgba(30, 41, 59, 0.7);
+    background: linear-gradient(135deg, rgb(44 53 67 / 80%), rgb(23 40 67));
+    border-radius: 1rem;
     backdrop-filter: blur(10px);
-    border-radius: 0.75rem;
-    padding: 0.5rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: none; /* Supprime l'ancienne bordure */
 }
 
 .tabs {
@@ -433,7 +433,8 @@ body {
   color: white;
   box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
 }
-/* Ajoutez ces classes à votre CSS */
+
+
 .search-section {
     background: linear-gradient(135deg, rgb(44 53 67 / 80%), rgb(23 40 67));
     border-radius: 1rem;
