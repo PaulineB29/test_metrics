@@ -758,6 +758,14 @@ const BuffettTab = ({
         'Real Estate'
     ];
 
+    const QUALITY_FILTERS = [
+        { value: 'ALL', label: 'Toutes qualités' },
+        { value: 'ELITE', label: 'ELITE' },
+        { value: 'STRONG', label: 'STRONG' },
+        { value: 'DECENT', label: 'DECENT' },
+        { value: 'WEAK', label: 'WEAK' }
+    ];
+
     // Fonctions de tri et pagination locales
     const getSortedAndFilteredData = (data) => {
         if (!data) return [];
@@ -821,55 +829,114 @@ const BuffettTab = ({
     });
     
     const paginatedData = getPaginatedData(filteredData);
+
+    const handleQualityChange = (e) => {
+        onFilterChange(e.target.value);
+    };
+
+    const handleSectorChange = (e) => {
+        setSectorFilter(e.target.value);
+    };
     
     return React.createElement('div', {},
         [
-            // Barre de recherche globale
-            React.createElement(GlobalSearchBar, {
-                key: 'search-bar',
-                searchTerm: searchTerm,
-                onSearch: onSearch,
-                dataCount: filteredData.length
-            }),
-          
-            // 🔥 FILTRES QUALITÉ Buffett
+            // Section Recherche et Filtres (NOUVEAU DESIGN COMPACT)
             React.createElement('div', { 
-                className: 'flex gap-2 mb-4 flex-wrap',
-                key: 'quality-filters' 
+                className: 'search-section mb-6',
+                key: 'search-filters'
             },
-                ['ALL', 'ELITE', 'STRONG', 'DECENT', 'WEAK'].map(filt =>
-                    React.createElement('button', {
-                        key: filt,
-                        onClick: () => onFilterChange(filt),
-                        className: `px-4 py-2 rounded-lg transition-all ${
-                            filter === filt 
-                                ? 'bg-blue-600 text-white shadow-lg' 
-                                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                        }`
-                    }, 
-                    filt === 'ALL' ? '📋 Toutes qualités' : 
-                    filt === 'ELITE' ? '⭐ ELITE' :
-                    filt === 'STRONG' ? '✅ STRONG' :
-                    filt === 'DECENT' ? '🟡 DECENT' : '🔴 WEAK')
-                )
-            ),
+                [
+                    // Barre de recherche avec compteur
+                    React.createElement('div', {
+                        className: 'search-input-container',
+                        key: 'search-bar'
+                    },
+                        [
+                            React.createElement('div', {
+                                className: 'search-icon',
+                                key: 'search-icon'
+                            }, '🔍'),
+                            
+                            React.createElement('input', {
+                                type: 'text',
+                                placeholder: 'Rechercher dans toutes les entreprises...',
+                                value: searchTerm,
+                                onChange: (e) => onSearch(e.target.value),
+                                className: 'search-input',
+                                key: 'search-input'
+                            }),
+                            
+                            React.createElement('div', {
+                                className: 'results-counter',
+                                key: 'counter'
+                            }, `${filteredData.length} résultat(s)`)
+                        ]
+                    ),
 
-            // 🔥 FILTRES SECTEUR
-            React.createElement('div', { 
-                className: 'flex gap-2 mb-6 flex-wrap',
-                key: 'sector-filters' 
-            },
-                SECTORS.map(sector =>
-                    React.createElement('button', {
-                        key: sector,
-                        onClick: () => setSectorFilter(sector),
-                        className: `px-4 py-2 rounded-lg transition-all ${
-                            sectorFilter === sector 
-                                ? 'bg-blue-600 text-white shadow-lg' 
-                                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                        }`
-                    }, sector)
-                )
+                    // Grid des dropdowns
+                    React.createElement('div', {
+                        className: 'dropdown-grid',
+                        key: 'dropdowns-grid'
+                    },
+                        [
+                            // Dropdown Qualité
+                            React.createElement('div', {
+                                className: 'dropdown-group',
+                                key: 'quality-dropdown'
+                            },
+                                [
+                                    React.createElement('label', {
+                                        className: 'dropdown-label',
+                                        key: 'quality-label'
+                                    }, 'Filtrer par qualité'),
+                                    
+                                    React.createElement('select', {
+                                        value: filter,
+                                        onChange: handleQualityChange,
+                                        className: 'dropdown-select',
+                                        key: 'quality-select'
+                                    },
+                                        QUALITY_FILTERS.map(option =>
+                                            React.createElement('option', {
+                                                value: option.value,
+                                                key: option.value,
+                                                className: 'bg-gray-800'
+                                            }, option.label)
+                                        )
+                                    )
+                                ]
+                            ),
+
+                            // Dropdown Secteur
+                            React.createElement('div', {
+                                className: 'dropdown-group',
+                                key: 'sector-dropdown'
+                            },
+                                [
+                                    React.createElement('label', {
+                                        className: 'dropdown-label',
+                                        key: 'sector-label'
+                                    }, 'Filtrer par secteur'),
+                                    
+                                    React.createElement('select', {
+                                        value: sectorFilter,
+                                        onChange: handleSectorChange,
+                                        className: 'dropdown-select',
+                                        key: 'sector-select'
+                                    },
+                                        SECTORS.map(sector =>
+                                            React.createElement('option', {
+                                                value: sector,
+                                                key: sector,
+                                                className: 'bg-gray-800'
+                                            }, sector)
+                                        )
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                ]
             ),
           
             // Tableau Buffett
@@ -1005,20 +1072,10 @@ const BuffettTab = ({
                 className: 'mt-4 text-gray-400 text-sm',
                 key: 'counter'
             }, 
-                `📊 ${filteredData.length} entreprise(s) ${filter !== 'ALL' ? getBuffettFilterLabel(filter) : ''} ${sectorFilter !== 'Tous secteurs' ? `dans ${sectorFilter}` : ''} - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} à ${Math.min(currentPage * itemsPerPage, filteredData.length)}`            )
+                `📊 ${filteredData.length} entreprise(s) ${filter !== 'ALL' ? getBuffettFilterLabel(filter) : ''} ${sectorFilter !== 'Tous secteurs' ? `dans ${sectorFilter}` : ''} - Affichage ${Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} à ${Math.min(currentPage * itemsPerPage, filteredData.length)}`
+            )
         ]
     );
-};
-
-// Fonction pour les labels des filtres Buffett
-const getBuffettFilterLabel = (filter) => {
-    const labels = {
-        'ELITE': 'de qualité elite',
-        'STRONG': 'de qualité strong', 
-        'DECENT': 'de qualité décente',
-        'WEAK': 'de qualité faible'
-    };
-    return labels[filter] || '';
 };
 
 // Composant Onglet Cash Flow avec filtres, Tri, Recherche et PAGINATION
@@ -1041,6 +1098,7 @@ const CashFlowTab = ({
 }) => {
     const [filter, setFilter] = useState('ALL');
     const [sectorFilter, setSectorFilter] = useState('Tous secteurs'); 
+  
        const SECTORS = [
               'Tous secteurs',
               'Industrials',
