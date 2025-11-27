@@ -117,7 +117,6 @@ body {
 .w-full { width: 100%; }
 .h-full { height: 100%; }
 
-
 /* Glassmorphism effects */
 .glass {
   background: rgba(30, 41, 59, 0.7);
@@ -237,6 +236,8 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    color: white;
+    font-weight: bold;
 }
 
 /* Card Styles */
@@ -271,6 +272,8 @@ body {
     transition: all 0.3s ease;
     cursor: pointer;
     backdrop-filter: blur(10px);
+    width: 100%;
+    text-align: left;
 }
 
 .btn-primary:hover {
@@ -285,6 +288,13 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
 }
+
+/* Icon replacements */
+.icon-star::before { content: "★"; }
+.icon-chart::before { content: "📈"; }
+.icon-cash::before { content: "💰"; }
+.icon-target::before { content: "🎯"; }
+.icon-warning::before { content: "⚠️"; }
 
 /* Value Trap badges */
 .value-badge-elite { background: linear-gradient(45deg, #f59e0b, #d97706); }
@@ -305,40 +315,80 @@ body {
     background: linear-gradient(45deg, #ef4444, #dc2626);
     padding: 0.5rem 0.75rem;
     border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
 }
 
 .risk-badge-crisis { 
     background: linear-gradient(45deg, #f97316, #ea580c);
     padding: 0.5rem 0.75rem;
     border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
 }
 
 .risk-badge-liquidity { 
     background: linear-gradient(45deg, #0ea5e9, #0369a1);
     padding: 0.5rem 0.75rem;
     border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
 }
 
 .risk-badge-cashburn { 
     background: linear-gradient(45deg, #f59e0b, #d97706);
     padding: 0.5rem 0.75rem;
     border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
 }
 
 .risk-badge-trouble { 
     background: linear-gradient(45deg, #8b5cf6, #7c3aed);
     padding: 0.5rem 0.75rem;
     border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
 }
 
 .risk-badge-distress { 
     background: linear-gradient(45deg, #64748b, #475569);
     padding: 0.5rem 0.75rem;
     border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
 }
 
 .risk-badge-watch { 
     background: linear-gradient(45deg, #6b7280, #4b5563);
     padding: 0.5rem 0.75rem;
     border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Status indicators */
+.status-badge {
+    padding: 0.5rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: center;
+    color: white;
+}
+
+.status-connected {
+    background: rgba(34, 197, 94, 0.2);
+    color: #34d399;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+/* Loading spinner */
+.loading-spinner {
+    border: 2px solid #3b82f6;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    animation: spin 1s linear infinite;
 }
