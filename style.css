@@ -441,3 +441,103 @@ body {
   color: white;
   box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
 }
+/* Ajoutez ces classes à votre CSS */
+.search-section {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  padding: 1.5rem;
+}
+
+.search-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(100, 116, 139, 0.5);
+  border-radius: 0.75rem;
+  padding: 1rem 1rem 1rem 3rem;
+  color: white;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.search-input::placeholder {
+  color: #64748b;
+}
+
+.results-counter {
+  color: #94a3b8;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.dropdown-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .dropdown-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.dropdown-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown-label {
+  color: #94a3b8;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.dropdown-select {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(100, 116, 139, 0.5);
+  border-radius: 0.75rem;
+  padding: 0.875rem 3rem 0.875rem 1rem;
+  color: white;
+  font-size: 0.875rem;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  transition: all 0.3s ease;
+}
+
+.dropdown-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.dropdown-select option {
+  background: #1e293b;
+  color: white;
+}
