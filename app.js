@@ -422,7 +422,7 @@ const renderSectionContent = (section) => {
               key: 'table-container'
             },
               React.createElement('table', { 
-                className: 'rating-table',
+                className: 'rating-table'
               },
                 [
                   React.createElement('thead', { key: 'head' },
