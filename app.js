@@ -2274,7 +2274,7 @@ const InvestmentApp = () => {
                                 React.createElement('div', { key: 'title-text' },
                                     [
                                         React.createElement('h1', { 
-                                            className: 'text-3xl font-bold text-white mb-8',
+                                            className: 'text-3xl font-bold text-white mb-0',
                                             key: 'main-title'
                                         }, 'Analyse d\'entreprises'),
                                     ]
