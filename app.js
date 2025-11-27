@@ -339,24 +339,12 @@ const Pagination = ({ currentPage, totalPages, onPageChange, itemsPerPage, onIte
 };
 
 const DescriptionBox = ({ analysisType }) => {
-  const [expandedSections, setExpandedSections] = useState({});
+  const [isExpanded, setIsExpanded] = useState(false);
   
   const desc = ANALYSIS_DESCRIPTIONS[analysisType];
-  
-  // Initialiser l'état des sections développées
-  useEffect(() => {
-    const initialExpanded = {};
-    desc.sections.forEach((section, index) => {
-      initialExpanded[index] = section.expanded || false;
-    });
-    setExpandedSections(initialExpanded);
-  }, [analysisType]);
 
-  const toggleSection = (index) => {
-    setExpandedSections(prev => ({
-      ...prev,
-      [index]: !prev[index]
-    }));
+  const toggleExpanded = () => {
+    setIsExpanded(!isExpanded);
   };
 
   const renderSectionContent = (section) => {
@@ -375,7 +363,12 @@ const DescriptionBox = ({ analysisType }) => {
                   React.createElement('div', { 
                     className: 'text-2xl mb-2',
                     key: 'emoji'
-                  }, item.emoji),
+                  }, 
+                    item.title.includes('ROE') ? '📊' :
+                    item.title.includes('ROIC') ? '⚙️' :
+                    item.title.includes('Dette') ? '🏛️' :
+                    item.title.includes('Marge') ? '💰' : '📈'
+                  ),
                   
                   React.createElement('h4', { 
                     className: 'font-bold text-white mb-2',
@@ -626,84 +619,81 @@ const DescriptionBox = ({ analysisType }) => {
     }
   };
 
-  const renderSection = (section, index) => {
-    const isExpanded = expandedSections[index];
-    
-    // Si c'est le premier élément (toujours visible)
-    if (index === 0) {
-      return React.createElement('div', { 
-        className: 'mb-6',
-        key: `default-${index}`
-      },
-        [
-          section.title && React.createElement('h3', { 
-            className: 'text-lg font-bold mb-3 text-white',
-            key: 'title'
-          }, section.title),
-          
-          React.createElement('p', {
-            className: 'text-gray-300 leading-relaxed',
-            key: 'content'
-          }, section.content)
-        ]
-      );
-    }
-
-    // Pour les autres sections (menu déroulant)
-    return React.createElement('div', { 
-      className: 'mb-2',
-      key: `accordion-${index}`
-    },
-      [
-        // Bouton d'en-tête cliquable
-        React.createElement('button', {
-          onClick: () => toggleSection(index),
-          className: `w-full text-left p-4 rounded-lg transition-all ${
-            isExpanded ? 'bg-gray-750' : 'bg-gray-800 hover:bg-gray-750'
-          }`,
-          key: 'header'
-        },
-          [
-            React.createElement('div', {
-              className: 'flex justify-between items-center',
-              key: 'header-content'
-            },
-              [
-                React.createElement('h3', {
-                  className: 'font-bold text-white',
-                  key: 'title'
-                }, section.title),
-                
-                React.createElement('span', {
-                  className: 'text-xl',
-                  key: 'arrow'
-                }, isExpanded ? '▼' : '▶')
-              ]
-            )
-          ]
-        ),
-        
-        // Contenu déroulant
-        isExpanded && React.createElement('div', {
-          className: 'mt-2 p-4 bg-gray-800 rounded-lg',
-          key: 'content'
-        },
-          renderSectionContent(section)
-        )
-      ]
-    );
-  };
-
- return React.createElement('div', { 
+  // Rendu principal avec un seul bouton
+  return React.createElement('div', { 
     className: 'bg-gray-800 rounded-lg p-6 mb-8 border-l-4 border-blue-500'
   },
     [
+      // Titre principal (toujours visible)
       React.createElement('h2', { 
         className: 'text-2xl font-bold mb-6 text-white text-center',
         key: 'main-title'
       }, desc.title),
       
-      ...desc.sections.map((section, index) => renderSection(section, index))
+      // Première section (toujours visible)
+      React.createElement('div', { 
+        className: 'mb-6',
+        key: 'first-section'
+      },
+        [
+          desc.sections[0].title && React.createElement('h3', { 
+            className: 'text-lg font-bold mb-3 text-white',
+            key: 'title'
+          }, desc.sections[0].title),
+          
+          React.createElement('p', {
+            className: 'text-gray-300 leading-relaxed',
+            key: 'content'
+          }, desc.sections[0].content)
+        ]
+      ),
+
+      // Bouton "Détail de la méthodologie"
+      React.createElement('div', {
+        className: 'mb-4',
+        key: 'toggle-button'
+      },
+        React.createElement('button', {
+          onClick: toggleExpanded,
+          className: 'w-full text-left p-4 rounded-lg bg-gray-750 hover:bg-gray-700 transition-all flex justify-between items-center',
+          key: 'header'
+        },
+          [
+            React.createElement('span', {
+              className: 'font-bold text-white text-lg',
+              key: 'button-text'
+            }, '📋 Détail de la méthodologie'),
+            
+            React.createElement('span', {
+              className: 'text-xl',
+              key: 'arrow'
+            }, isExpanded ? '▼' : '▶')
+          ]
+        )
+      ),
+      
+      // Contenu déroulant de la méthodologie
+      isExpanded && React.createElement('div', {
+        className: 'mt-2 p-4 bg-gray-800 rounded-lg space-y-6',
+        key: 'methodology-content'
+      },
+        // Afficher toutes les sections sauf la première (déjà affichée)
+        desc.sections.slice(1).map((section, index) =>
+          React.createElement('div', {
+            key: `section-${index + 1}`,
+            className: 'mb-6'
+          },
+            [
+              section.title && React.createElement('h3', { 
+                className: 'text-lg font-bold mb-3 text-white',
+                key: 'title'
+              }, section.title),
+              
+              renderSectionContent(section)
+            ]
+          )
+        )
+      )
     ]
   );
 };
