@@ -629,31 +629,26 @@ const DescriptionBox = ({ analysisType }) => {
     }
   };
 
-  return React.createElement('div', { 
-    className: 'glass rounded-2xl p-6 mb-8'
+ return React.createElement('div', { 
+    className: 'glass-main'
   },
     [
-      // Header avec icône et titre
+      // Header avec titre seulement (sans icône)
       React.createElement('div', { 
         className: 'flex items-center gap-4 mb-6',
         key: 'header'
       },
         [
-          React.createElement('div', {
-            className: 'header-icon',
-            key: 'icon'
-          }, 'Q'),
-          
           React.createElement('h1', { 
-            className: 'text-2xl font-bold text-white',
+            className: 'text-xl text-white', // Réduit la taille et enlève le gras
             key: 'title'
-          }, desc.title)
+          }, 'Buffett Quality Score')
         ]
       ),
       
-      // Carte explicative avec gradient
+      // Carte explicative avec le nouveau gradient
       React.createElement('div', { 
-        className: 'gradient-card p-6 mb-6',
+        className: 'gradient-card-custom',
         key: 'explanation-card'
       },
         [
@@ -670,44 +665,43 @@ const DescriptionBox = ({ analysisType }) => {
               React.createElement('div', { key: 'text-content' },
                 [
                   React.createElement('h2', { 
-                    className: 'text-xl font-bold mb-3 text-white',
+                    className: 'text-lg mb-3 text-white', // Réduit la taille et enlève le gras
                     key: 'card-title'
-                  }, desc.sections[0].title),
+                  }, 'L\'Héritage de Warren Buffett'),
                   
                   React.createElement('p', {
-                    className: 'text-gray-300 leading-relaxed',
+                    className: 'text-gray-300 leading-relaxed text-sm', // Réduit légèrement la taille
                     key: 'card-text'
                   }, desc.sections[0].content)
                 ]
               )
             ]
-          )
-        ]
-      ),
-
-      // Bouton "Détail de la méthodologie"
-      React.createElement('button', {
-        onClick: toggleExpanded,
-        className: 'btn-primary w-full flex justify-between items-center mb-4',
-        key: 'toggle-button'
-      },
-        [
-          React.createElement('span', {
-            className: 'font-bold text-white',
-            key: 'button-text'
-          }, 'Détail de la méthodologie'),
-          
-          React.createElement('span', {
-            className: 'transition-transform',
-            key: 'arrow',
-            style: { transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }
-          }, '▼')
+          ),
+          // Bouton "Détail de la méthodologie"
+          React.createElement('button', {
+                onClick: toggleExpanded,
+                className: 'btn-primary-custom flex justify-between items-center',
+                key: 'toggle-button'
+              },
+                [
+                  React.createElement('span', {
+                    className: 'text-white',
+                    key: 'button-text'
+                  }, 'Détail de la méthodologie'),
+                  
+                  React.createElement('span', {
+                    className: 'transition-transform',
+                    key: 'arrow',
+                    style: { transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }
+                  }, '▼')
+                ]
+              )
         ]
       ),
       
       // Contenu déroulant de la méthodologie
       isExpanded && React.createElement('div', {
-        className: 'expandable-section p-6 space-y-6',
+        className: 'expandable-section p-6 space-y-6 mt-4',
         key: 'methodology-content'
       },
         desc.sections.slice(1).map((section, index) =>
@@ -2217,36 +2211,45 @@ const InvestmentApp = () => {
             [
                 // En-tête
                 React.createElement('div', { key: 'header' },
-    [
-        React.createElement('div', { 
-            className: 'glass rounded-2xl p-8 mb-8',
-            key: 'main-header'
-        },
             [
-                React.createElement('div', {
-                    className: 'flex items-center gap-4 mb-4',
-                    key: 'title-section'
+                React.createElement('div', { 
+                    className: 'glass-header',
+                    key: 'main-header'
                 },
                     [
                         React.createElement('div', {
-                            className: 'header-icon text-xl',
-                            key: 'main-icon'
-                        }, 'B'),
-                        
-                        React.createElement('div', { key: 'title-text' },
+                            className: 'flex items-center gap-4 mb-4',
+                            key: 'title-section'
+                        },
                             [
-                                React.createElement('h1', { 
-                                    className: 'text-3xl font-bold mb-2 text-white',
-                                    key: 'main-title'
-                                }, 'Buffett Quality Score - Analyse Investissement'),
+                                React.createElement('div', {
+                                    className: 'header-icon text-xl',
+                                    key: 'main-icon'
+                                }, ''),
+                                
+                                React.createElement('div', { key: 'title-text' },
+                                    [
+                                        React.createElement('h1', { 
+                                            className: 'text-3xl font-bold mb-2 text-white',
+                                            key: 'main-title'
+                                        }, 'Analyse d\'entreprises'),
+                                        React.createElement('p', { 
+                                            className: 'text-gray-400',
+                                            key: 'subtitle' 
+                                        }, 'Données en direct depuis PostgreSQL - Outil professionnel d\'analyse boursière')
+                                    ]
+                                )
                             ]
-                        )
+                        ),
+                        
+                        React.createElement('div', { 
+                            className: 'status-connected p-4 rounded-lg',
+                            key: 'live-warning'
+                        }, 'CONNECTÉ - Base de données en temps réel')
                     ]
-                ),                
+                )
             ]
-        )
-    ]
-),
+        ),
                 
                 // Onglets
                 React.createElement('div', { 
@@ -2255,29 +2258,25 @@ const InvestmentApp = () => {
                 },
                     React.createElement('div', { className: 'tabs' },
                         [
-                            // Dans les onglets, remplacez par :
                             React.createElement('button', {
                                 key: 'buffett',
                                 onClick: () => setActiveTab('buffett'),
-                                className: `tab ${activeTab === 'buffett' ? 'active' : ''}`
+                                className: `tab tab-gradient ${activeTab === 'buffett' ? 'active' : ''}`
                             }, `Qualité Buffett (${buffettData.length})`),
-                            
                             React.createElement('button', {
                                 key: 'cashflow',
                                 onClick: () => setActiveTab('cashflow'),
-                                className: `tab ${activeTab === 'cashflow' ? 'active' : ''}`
+                                className: `tab tab-gradient ${activeTab === 'cashflow' ? 'active' : ''}`
                             }, `Cash Flow (${cashFlowData.length})`),
-                            
                             React.createElement('button', {
                                 key: 'valuetrap',
                                 onClick: () => setActiveTab('valuetrap'),
-                                className: `tab ${activeTab === 'valuetrap' ? 'active' : ''}`
+                                className: `tab tab-gradient ${activeTab === 'valuetrap' ? 'active' : ''}`
                             }, `Value Trap (${valueTrapData.length})`),
-                            
                             React.createElement('button', {
                                 key: 'shortrisk',
                                 onClick: () => setActiveTab('shortrisk'),
-                                className: `tab ${activeTab === 'shortrisk' ? 'active' : ''}`
+                                className: `tab tab-gradient ${activeTab === 'shortrisk' ? 'active' : ''}`
                             }, `Short Risk (${shortRiskData.length})`)
                         ]
                     )
