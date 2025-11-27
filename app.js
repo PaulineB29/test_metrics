@@ -254,7 +254,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, itemsPerPage, onIte
                             React.createElement('option', {
                                 value: value,
                                 key: value
-                                className: 'bg-black'
+                                className: 'bg-gray-800'
                             }, value)
                         )
                     )
