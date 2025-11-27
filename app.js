@@ -839,7 +839,7 @@ const BuffettTab = ({
                         onClick: () => setSectorFilter(sector),
                         className: `px-4 py-2 rounded-lg transition-all ${
                             sectorFilter === sector 
-                                ? 'bg-green-600 text-white shadow-lg' 
+                                ? 'bg-blue-600 text-white shadow-lg' 
                                 : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                         }`
                     }, sector)
@@ -1088,7 +1088,7 @@ const CashFlowTab = ({
                         onClick: () => setSectorFilter(sector),
                         className: `px-4 py-2 rounded-lg transition-all ${
                             sectorFilter === sector 
-                                ? 'bg-green-600 text-white shadow-lg' 
+                                ? 'bg-blue-600 text-white shadow-lg' 
                                 : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                         }`
                     }, sector)
@@ -1349,7 +1349,7 @@ const ValueTrapTab = ({
                         onClick: () => setSectorFilter(sector),
                         className: `px-4 py-2 rounded-lg transition-all ${
                             sectorFilter === sector 
-                                ? 'bg-green-600 text-white shadow-lg' 
+                                ? 'bg-blue-600 text-white shadow-lg' 
                                 : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                         }`
                     }, sector)
@@ -1675,7 +1675,7 @@ const ShortRiskTab = ({
                         onClick: () => setSectorFilter(sector),
                         className: `px-4 py-2 rounded-lg transition-all ${
                             sectorFilter === sector 
-                                ? 'bg-green-600 text-white shadow-lg' 
+                                ? 'bg-blue-600 text-white shadow-lg' 
                                 : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                         }`
                     }, sector)
