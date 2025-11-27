@@ -2651,8 +2651,8 @@ const InvestmentApp = () => {
                             React.createElement(BuffettTab, {
                                 key: 'table',
                                 data: filteredBuffettData,
-                                filter: buffettFilter, // ← AJOUTER
-                                onFilterChange: setBuffettFilter, // ← AJOUTER
+                                filter: buffettFilter,
+                                onFilterChange: setBuffettFilter,
                                 getRatingColor: getBuffettRatingColor,
                                 getValueColor: getValueColor,
                                 sortConfig: sortConfig,
@@ -2724,7 +2724,7 @@ const InvestmentApp = () => {
             ]
         )
     );
-};
+}; 
 
 // Rendu de l'application
 const root = ReactDOM.createRoot(document.getElementById('root'));
