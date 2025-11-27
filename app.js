@@ -879,17 +879,8 @@ const BuffettTab = ({
         { value: 'WEAK', label: 'WEAK' }
     ];
 
-    const sortedAndFilteredData = React.useMemo(() => {
-        return getSortedAndFilteredData(data);
-    }, [data, searchTerm, sortConfig]);
-    
-    const filteredData = React.useMemo(() => {
-        return sortedAndFilteredData.filter(item => {
-            // logique de filtrage
-        });
-    }, [sortedAndFilteredData, filter, sectorFilter]);
-  
-    // Fonctions de tri et pagination locales
+
+// Fonctions de tri et pagination locales
     const getSortedAndFilteredData = (data) => {
         if (!data) return [];
         
