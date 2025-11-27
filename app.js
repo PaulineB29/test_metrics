@@ -11,7 +11,7 @@ const ANALYSIS_DESCRIPTIONS = {
       {
         title: " L'Héritage de Warren Buffett",
         content: " Cette analyse applique les principes fondamentaux du plus grand investisseur de tous les temps : Warren Buffett. Elle identifie les entreprises d'exception selon sa philosophie :  'Achetez des entreprises merveilleuses à des prix raisonnables.'",
-        expanded: true // ← Premier élément ouvert par défaut
+        expanded: true
       },
       {
         title: "Les 4 Piliers de la Qualité Buffett",
@@ -129,28 +129,126 @@ const ANALYSIS_DESCRIPTIONS = {
       }
     ]
   },
-      // Ajouter les autres analyses plus tard
-      cashflow: {
-        title: "Cash Flow - Les Générateurs de Trésorerie",
-        sections: [
+  cashflow: {
+    title: "Cash Flow - Les Générateurs de Trésorerie",
+    sections: [
+      {
+        title: "L'Importance du Cash Flow",
+        content: "Le cash flow est le véritable oxygène d'une entreprise. Cette analyse identifie les entreprises qui génèrent d'excellents flux de trésorerie - le signe d'un business sain et durable.",
+        expanded: true
+      },
+      {
+        title: "Les 3 Piliers du Cash Flow",
+        type: "columns",
+        items: [
           {
-            title: "Ce que cette analyse mesure",
-            content: "Cette analyse identifie les entreprises qui génèrent d'excellents flux de trésorerie - le véritable 'oxygène' d'une entreprise."
+            title: "Cash Flow Opérationnel",
+            description: "Trésorerie générée par l'activité principale de l'entreprise",
+            quote: "Le cash flow opérationnel doit être positif et croissant"
+          },
+          {
+            title: "Free Cash Flow",
+            description: "Cash flow disponible après les investissements",
+            note: "Indicateur clé : Capacité à financer la croissance et verser des dividendes"
+          },
+          {
+            title: "Marge de Cash Flow", 
+            description: "Pourcentage du chiffre d'affaires transformé en cash",
+            rule: "Une marge élevée = avantage concurrentiel fort"
           }
-          // ... (vous pourrez compléter plus tard)
-        ]
+        ],
+        expanded: false
       },
-      valuetrap: {
-        title: "Value Trap Detector - Éviter les Fausses Bonnes Affaires",
-        sections: [] // À compléter
-      },
-      shortrisk: {
-        title: "Short Risk - Détecteur de Détresse",
-        sections: [] // À compléter
+      {
+        title: "Notre Système de Notation Cash Flow",
+        type: "table",
+        headers: ["Rating", "Signification", "Critères"],
+        rows: [
+          ["💰 EXCELLENT", "Générateur de cash exceptionnel", "Yield FCF > 6%, Marge FCF > 30%"],
+          ["💸 BON", "Bon générateur de cash", "Yield FCF > 3%, Marge FCF > 15%"],
+          ["🔴 FAIBLE", "Cash flow à améliorer", "Ne répond pas aux critères de qualité"]
+        ],
+        expanded: false
       }
-    };
+    ]
+  },
+  valuetrap: {
+    title: "Value Trap Detector - Éviter les Fausses Bonnes Affaires",
+    sections: [
+      {
+        title: "Le Danger des Value Traps",
+        content: "Un value trap est une entreprise qui semble bon marché mais qui cache des problèmes fondamentaux. Cette analyse vous aide à distinguer les vraies opportunités des pièges.",
+        expanded: true
+      },
+      {
+        title: "Les 4 Signes d'un Value Trap",
+        type: "columns",
+        items: [
+          {
+            title: "Déclin Structurel",
+            description: "L'entreprise opère dans un secteur en déclin",
+            quote: "Même à prix bas, une entreprise en déclin reste risquée"
+          },
+          {
+            title: "Dette Excessive",
+            description: "Trop de dette par rapport à la capacité de remboursement",
+            note: "La dette peut anéantir les bénéfices"
+          },
+          {
+            title: "Mauvais Management", 
+            description: "Décisions stratégiques médiocres répétées",
+            rule: "Un bon management crée de la valeur, un mauvais la détruit"
+          },
+          {
+            title: "Avantage Concurrentiel Faible",
+            description: "Pas de barrières à l'entrée ou de différenciation",
+            indicator: "Sans avantage concurrentiel, les marges s'érodent"
+          }
+        ],
+        expanded: false
+      }
+    ]
+  },
+  shortrisk: {
+    title: "Short Risk - Détecteur de Détresse",
+    sections: [
+      {
+        title: "Identifier les Entreprises à Risque",
+        content: "Cette analyse détecte les signes avant-coureurs de difficultés financières. Elle identifie les entreprises qui pourraient rencontrer des problèmes de solvabilité.",
+        expanded: true
+      },
+      {
+        title: "Les 4 Signaux d'Alerte",
+        type: "columns",
+        items: [
+          {
+            title: "Dette Dangereuse",
+            description: "Ratio dette/equity trop élevé",
+            quote: "Une dette excessive est le premier signe de danger"
+          },
+          {
+            title: "Problèmes de Liquidité",
+            description: "Current ratio faible, difficultés à payer les dettes court terme",
+            note: "Les problèmes de liquidité peuvent être fatals"
+          },
+          {
+            title: "Cash Flow Négatif", 
+            description: "L'entreprise brûle plus de cash qu'elle n'en génère",
+            rule: "Brûler du cash n'est pas soutenable à long terme"
+          },
+          {
+            title: "Pertes Récurrentes",
+            description: "Bénéfices négatifs sur plusieurs périodes",
+            indicator: "Les pertes répétées épuisent les réserves"
+          }
+        ],
+        expanded: false
+      }
+    ]
+  }
+};
 
-  // Composant Barre de Recherche Globale
+// Composant Barre de Recherche Globale
 const GlobalSearchBar = ({ searchTerm, onSearch, dataCount }) => {
     return React.createElement('div', { 
         className: 'mb-6 p-4 bg-gray-800 rounded-lg'
@@ -192,7 +290,7 @@ const GlobalSearchBar = ({ searchTerm, onSearch, dataCount }) => {
     );
 };
 
-  // Composant En-tête de Tableau avec Tri
+// Composant En-tête de Tableau avec Tri
 const SortableHeader = ({ column, sortConfig, onSort, children }) => {
     const isSorted = sortConfig.key === column;
     
@@ -221,26 +319,21 @@ const Pagination = ({
     onItemsPerPageChange,
     totalItems 
 }) => {
-    // Calculs dérivés
     const startItem = Math.min((currentPage - 1) * itemsPerPage + 1, totalItems);
     const endItem = Math.min(currentPage * itemsPerPage, totalItems);
     
-    // Génération des numéros de page à afficher (max 6 pages)
     const getPageNumbers = () => {
         const pages = [];
         const maxVisiblePages = 6;
         
         if (totalPages <= maxVisiblePages) {
-            // Si moins de 6 pages, afficher toutes
             for (let i = 1; i <= totalPages; i++) {
                 pages.push(i);
             }
         } else {
-            // Logique pour afficher un sous-ensemble de pages
             let startPage = Math.max(1, currentPage - 2);
             let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
             
-            // Ajuster si on est proche du début
             if (endPage - startPage + 1 < maxVisiblePages) {
                 startPage = Math.max(1, endPage - maxVisiblePages + 1);
             }
@@ -257,13 +350,11 @@ const Pagination = ({
 
     return React.createElement('div', { key: 'pagination' },
         [
-            // SECTION 1 : Barre de Pagination Principale
             React.createElement('div', {
                 className: 'pagination-container',
                 key: 'pagination-main'
             },
                 [
-                    // Partie Gauche - Sélecteur de lignes
                     React.createElement('div', {
                         className: 'pagination-left',
                         key: 'pagination-left'
@@ -291,13 +382,11 @@ const Pagination = ({
                         ]
                     ),
 
-                    // Partie Centre - Navigation de pages
                     React.createElement('div', {
                         className: 'pagination-center',
                         key: 'pagination-center'
                     },
                         [
-                            // Bouton Première page
                             React.createElement('button', {
                                 onClick: () => onPageChange(1),
                                 disabled: currentPage === 1,
@@ -305,7 +394,6 @@ const Pagination = ({
                                 key: 'first'
                             }, '««'),
 
-                            // Bouton Page précédente
                             React.createElement('button', {
                                 onClick: () => onPageChange(Math.max(1, currentPage - 1)),
                                 disabled: currentPage === 1,
@@ -313,7 +401,6 @@ const Pagination = ({
                                 key: 'prev'
                             }, '«'),
 
-                            // Numéros de page
                             ...pageNumbers.map(page =>
                                 React.createElement('button', {
                                     onClick: () => onPageChange(page),
@@ -322,7 +409,6 @@ const Pagination = ({
                                 }, page)
                             ),
 
-                            // Bouton Page suivante
                             React.createElement('button', {
                                 onClick: () => onPageChange(Math.min(totalPages, currentPage + 1)),
                                 disabled: currentPage === totalPages,
@@ -330,7 +416,6 @@ const Pagination = ({
                                 key: 'next'
                             }, '»'),
 
-                            // Bouton Dernière page
                             React.createElement('button', {
                                 onClick: () => onPageChange(totalPages),
                                 disabled: currentPage === totalPages,
@@ -340,7 +425,6 @@ const Pagination = ({
                         ]
                     ),
 
-                    // Partie Droite - Indicateur de page
                     React.createElement('div', {
                         className: 'pagination-right',
                         key: 'pagination-right'
@@ -348,7 +432,6 @@ const Pagination = ({
                 ]
             ),
 
-            // SECTION 2 : Barre d'Information (Footer)
             React.createElement('div', {
                 className: 'pagination-footer',
                 key: 'pagination-footer'
@@ -356,6 +439,7 @@ const Pagination = ({
         ]
     );
 };
+
 const DescriptionBox = ({ analysisType }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   
@@ -365,8 +449,7 @@ const DescriptionBox = ({ analysisType }) => {
     setIsExpanded(!isExpanded);
   };
 
-
-const renderSectionContent = (section) => {
+  const renderSectionContent = (section) => {
     switch (section.type) {
       case "columns":
         return React.createElement('div', { key: 'columns-content' },
@@ -447,6 +530,7 @@ const renderSectionContent = (section) => {
                               (cell.includes('ELITE') ? 'text-yellow-400 font-semibold' :
                                cell.includes('STRONG') ? 'text-green-400 font-semibold' :
                                cell.includes('DECENT') ? 'text-orange-400 font-semibold' :
+                               cell.includes('EXCELLENT') ? 'text-green-400 font-semibold' :
                                'text-red-400 font-semibold') : 
                               (cellIdx === 1 ? 'text-slate-300' : 'text-slate-400')
                           }, cell)
@@ -679,78 +763,76 @@ const renderSectionContent = (section) => {
         }, section.content);
     }
   };
-      return React.createElement('div', { 
-          className: 'glass-main'
+
+  return React.createElement('div', { 
+      className: 'glass-main'
+    },
+      [          
+        React.createElement('div', { 
+          key: 'explanation-card'
         },
-          [          
-            // Carte explicative
-            React.createElement('div', { 
-              key: 'explanation-card'
+          [
+            React.createElement('div', {
+              className: 'flex items-start gap-4',
+              key: 'card-content'
             },
               [
                 React.createElement('div', {
-                  className: 'flex items-start gap-4',
-                  key: 'card-content'
-                },
+                  className: 'border-left-blue h-12',
+                  key: 'blue-bar'
+                }),
+                
+                React.createElement('div', { key: 'text-content' },
                   [
-                    React.createElement('div', {
-                      className: 'border-left-blue h-12',
-                      key: 'blue-bar'
-                    }),
+                    React.createElement('h2', { 
+                      className: 'text-lg mb-3 text-white',
+                      key: 'card-title'
+                    }, desc.sections[0].title),
                     
-                    React.createElement('div', { key: 'text-content' },
-                      [
-                        React.createElement('h2', { 
-                          className: 'text-lg mb-3 text-white',
-                          key: 'card-title'
-                        }, 'L\'Héritage de Warren Buffett'),
-                        
-                        React.createElement('p', {
-                          className: 'text-gray-300 leading-relaxed text-sm',
-                          key: 'card-text'
-                        }, desc.sections[0].content)
-                      ]
-                    )
+                    React.createElement('p', {
+                      className: 'text-gray-300 leading-relaxed text-sm',
+                      key: 'card-text'
+                    }, desc.sections[0].content)
                   ]
-                ),
-             // Bouton
-              React.createElement('button', {
-                onClick: toggleExpanded,
-                className: 'btn-primary-custom flex justify-between items-center mt-4',
-                key: 'toggle-button'
-              },
-                [
-                  React.createElement('span', {
-                    className: 'text-white',
-                    key: 'button-text'
-                  }, 'Détail de la méthodologie'),
-                  
-                  React.createElement('span', {
-                    className: 'transition-transform',
-                    key: 'arrow',
-                    style: { transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }
-                  }, '▼')
-                ]
-              )
-            ]
-          ),
-      
-      // SECTION DÉROULANTE CORRIGÉE (sans duplication de titre)
-      isExpanded && React.createElement('div', {
-        className: 'expandable-section p-6 space-y-6 mt-4',
-        key: 'methodology-content'
-      },
-        desc.sections.slice(1).map((section, index) =>
-          React.createElement('div', {
-            key: `section-${index + 1}`,
-            className: 'mb-8 last:mb-0'
-          },
-            // ⚠️ Appel direct sans afficher le titre ici
-            renderSectionContent(section)
+                )
+              ]
+            ),
+            
+            React.createElement('button', {
+              onClick: toggleExpanded,
+              className: 'btn-primary-custom flex justify-between items-center mt-4',
+              key: 'toggle-button'
+            },
+              [
+                React.createElement('span', {
+                  className: 'text-white',
+                  key: 'button-text'
+                }, 'Détail de la méthodologie'),
+                
+                React.createElement('span', {
+                  className: 'transition-transform',
+                  key: 'arrow',
+                  style: { transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }
+                }, '▼')
+              ]
+            )
+          ]
+        ),
+        
+        isExpanded && React.createElement('div', {
+          className: 'expandable-section p-6 space-y-6 mt-4',
+          key: 'methodology-content'
+        },
+          desc.sections.slice(1).map((section, index) =>
+            React.createElement('div', {
+              key: `section-${index + 1}`,
+              className: 'mb-8 last:mb-0'
+            },
+              renderSectionContent(section)
+            )
           )
         )
-      )
-    ]
+      ]
   );
 };
 
@@ -1103,6 +1185,7 @@ const BuffettTab = ({
   };
 
 // Composant Onglet Cash Flow avec filtres, Tri, Recherche et PAGINATION
+// Composant Onglet Cash Flow avec le même design que Buffett
 const CashFlowTab = ({ 
     data, 
     getCashFlowColor, 
@@ -1112,32 +1195,83 @@ const CashFlowTab = ({
     onSort, 
     searchTerm, 
     onSearch, 
-    getSortedAndFilteredData,
-    getPaginatedData,
-    currentPage,
-    totalPages,
-    onPageChange,
-    itemsPerPage,
+    currentPage, 
+    totalPages, 
+    onPageChange, 
+    itemsPerPage, 
     onItemsPerPageChange,
-    totalItems 
+    totalItems
 }) => {
     const [filter, setFilter] = useState('ALL');
-    const [sectorFilter, setSectorFilter] = useState('Tous secteurs'); 
-  
-       const SECTORS = [
-              'Tous secteurs',
-              'Industrials',
-              'Technology', 
-              'Financial Services',
-              'Consumer Cyclical',
-              'Consumer Defensive', 
-              'Healthcare',
-              'Basic Materials',
-              'Energy',
-              'Communication Services',
-              'Utilities',
-              'Real Estate'
-          ];
+    const [sectorFilter, setSectorFilter] = useState('Tous secteurs');
+
+    const CASH_FLOW_FILTERS = [
+        { value: 'ALL', label: 'Tous scores' },
+        { value: 'EXCELLENT', label: '💰 EXCELLENT' },
+        { value: 'GOOD', label: '💸 BON' },
+        { value: 'WEAK', label: '🔴 FAIBLE' }
+    ];
+
+    const SECTORS = [
+        'Tous secteurs',
+        'Industrials',
+        'Technology', 
+        'Financial Services',
+        'Consumer Cyclical',
+        'Consumer Defensive', 
+        'Healthcare',
+        'Basic Materials',
+        'Energy',
+        'Communication Services',
+        'Utilities',
+        'Real Estate'
+    ];
+
+    const getSortedAndFilteredData = (data) => {
+        if (!data) return [];
+        
+        let filteredData = data;
+        if (searchTerm) {
+            const searchLower = searchTerm.toLowerCase();
+            filteredData = data.filter(item => 
+                Object.values(item).some(value => 
+                    value && value.toString().toLowerCase().includes(searchLower)
+                )
+            );
+        }
+
+        if (sortConfig.key) {
+            filteredData = [...filteredData].sort((a, b) => {
+                let aValue = a[sortConfig.key];
+                let bValue = b[sortConfig.key];
+
+                if (aValue === null || aValue === undefined) aValue = '';
+                if (bValue === null || bValue === undefined) bValue = '';
+
+                if (!isNaN(parseFloat(aValue)) && !isNaN(parseFloat(bValue))) {
+                    aValue = parseFloat(aValue);
+                    bValue = parseFloat(bValue);
+                }
+
+                if (aValue < bValue) {
+                    return sortConfig.direction === 'asc' ? -1 : 1;
+                }
+                if (aValue > bValue) {
+                    return sortConfig.direction === 'asc' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+
+        return filteredData;
+    };
+
+    const getPaginatedData = (data) => {
+        if (!data || data.length === 0) return [];
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        return data.slice(startIndex, endIndex);
+    };
 
     const sortedAndFilteredData = getSortedAndFilteredData(data);
     
@@ -1154,191 +1288,256 @@ const CashFlowTab = ({
     });
     
     const paginatedData = getPaginatedData(filteredData);
-    
-    return React.createElement('div', { className: 'table-container' },
+
+    const getCashFlowRating = (item) => {
+        if (item.fcf_yield > 0.06) return '💰 EXCELLENT';
+        if (item.fcf_yield > 0.03) return '💸 BON';
+        return '🔴 FAIBLE';
+    };
+
+    const getCashFlowRatingColor = (item) => {
+        if (item.fcf_yield > 0.06) return 'bg-gradient-purple';
+        if (item.fcf_yield > 0.03) return 'bg-gradient-teal';
+        return 'bg-gradient-red';
+    };
+
+    return React.createElement('div', {},
         [
-            // Barre de recherche globale (inchangée)
-            React.createElement(GlobalSearchBar, {
-                key: 'search-bar',
-                searchTerm: searchTerm,
-                onSearch: onSearch,
-                dataCount: filteredData.length
-            }),
-
-            // 🔥 FILTRES QUALITÉ Cash Flow
+            // Section Recherche et Filtres (MÊME DESIGN QUE BUFFETT)
             React.createElement('div', { 
-                className: 'flex gap-2 mb-4 flex-wrap',
-                key: 'quality-filters' 
-            },
-                ['ALL', 'EXCELLENT', 'GOOD', 'WEAK'].map(filt =>
-                    React.createElement('button', {
-                        key: filt,
-                        onClick: () => setFilter(filt),
-                        className: `px-4 py-2 rounded-lg transition-all ${
-                            filter === filt 
-                                ? 'bg-blue-600 text-white shadow-lg' 
-                                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                        }`
-                    }, 
-                    filt === 'ALL' ? '📋 Tous scores' : 
-                    filt === 'EXCELLENT' ? '💰 EXCELLENT' :
-                    filt === 'GOOD' ? '💸 BON' : '🔴 FAIBLE')
-                )
-            ),
-
-            // 🔥 FILTRES SECTEUR Cash Flow
-            React.createElement('div', { 
-                className: 'flex gap-2 mb-6 flex-wrap',
-                key: 'sector-filters' 
-            },
-                SECTORS.map(sector =>
-                    React.createElement('button', {
-                        key: sector,
-                        onClick: () => setSectorFilter(sector),
-                        className: `px-4 py-2 rounded-lg transition-all ${
-                            sectorFilter === sector 
-                                ? 'bg-blue-600 text-white shadow-lg' 
-                                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                        }`
-                    }, sector)
-                )
-            ),
-          
-            React.createElement('div', { 
-                className: 'bg-gray-800 rounded-lg overflow-hidden shadow-xl',
-                key: 'table'
+                className: 'search-section mb-6',
+                key: 'search-filters'
             },
                 [
-                    // En-tête du tableau Cash Flow AVEC TRI
-                    React.createElement('div', { 
-                        className: 'grid grid-cols-10 gap-4 p-4 bg-gray-700 font-semibold text-sm',
-                        key: 'table-header'
+                    React.createElement('div', {
+                        className: 'search-input-container',
+                        key: 'search-bar'
                     },
                         [
-                            React.createElement(SortableHeader, {
-                                key: 'symbole',
-                                column: 'symbole',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Symbole'),
+                            React.createElement('div', {
+                                className: 'search-icon',
+                                key: 'search-icon'
+                            }, '🔍'),
                             
-                            React.createElement(SortableHeader, {
-                                key: 'nom',
-                                column: 'nom',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Entreprise'),
+                            React.createElement('input', {
+                                type: 'text',
+                                placeholder: 'Rechercher entreprises',
+                                value: searchTerm,
+                                onChange: (e) => onSearch(e.target.value),
+                                className: 'search-input',
+                                key: 'search-input'
+                            }),
                             
-                            React.createElement(SortableHeader, {
-                                key: 'secteur',
-                                column: 'secteur',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Secteur'),
-                            
-                            React.createElement(SortableHeader, {
-                                key: 'operating_cash_flow',
-                                column: 'operating_cash_flow',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Cash Flow Op.'),
-                            
-                            React.createElement(SortableHeader, {
-                                key: 'free_cash_flow',
-                                column: 'free_cash_flow',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Free Cash Flow'),
-                            
-                            React.createElement(SortableHeader, {
-                                key: 'revenue',
-                                column: 'revenue',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Revenus'),
-                            
-                            React.createElement(SortableHeader, {
-                                key: 'net_income',
-                                column: 'net_income',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Net Income'),
-                            
-                            React.createElement(SortableHeader, {
-                                key: 'fcf_margin',
-                                column: 'fcf_margin',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Marge FCF'),
-                            
-                            React.createElement(SortableHeader, {
-                                key: 'fcf_yield',
-                                column: 'fcf_yield',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Yield FCF'),
-                            
-                            React.createElement('div', { 
-                                key: 'score',
-                                className: 'tooltip',
-                                'data-tooltip': 'Score basé sur le yield FCF'
-                            }, 'Score')
+                            React.createElement('div', {
+                                className: 'results-counter',
+                                key: 'counter'
+                            }, `${filteredData.length} résultat(s)`)
                         ]
                     ),
-                    
-                    ...paginatedData.map((item, index) =>
-                        React.createElement('div', {
-                            key: item.symbole + index,
-                            className: 'grid grid-cols-10 gap-4 p-4 border-b border-gray-700 hover:bg-gray-750 transition-colors text-sm'
-                        },
-                            [
-                                React.createElement('div', { 
-                                    className: 'font-bold text-lg',
-                                    key: 'symbole'
-                                }, item.symbole),
-                                React.createElement('div', { 
-                                    className: 'font-semibold',
-                                    key: 'nom' 
-                                }, item.nom),
-                                React.createElement('div', { 
-                                    className: 'text-gray-300',
-                                    key: 'secteur' 
-                                }, item.secteur),
-                                React.createElement('div', { 
-                                    className: 'text-green-400 font-bold',
-                                    key: 'op-cf'
-                                }, formatMillions(item.operating_cash_flow)),
-                                React.createElement('div', { 
-                                    className: 'text-blue-400 font-bold',
-                                    key: 'fcf'
-                                }, formatMillions(item.free_cash_flow)),
-                                React.createElement('div', { 
-                                    key: 'revenue'
-                                }, formatMillions(item.revenue)),
-                                React.createElement('div', { 
-                                    key: 'net-income'
-                                }, formatMillions(item.net_income)),
-                                React.createElement('div', { 
-                                    className: getCashFlowColor(item.fcf_margin, 'margin'),
-                                    key: 'fcf-margin'
-                                }, formatPercent(item.fcf_margin)),
-                                React.createElement('div', { 
-                                    className: getCashFlowColor(item.fcf_yield, 'yield'),
-                                    key: 'fcf-yield'
-                                }, formatPercent(item.fcf_yield)),
-                                React.createElement('div', { 
-                                    className: `px-3 py-2 rounded-full text-xs font-bold text-center text-white ${
-                                        item.fcf_yield > 0.06 ? 'bg-gradient-purple' : 'bg-gradient-teal'
-                                    }`,
-                                    key: 'rating'
-                                }, item.fcf_yield > 0.06 ? '💰 EXCELLENT' : '💸 BON')
-                            ]
-                        )
+
+                    React.createElement('div', {
+                        className: 'dropdown-grid',
+                        key: 'dropdowns-grid'
+                    },
+                        [
+                            React.createElement('div', {
+                                className: 'dropdown-group',
+                                key: 'quality-dropdown'
+                            },
+                                [
+                                    React.createElement('label', {
+                                        className: 'dropdown-label',
+                                        key: 'quality-label'
+                                    }, 'Filtrer par score'),
+                                    
+                                    React.createElement('select', {
+                                        value: filter,
+                                        onChange: (e) => setFilter(e.target.value),
+                                        className: 'dropdown-select',
+                                        key: 'quality-select'
+                                    },
+                                        CASH_FLOW_FILTERS.map(option =>
+                                            React.createElement('option', {
+                                                value: option.value,
+                                                key: option.value,
+                                                className: 'bg-gray-800'
+                                            }, option.label)
+                                        )
+                                    )
+                                ]
+                            ),
+
+                            React.createElement('div', {
+                                className: 'dropdown-group',
+                                key: 'sector-dropdown'
+                            },
+                                [
+                                    React.createElement('label', {
+                                        className: 'dropdown-label',
+                                        key: 'sector-label'
+                                    }, 'Filtrer par secteur'),
+                                    
+                                    React.createElement('select', {
+                                        value: sectorFilter,
+                                        onChange: (e) => setSectorFilter(e.target.value),
+                                        className: 'dropdown-select',
+                                        key: 'sector-select'
+                                    },
+                                        SECTORS.map(sector =>
+                                            React.createElement('option', {
+                                                value: sector,
+                                                key: sector,
+                                                className: 'bg-gray-800'
+                                            }, sector)
+                                        )
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                ]
+            ),
+          
+            // Tableau (MÊME DESIGN QUE BUFFETT)
+            React.createElement('div', { 
+                className: 'table-container',
+                key: 'table-container'
+            },
+                [
+                    React.createElement('div', { 
+                        className: 'bg-gray-800 rounded-lg overflow-hidden shadow-xl',
+                        key: 'table'
+                    },
+                        [
+                            // En-tête du tableau Cash Flow AVEC TRI
+                            React.createElement('div', { 
+                                className: 'grid grid-cols-10 gap-4 p-4 bg-gray-700 font-semibold text-sm',
+                                key: 'table-header'
+                            },
+                                [
+                                    React.createElement(SortableHeader, {
+                                        key: 'symbole',
+                                        column: 'symbole',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Symbole'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'nom',
+                                        column: 'nom',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Entreprise'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'secteur',
+                                        column: 'secteur',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Secteur'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'operating_cash_flow',
+                                        column: 'operating_cash_flow',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Cash Flow Op.'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'free_cash_flow',
+                                        column: 'free_cash_flow',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Free Cash Flow'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'revenue',
+                                        column: 'revenue',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Revenus'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'net_income',
+                                        column: 'net_income',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Net Income'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'fcf_margin',
+                                        column: 'fcf_margin',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Marge FCF'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'fcf_yield',
+                                        column: 'fcf_yield',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Yield FCF'),
+                                    
+                                    React.createElement('div', { 
+                                        key: 'score'
+                                    }, 'Score')
+                                ]
+                            ),
+                            
+                            // Corps du tableau
+                            ...paginatedData.map((item, index) =>
+                                React.createElement('div', {
+                                    key: item.symbole + index,
+                                    className: 'grid grid-cols-10 gap-4 p-4 border-b border-gray-700 hover:bg-gray-750 transition-colors text-sm'
+                                },
+                                    [
+                                        React.createElement('div', { 
+                                            className: 'font-bold text-lg',
+                                            key: 'symbole'
+                                        }, item.symbole),
+                                        React.createElement('div', { 
+                                            className: 'font-semibold',
+                                            key: 'nom' 
+                                        }, item.nom),
+                                        React.createElement('div', { 
+                                            className: 'text-gray-300',
+                                            key: 'secteur' 
+                                        }, item.secteur),
+                                        React.createElement('div', { 
+                                            className: 'text-green-400 font-bold',
+                                            key: 'op-cf'
+                                        }, formatMillions(item.operating_cash_flow)),
+                                        React.createElement('div', { 
+                                            className: 'text-blue-400 font-bold',
+                                            key: 'fcf'
+                                        }, formatMillions(item.free_cash_flow)),
+                                        React.createElement('div', { 
+                                            key: 'revenue'
+                                        }, formatMillions(item.revenue)),
+                                        React.createElement('div', { 
+                                            key: 'net-income'
+                                        }, formatMillions(item.net_income)),
+                                        React.createElement('div', { 
+                                            className: getCashFlowColor(item.fcf_margin, 'margin'),
+                                            key: 'fcf-margin'
+                                        }, formatPercent(item.fcf_margin)),
+                                        React.createElement('div', { 
+                                            className: getCashFlowColor(item.fcf_yield, 'yield'),
+                                            key: 'fcf-yield'
+                                        }, formatPercent(item.fcf_yield)),
+                                        React.createElement('div', { 
+                                            className: `px-3 py-2 rounded-full text-xs font-bold text-center text-white ${getCashFlowRatingColor(item)}`,
+                                            key: 'rating'
+                                        }, getCashFlowRating(item))
+                                    ]
+                                )
+                            )
+                        ]
                     )
                 ]
             ),
 
-            // AJOUT PAGINATION
+            // PAGINATION (MÊME DESIGN QUE BUFFETT)
             React.createElement(Pagination, {
                 key: 'pagination',
                 currentPage: currentPage,
@@ -1348,19 +1547,9 @@ const CashFlowTab = ({
                 onItemsPerPageChange: onItemsPerPageChange, 
                 totalItems: filteredData.length
             })
-         ]
-      );
-  };
-
-      // Fonction utilitaire pour les labels des filtres Cash Flow
-      const getCashFlowFilterLabel = (filter) => {
-          const labels = {
-              'EXCELLENT': 'avec un cash flow excellent',
-              'GOOD': 'avec un bon cash flow', 
-              'WEAK': 'avec un cash flow faible'
-          };
-          return labels[filter] || '';
-      };
+        ]
+    );
+};
 
 // Composant Onglet Value Trap Detector avec Filtres, Tri, Recherche et PAGINATION
 const ValueTrapTab = ({ 
@@ -1371,18 +1560,25 @@ const ValueTrapTab = ({
     onSort, 
     searchTerm, 
     onSearch, 
-    getSortedAndFilteredData,
-    getPaginatedData,
-    currentPage,
-    totalPages,
-    onPageChange,
-    itemsPerPage,
+    currentPage, 
+    totalPages, 
+    onPageChange, 
+    itemsPerPage, 
     onItemsPerPageChange,
     totalItems 
 }) => {
     const [filter, setFilter] = useState('ALL');
-        const [sectorFilter, setSectorFilter] = useState('Tous secteurs'); // 🔥 AJOUT
-    
+    const [sectorFilter, setSectorFilter] = useState('Tous secteurs');
+
+    const VALUE_TRAP_FILTERS = [
+        { value: 'ALL', label: 'Tous types' },
+        { value: 'ELITE_VALUE', label: '⭐ ELITE' },
+        { value: 'SOLID_VALUE', label: '✅ SOLIDE' },
+        { value: 'VALUE_TRAP', label: '⚠️ PIÈGE' },
+        { value: 'DEEP_VALUE', label: '🎯 PROFOND' },
+        { value: 'POTENTIAL', label: '📊 POTENTIEL' }
+    ];
+
     const SECTORS = [
         'Tous secteurs',
         'Industrials',
@@ -1397,10 +1593,55 @@ const ValueTrapTab = ({
         'Utilities',
         'Real Estate'
     ];
-  
+
+    const getSortedAndFilteredData = (data) => {
+        if (!data) return [];
+        
+        let filteredData = data;
+        if (searchTerm) {
+            const searchLower = searchTerm.toLowerCase();
+            filteredData = data.filter(item => 
+                Object.values(item).some(value => 
+                    value && value.toString().toLowerCase().includes(searchLower)
+                )
+            );
+        }
+
+        if (sortConfig.key) {
+            filteredData = [...filteredData].sort((a, b) => {
+                let aValue = a[sortConfig.key];
+                let bValue = b[sortConfig.key];
+
+                if (aValue === null || aValue === undefined) aValue = '';
+                if (bValue === null || bValue === undefined) bValue = '';
+
+                if (!isNaN(parseFloat(aValue)) && !isNaN(parseFloat(bValue))) {
+                    aValue = parseFloat(aValue);
+                    bValue = parseFloat(bValue);
+                }
+
+                if (aValue < bValue) {
+                    return sortConfig.direction === 'asc' ? -1 : 1;
+                }
+                if (aValue > bValue) {
+                    return sortConfig.direction === 'asc' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+
+        return filteredData;
+    };
+
+    const getPaginatedData = (data) => {
+        if (!data || data.length === 0) return [];
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        return data.slice(startIndex, endIndex);
+    };
+
     const sortedAndFilteredData = getSortedAndFilteredData(data);
     
-    // 🔥 MODIFICATION : Ajout du filtre secteur
     const filteredData = sortedAndFilteredData.filter(item => {
         const qualityMatch = filter === 'ALL' || 
             (item.value_grade && item.value_grade.includes(filter));
@@ -1412,215 +1653,273 @@ const ValueTrapTab = ({
     });
     
     const paginatedData = getPaginatedData(filteredData);
-    
-    return React.createElement('div', { className: 'table-container' },
+
+    return React.createElement('div', {},
         [
-            // Barre de recherche globale (inchangée)
-            // Avertissement Value Trap (inchangé)
-
-            // 🔥 FILTRES QUALITÉ Value Trap
+            // Section Recherche et Filtres (MÊME DESIGN QUE BUFFETT)
             React.createElement('div', { 
-                className: 'flex gap-2 mb-4 flex-wrap',
-                key: 'quality-filters' 
-            },
-                ['ALL', 'ELITE_VALUE', 'SOLID_VALUE', 'VALUE_TRAP', 'DEEP_VALUE', 'POTENTIAL'].map(filt =>
-                    React.createElement('button', {
-                        key: filt,
-                        onClick: () => setFilter(filt),
-                        className: `px-4 py-2 rounded-lg transition-all ${
-                            filter === filt 
-                                ? 'bg-blue-600 text-white shadow-lg' 
-                                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                        }`
-                    }, 
-                    filt === 'ALL' ? '📋 Tous types' : 
-                    filt === 'ELITE_VALUE' ? '⭐ ELITE' :
-                    filt === 'SOLID_VALUE' ? '✅ SOLIDE' :
-                    filt === 'VALUE_TRAP' ? '⚠️ PIÈGE' :
-                    filt === 'DEEP_VALUE' ? '🎯 PROFOND' : '📊 POTENTIEL')
-                )
-            ),
-
-            // 🔥 FILTRES SECTEUR Value Trap
-            React.createElement('div', { 
-                className: 'flex gap-2 mb-6 flex-wrap',
-                key: 'sector-filters' 
-            },
-                SECTORS.map(sector =>
-                    React.createElement('button', {
-                        key: sector,
-                        onClick: () => setSectorFilter(sector),
-                        className: `px-4 py-2 rounded-lg transition-all ${
-                            sectorFilter === sector 
-                                ? 'bg-blue-600 text-white shadow-lg' 
-                                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                        }`
-                    }, sector)
-                )
-            ),
-
-            // Tableau Value Trap
-            React.createElement('div', { 
-                className: 'bg-gray-800 rounded-lg overflow-hidden shadow-xl',
-                key: 'table'
+                className: 'search-section mb-6',
+                key: 'search-filters'
             },
                 [
-                    // En-tête du tableau Value Trap AVEC TRI
-                    React.createElement('div', { 
-                        className: 'grid grid-cols-12 gap-2 p-4 bg-gray-700 font-semibold text-xs',
-                        key: 'table-header'
+                    React.createElement('div', {
+                        className: 'search-input-container',
+                        key: 'search-bar'
                     },
                         [
-                            React.createElement(SortableHeader, {
-                                key: 'symbole',
-                                column: 'symbole',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Symbole'),
+                            React.createElement('div', {
+                                className: 'search-icon',
+                                key: 'search-icon'
+                            }, '🔍'),
                             
-                            React.createElement(SortableHeader, {
-                                key: 'nom',
-                                column: 'nom',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Entreprise'),
+                            React.createElement('input', {
+                                type: 'text',
+                                placeholder: 'Rechercher entreprises',
+                                value: searchTerm,
+                                onChange: (e) => onSearch(e.target.value),
+                                className: 'search-input',
+                                key: 'search-input'
+                            }),
                             
-                            React.createElement(SortableHeader, {
-                                key: 'secteur',
-                                column: 'secteur',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Secteur'),
-                            
-                            React.createElement(SortableHeader, {
-                                key: 'pe_ratio',
-                                column: 'pe_ratio',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'P/E'),
-                            
-                            React.createElement(SortableHeader, {
-                                key: 'pb_ratio',
-                                column: 'pb_ratio',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'P/B'),
-                            
-                            React.createElement(SortableHeader, {
-                                key: 'price_to_fcf',
-                                column: 'price_to_fcf',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'P/FCF'),
-                            
-                            React.createElement(SortableHeader, {
-                                key: 'evToEbitda',
-                                column: 'evToEbitda',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'EV/EBITDA'),
-                            
-                            React.createElement(SortableHeader, {
-                                key: 'roe',
-                                column: 'roe',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'ROE'),
-                            
-                            React.createElement(SortableHeader, {
-                                key: 'roic',
-                                column: 'roic',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'ROIC'),
-                            
-                            React.createElement(SortableHeader, {
-                                key: 'graham_multiple',
-                                column: 'graham_multiple',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Graham'),
-                            
-                            React.createElement(SortableHeader, {
-                                key: 'value_score',
-                                column: 'value_score',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Score'),
-                            
-                            React.createElement('div', { key: 'grade' }, 'Grade')
+                            React.createElement('div', {
+                                className: 'results-counter',
+                                key: 'counter'
+                            }, `${filteredData.length} résultat(s)`)
                         ]
                     ),
-                    
-                    // 🔥 CORRECTION : utiliser paginatedData au lieu de sortedAndFilteredData
-                    ...paginatedData.map((item, index) =>
-                        React.createElement('div', {
-                            key: item.symbole + index,
-                            className: 'grid grid-cols-12 gap-2 p-4 border-b border-gray-700 hover:bg-gray-750 transition-colors text-xs'
-                        },
-                            [
-                                React.createElement('div', { 
-                                    className: 'font-bold text-sm',
-                                    key: 'symbole'
-                                }, item.symbole),
-                                React.createElement('div', { 
-                                    className: 'font-semibold',
-                                    key: 'nom' 
-                                }, item.nom),
-                                React.createElement('div', { 
-                                    className: 'text-gray-300',
-                                    key: 'secteur' 
-                                }, item.secteur),
-                                React.createElement('div', { 
-                                    className: item.pe_ratio < 8 ? 'text-green-400 font-bold' : 
-                                              item.pe_ratio < 15 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
-                                    key: 'pe'
-                                }, `${Number(item.pe_ratio).toFixed(2)}`),
-                                React.createElement('div', { 
-                                    className: item.pb_ratio < 1 ? 'text-green-400 font-bold' : 
-                                              item.pb_ratio < 2 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
-                                    key: 'pb'
-                                }, `${Number(item.pb_ratio).toFixed(2)}`),
-                                React.createElement('div', { 
-                                    className: item.price_to_fcf < 10 ? 'text-green-400 font-bold' : 
-                                              item.price_to_fcf < 20 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
-                                    key: 'p-fcf'
-                                }, `${Number(item.price_to_fcf).toFixed(2)}`),
-                                React.createElement('div', { 
-                                    className: item.evToEbitda < 8 ? 'text-green-400 font-bold' : 
-                                              item.evToEbitda < 15 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
-                                    key: 'ev-ebitda'
-                                }, `${Number(item.evToEbitda).toFixed(2)}`),
-                                React.createElement('div', { 
-                                    className: item.roe > 15 ? 'text-green-400 font-bold' : 
-                                              item.roe > 8 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
-                                    key: 'roe'
-                                }, `${Number(item.roe).toFixed(2)}%`),
-                                React.createElement('div', { 
-                                    className: item.roic > 12 ? 'text-green-400 font-bold' : 
-                                              item.roic > 8 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
-                                    key: 'roic'
-                                }, `${Number(item.roic).toFixed(2)}%`),
-                                React.createElement('div', { 
-                                    className: item.graham_multiple < 15 ? 'text-green-400 font-bold' : 
-                                              item.graham_multiple < 22.5 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
-                                    key: 'graham'
-                                }, `${Number(item.graham_multiple).toFixed(2)}`),
-                                React.createElement('div', { 
-                                    className: getValueScoreColor(item.value_score),
-                                    key: 'score'
-                                }, `${Number(item.value_score).toFixed(2)}`),
-                                React.createElement('div', { 
-                                    className: `px-2 py-1 rounded-full text-xs font-bold text-center text-white ${getValueGradeColor(item.value_grade)}`,
-                                    key: 'grade'
-                                }, item.value_grade)
-                            ]
-                        )
+
+                    React.createElement('div', {
+                        className: 'dropdown-grid',
+                        key: 'dropdowns-grid'
+                    },
+                        [
+                            React.createElement('div', {
+                                className: 'dropdown-group',
+                                key: 'quality-dropdown'
+                            },
+                                [
+                                    React.createElement('label', {
+                                        className: 'dropdown-label',
+                                        key: 'quality-label'
+                                    }, 'Filtrer par type'),
+                                    
+                                    React.createElement('select', {
+                                        value: filter,
+                                        onChange: (e) => setFilter(e.target.value),
+                                        className: 'dropdown-select',
+                                        key: 'quality-select'
+                                    },
+                                        VALUE_TRAP_FILTERS.map(option =>
+                                            React.createElement('option', {
+                                                value: option.value,
+                                                key: option.value,
+                                                className: 'bg-gray-800'
+                                            }, option.label)
+                                        )
+                                    )
+                                ]
+                            ),
+
+                            React.createElement('div', {
+                                className: 'dropdown-group',
+                                key: 'sector-dropdown'
+                            },
+                                [
+                                    React.createElement('label', {
+                                        className: 'dropdown-label',
+                                        key: 'sector-label'
+                                    }, 'Filtrer par secteur'),
+                                    
+                                    React.createElement('select', {
+                                        value: sectorFilter,
+                                        onChange: (e) => setSectorFilter(e.target.value),
+                                        className: 'dropdown-select',
+                                        key: 'sector-select'
+                                    },
+                                        SECTORS.map(sector =>
+                                            React.createElement('option', {
+                                                value: sector,
+                                                key: sector,
+                                                className: 'bg-gray-800'
+                                            }, sector)
+                                        )
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                ]
+            ),
+          
+            // Tableau Value Trap (MÊME DESIGN QUE BUFFETT)
+            React.createElement('div', { 
+                className: 'table-container',
+                key: 'table-container'
+            },
+                [
+                    React.createElement('div', { 
+                        className: 'bg-gray-800 rounded-lg overflow-hidden shadow-xl',
+                        key: 'table'
+                    },
+                        [
+                            // En-tête du tableau Value Trap AVEC TRI
+                            React.createElement('div', { 
+                                className: 'grid grid-cols-12 gap-2 p-4 bg-gray-700 font-semibold text-xs',
+                                key: 'table-header'
+                            },
+                                [
+                                    React.createElement(SortableHeader, {
+                                        key: 'symbole',
+                                        column: 'symbole',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Symbole'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'nom',
+                                        column: 'nom',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Entreprise'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'secteur',
+                                        column: 'secteur',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Secteur'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'pe_ratio',
+                                        column: 'pe_ratio',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'P/E'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'pb_ratio',
+                                        column: 'pb_ratio',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'P/B'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'price_to_fcf',
+                                        column: 'price_to_fcf',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'P/FCF'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'evToEbitda',
+                                        column: 'evToEbitda',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'EV/EBITDA'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'roe',
+                                        column: 'roe',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'ROE'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'roic',
+                                        column: 'roic',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'ROIC'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'graham_multiple',
+                                        column: 'graham_multiple',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Graham'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'value_score',
+                                        column: 'value_score',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Score'),
+                                    
+                                    React.createElement('div', { key: 'grade' }, 'Grade')
+                                ]
+                            ),
+                            
+                            // Corps du tableau
+                            ...paginatedData.map((item, index) =>
+                                React.createElement('div', {
+                                    key: item.symbole + index,
+                                    className: 'grid grid-cols-12 gap-2 p-4 border-b border-gray-700 hover:bg-gray-750 transition-colors text-xs'
+                                },
+                                    [
+                                        React.createElement('div', { 
+                                            className: 'font-bold text-sm',
+                                            key: 'symbole'
+                                        }, item.symbole),
+                                        React.createElement('div', { 
+                                            className: 'font-semibold',
+                                            key: 'nom' 
+                                        }, item.nom),
+                                        React.createElement('div', { 
+                                            className: 'text-gray-300',
+                                            key: 'secteur' 
+                                        }, item.secteur),
+                                        React.createElement('div', { 
+                                            className: item.pe_ratio < 8 ? 'text-green-400 font-bold' : 
+                                                      item.pe_ratio < 15 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
+                                            key: 'pe'
+                                        }, `${Number(item.pe_ratio).toFixed(2)}`),
+                                        React.createElement('div', { 
+                                            className: item.pb_ratio < 1 ? 'text-green-400 font-bold' : 
+                                                      item.pb_ratio < 2 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
+                                            key: 'pb'
+                                        }, `${Number(item.pb_ratio).toFixed(2)}`),
+                                        React.createElement('div', { 
+                                            className: item.price_to_fcf < 10 ? 'text-green-400 font-bold' : 
+                                                      item.price_to_fcf < 20 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
+                                            key: 'p-fcf'
+                                        }, `${Number(item.price_to_fcf).toFixed(2)}`),
+                                        React.createElement('div', { 
+                                            className: item.evToEbitda < 8 ? 'text-green-400 font-bold' : 
+                                                      item.evToEbitda < 15 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
+                                            key: 'ev-ebitda'
+                                        }, `${Number(item.evToEbitda).toFixed(2)}`),
+                                        React.createElement('div', { 
+                                            className: item.roe > 15 ? 'text-green-400 font-bold' : 
+                                                      item.roe > 8 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
+                                            key: 'roe'
+                                        }, `${Number(item.roe).toFixed(2)}%`),
+                                        React.createElement('div', { 
+                                            className: item.roic > 12 ? 'text-green-400 font-bold' : 
+                                                      item.roic > 8 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
+                                            key: 'roic'
+                                        }, `${Number(item.roic).toFixed(2)}%`),
+                                        React.createElement('div', { 
+                                            className: item.graham_multiple < 15 ? 'text-green-400 font-bold' : 
+                                                      item.graham_multiple < 22.5 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
+                                            key: 'graham'
+                                        }, `${Number(item.graham_multiple).toFixed(2)}`),
+                                        React.createElement('div', { 
+                                            className: getValueScoreColor(item.value_score),
+                                            key: 'score'
+                                        }, `${Number(item.value_score).toFixed(2)}`),
+                                        React.createElement('div', { 
+                                            className: `px-2 py-1 rounded-full text-xs font-bold text-center text-white ${getValueGradeColor(item.value_grade)}`,
+                                            key: 'grade'
+                                        }, item.value_grade)
+                                    ]
+                                )
+                            )
+                        ]
                     )
                 ]
             ),
 
-            // Pagination et compteur
+            // PAGINATION (MÊME DESIGN QUE BUFFETT)
             React.createElement(Pagination, {
                 key: 'pagination',
                 currentPage: currentPage,
@@ -1630,24 +1929,11 @@ const ValueTrapTab = ({
                 onItemsPerPageChange: onItemsPerPageChange, 
                 totalItems: filteredData.length
             })
-         ]
-      );
-  };
+        ]
+    );
+};
 
-        // Fonction utilitaire pour les labels des filtres
-        const getFilterLabel = (filter) => {
-            const labels = {
-                'ELITE_VALUE': 'de qualité elite',
-                'SOLID_VALUE': 'de qualité solide', 
-                'VALUE_TRAP': 'potentiels pièges',
-                'DEEP_VALUE': 'de valeur profonde',
-                'POTENTIAL': 'à potentiel'
-            };
-            return labels[filter] || '';
-        };
-
-
-      // Composant Onglet Short Risk Detector avec Filtres, Tri et Recherche
+// Composant Onglet Short Risk Detector avec Filtres, Tri et Recherche
 const ShortRiskTab = ({ 
     data, 
     getShortSignalColor, 
@@ -1658,18 +1944,24 @@ const ShortRiskTab = ({
     onSort, 
     searchTerm, 
     onSearch, 
-    getSortedAndFilteredData,
-    getPaginatedData,
-    currentPage,
-    totalPages,
-    onPageChange,
-    itemsPerPage,
+    currentPage, 
+    totalPages, 
+    onPageChange, 
+    itemsPerPage, 
     onItemsPerPageChange,
     totalItems 
 }) => {
     const [filter, setFilter] = useState('ALL');
-     const [sectorFilter, setSectorFilter] = useState('Tous secteurs'); // 🔥 AJOUT
-    
+    const [sectorFilter, setSectorFilter] = useState('Tous secteurs');
+
+    const RISK_FILTERS = [
+        { value: 'ALL', label: 'Tous risques' },
+        { value: 'CRITICAL', label: '🚨 CRITIQUE' },
+        { value: 'HIGH', label: '🔴 ÉLEVÉ' },
+        { value: 'MEDIUM', label: '🟡 MOYEN' },
+        { value: 'LOW', label: '🟢 FAIBLE' }
+    ];
+
     const SECTORS = [
         'Tous secteurs',
         'Industrials',
@@ -1684,10 +1976,55 @@ const ShortRiskTab = ({
         'Utilities',
         'Real Estate'
     ];
-  
+
+    const getSortedAndFilteredData = (data) => {
+        if (!data) return [];
+        
+        let filteredData = data;
+        if (searchTerm) {
+            const searchLower = searchTerm.toLowerCase();
+            filteredData = data.filter(item => 
+                Object.values(item).some(value => 
+                    value && value.toString().toLowerCase().includes(searchLower)
+                )
+            );
+        }
+
+        if (sortConfig.key) {
+            filteredData = [...filteredData].sort((a, b) => {
+                let aValue = a[sortConfig.key];
+                let bValue = b[sortConfig.key];
+
+                if (aValue === null || aValue === undefined) aValue = '';
+                if (bValue === null || bValue === undefined) bValue = '';
+
+                if (!isNaN(parseFloat(aValue)) && !isNaN(parseFloat(bValue))) {
+                    aValue = parseFloat(aValue);
+                    bValue = parseFloat(bValue);
+                }
+
+                if (aValue < bValue) {
+                    return sortConfig.direction === 'asc' ? -1 : 1;
+                }
+                if (aValue > bValue) {
+                    return sortConfig.direction === 'asc' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+
+        return filteredData;
+    };
+
+    const getPaginatedData = (data) => {
+        if (!data || data.length === 0) return [];
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        return data.slice(startIndex, endIndex);
+    };
+
     const sortedAndFilteredData = getSortedAndFilteredData(data);
     
-    // 🔥 MODIFICATION : Ajout du filtre secteur
     const filteredData = sortedAndFilteredData.filter(item => {
         const qualityMatch = filter === 'ALL' || 
             (filter === 'CRITICAL' && item.risk_score >= 8) ||
@@ -1702,199 +2039,258 @@ const ShortRiskTab = ({
     });
     
     const paginatedData = getPaginatedData(filteredData);
-    
-    return React.createElement('div', { className: 'table-container' },
+
+    return React.createElement('div', {},
         [
-            // Barre de recherche globale (inchangée)
-            // Avertissement important (inchangé)
-
-            // 🔥 FILTRES QUALITÉ Short Risk
+            // Section Recherche et Filtres (MÊME DESIGN QUE BUFFETT)
             React.createElement('div', { 
-                className: 'flex gap-2 mb-4 flex-wrap',
-                key: 'quality-filters' 
-            },
-                ['ALL', 'CRITICAL', 'HIGH', 'MEDIUM', 'LOW'].map(filt =>
-                    React.createElement('button', {
-                        key: filt,
-                        onClick: () => setFilter(filt),
-                        className: `px-4 py-2 rounded-lg transition-all ${
-                            filter === filt 
-                                ? 'bg-blue-600 text-white shadow-lg' 
-                                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                        }`
-                    }, 
-                    filt === 'ALL' ? '📋 Tous risques' : 
-                    filt === 'CRITICAL' ? '🚨 CRITIQUE' :
-                    filt === 'HIGH' ? '🔴 ÉLEVÉ' :
-                    filt === 'MEDIUM' ? '🟡 MOYEN' : '🟢 FAIBLE')
-                )
-            ),
-
-            // 🔥 FILTRES SECTEUR Short Risk
-            React.createElement('div', { 
-                className: 'flex gap-2 mb-6 flex-wrap',
-                key: 'sector-filters' 
-            },
-                SECTORS.map(sector =>
-                    React.createElement('button', {
-                        key: sector,
-                        onClick: () => setSectorFilter(sector),
-                        className: `px-4 py-2 rounded-lg transition-all ${
-                            sectorFilter === sector 
-                                ? 'bg-blue-600 text-white shadow-lg' 
-                                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                        }`
-                    }, sector)
-                )
-            ),
-
-            // Tableau Short Risk
-            React.createElement('div', { 
-                className: 'bg-gray-800 rounded-lg overflow-hidden shadow-xl',
-                key: 'table'
+                className: 'search-section mb-6',
+                key: 'search-filters'
             },
                 [
-                    // En-tête du tableau Short Risk AVEC TRI
-                    React.createElement('div', { 
-                        className: 'grid grid-cols-11 gap-2 p-4 bg-gray-700 font-semibold text-sm',
-                        key: 'table-header'
+                    React.createElement('div', {
+                        className: 'search-input-container',
+                        key: 'search-bar'
                     },
                         [
-                            React.createElement(SortableHeader, {
-                                key: 'symbole',
-                                column: 'symbole',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Symbole'),
+                            React.createElement('div', {
+                                className: 'search-icon',
+                                key: 'search-icon'
+                            }, '🔍'),
                             
-                            React.createElement(SortableHeader, {
-                                key: 'nom',
-                                column: 'nom',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Entreprise'),
+                            React.createElement('input', {
+                                type: 'text',
+                                placeholder: 'Rechercher entreprises',
+                                value: searchTerm,
+                                onChange: (e) => onSearch(e.target.value),
+                                className: 'search-input',
+                                key: 'search-input'
+                            }),
                             
-                            React.createElement(SortableHeader, {
-                                key: 'secteur',
-                                column: 'secteur',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Secteur'),
-                            
-                            React.createElement(SortableHeader, {
-                                key: 'debt_to_equity',
-                                column: 'debt_to_equity',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Dette/Equity'),
-                            
-                            React.createElement(SortableHeader, {
-                                key: 'interest_coverage',
-                                column: 'interest_coverage',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Coverage Int.'),
-                            
-                            React.createElement(SortableHeader, {
-                                key: 'current_ratio',
-                                column: 'current_ratio',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Current Ratio'),
-                            
-                            React.createElement(SortableHeader, {
-                                key: 'net_income',
-                                column: 'net_income',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Net Income'),
-                            
-                            React.createElement(SortableHeader, {
-                                key: 'operating_cash_flow',
-                                column: 'operating_cash_flow',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Cash Flow Op.'),
-                            
-                            React.createElement(SortableHeader, {
-                                key: 'revenue',
-                                column: 'revenue',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Revenus'),
-                            
-                            React.createElement(SortableHeader, {
-                                key: 'risk_score',
-                                column: 'risk_score',
-                                sortConfig: sortConfig,
-                                onSort: onSort
-                            }, 'Score Risque'),
-                            
-                            React.createElement('div', { key: 'signal' }, 'Signal')
+                            React.createElement('div', {
+                                className: 'results-counter',
+                                key: 'counter'
+                            }, `${filteredData.length} résultat(s)`)
                         ]
                     ),
-                    
-                    // Corps du tableau Short Risk
-                    ...paginatedData.map((item, index) =>
-                        React.createElement('div', {
-                            key: item.symbole + index,
-                            className: 'grid grid-cols-11 gap-2 p-4 border-b border-gray-700 hover:bg-gray-750 transition-colors text-sm'
-                        },
-                            [
-                                React.createElement('div', { 
-                                    className: 'font-bold text-lg',
-                                    key: 'symbole'
-                                }, item.symbole),
-                                React.createElement('div', { 
-                                    className: 'font-semibold',
-                                    key: 'nom' 
-                                }, item.nom),
-                                React.createElement('div', { 
-                                    className: 'text-gray-300',
-                                    key: 'secteur' 
-                                }, item.secteur),
-                                React.createElement('div', { 
-                                    className: item.debt_to_equity > 3 ? 'text-red-400 font-bold' : 
-                                              item.debt_to_equity > 2 ? 'text-yellow-400 font-bold' : 'text-green-400 font-bold',
-                                    key: 'debt'
-                                }, `${Number(item.debt_to_equity).toFixed(2)}x`),
-                                React.createElement('div', { 
-                                    className: item.interest_coverage < 1 ? 'text-red-400 font-bold' : 
-                                              item.interest_coverage < 1.5 ? 'text-yellow-400 font-bold' : 'text-green-400 font-bold',
-                                    key: 'interest'
-                                }, `${Number(item.interest_coverage).toFixed(2)}`),
-                                React.createElement('div', { 
-                                    className: item.current_ratio < 0.8 ? 'text-red-400 font-bold' : 
-                                              item.current_ratio < 1 ? 'text-yellow-400 font-bold' : 'text-green-400 font-bold',
-                                    key: 'current'
-                                }, `${Number(item.current_ratio).toFixed(2)}`),
-                                React.createElement('div', { 
-                                    className: item.net_income < 0 ? 'text-red-400 font-bold' : 'text-green-400 font-bold',
-                                    key: 'net-income'
-                                }, formatMillions(item.net_income)),
-                                React.createElement('div', { 
-                                    className: item.operating_cash_flow < 0 ? 'text-red-400 font-bold' : 'text-green-400 font-bold',
-                                    key: 'cash-flow'
-                                }, formatMillions(item.operating_cash_flow)),
-                                React.createElement('div', { 
-                                    key: 'revenue'
-                                }, formatMillions(item.revenue)),
-                                React.createElement('div', { 
-                                    className: item.risk_score >= 8 ? 'text-red-400 font-bold' : 
-                                              item.risk_score >= 5 ? 'text-yellow-400 font-bold' : 'text-green-400 font-bold',
-                                    key: 'risk-score'
-                                }, item.risk_score),
-                                React.createElement('div', { 
-                                    className: `px-3 py-2 rounded-full text-xs font-bold text-center text-white ${getShortSignalColor(item.short_signal)}`,
-                                    key: 'signal'
-                                }, item.short_signal)
-                            ]
-                        )
+
+                    React.createElement('div', {
+                        className: 'dropdown-grid',
+                        key: 'dropdowns-grid'
+                    },
+                        [
+                            React.createElement('div', {
+                                className: 'dropdown-group',
+                                key: 'quality-dropdown'
+                            },
+                                [
+                                    React.createElement('label', {
+                                        className: 'dropdown-label',
+                                        key: 'quality-label'
+                                    }, 'Filtrer par risque'),
+                                    
+                                    React.createElement('select', {
+                                        value: filter,
+                                        onChange: (e) => setFilter(e.target.value),
+                                        className: 'dropdown-select',
+                                        key: 'quality-select'
+                                    },
+                                        RISK_FILTERS.map(option =>
+                                            React.createElement('option', {
+                                                value: option.value,
+                                                key: option.value,
+                                                className: 'bg-gray-800'
+                                            }, option.label)
+                                        )
+                                    )
+                                ]
+                            ),
+
+                            React.createElement('div', {
+                                className: 'dropdown-group',
+                                key: 'sector-dropdown'
+                            },
+                                [
+                                    React.createElement('label', {
+                                        className: 'dropdown-label',
+                                        key: 'sector-label'
+                                    }, 'Filtrer par secteur'),
+                                    
+                                    React.createElement('select', {
+                                        value: sectorFilter,
+                                        onChange: (e) => setSectorFilter(e.target.value),
+                                        className: 'dropdown-select',
+                                        key: 'sector-select'
+                                    },
+                                        SECTORS.map(sector =>
+                                            React.createElement('option', {
+                                                value: sector,
+                                                key: sector,
+                                                className: 'bg-gray-800'
+                                            }, sector)
+                                        )
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                ]
+            ),
+          
+            // Tableau Short Risk (MÊME DESIGN QUE BUFFETT)
+            React.createElement('div', { 
+                className: 'table-container',
+                key: 'table-container'
+            },
+                [
+                    React.createElement('div', { 
+                        className: 'bg-gray-800 rounded-lg overflow-hidden shadow-xl',
+                        key: 'table'
+                    },
+                        [
+                            // En-tête du tableau Short Risk AVEC TRI
+                            React.createElement('div', { 
+                                className: 'grid grid-cols-11 gap-2 p-4 bg-gray-700 font-semibold text-sm',
+                                key: 'table-header'
+                            },
+                                [
+                                    React.createElement(SortableHeader, {
+                                        key: 'symbole',
+                                        column: 'symbole',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Symbole'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'nom',
+                                        column: 'nom',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Entreprise'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'secteur',
+                                        column: 'secteur',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Secteur'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'debt_to_equity',
+                                        column: 'debt_to_equity',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Dette/Equity'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'interest_coverage',
+                                        column: 'interest_coverage',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Coverage Int.'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'current_ratio',
+                                        column: 'current_ratio',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Current Ratio'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'net_income',
+                                        column: 'net_income',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Net Income'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'operating_cash_flow',
+                                        column: 'operating_cash_flow',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Cash Flow Op.'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'revenue',
+                                        column: 'revenue',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Revenus'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'risk_score',
+                                        column: 'risk_score',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Score Risque'),
+                                    
+                                    React.createElement('div', { key: 'signal' }, 'Signal')
+                                ]
+                            ),
+                            
+                            // Corps du tableau Short Risk
+                            ...paginatedData.map((item, index) =>
+                                React.createElement('div', {
+                                    key: item.symbole + index,
+                                    className: 'grid grid-cols-11 gap-2 p-4 border-b border-gray-700 hover:bg-gray-750 transition-colors text-sm'
+                                },
+                                    [
+                                        React.createElement('div', { 
+                                            className: 'font-bold text-lg',
+                                            key: 'symbole'
+                                        }, item.symbole),
+                                        React.createElement('div', { 
+                                            className: 'font-semibold',
+                                            key: 'nom' 
+                                        }, item.nom),
+                                        React.createElement('div', { 
+                                            className: 'text-gray-300',
+                                            key: 'secteur' 
+                                        }, item.secteur),
+                                        React.createElement('div', { 
+                                            className: item.debt_to_equity > 3 ? 'text-red-400 font-bold' : 
+                                                      item.debt_to_equity > 2 ? 'text-yellow-400 font-bold' : 'text-green-400 font-bold',
+                                            key: 'debt'
+                                        }, `${Number(item.debt_to_equity).toFixed(2)}x`),
+                                        React.createElement('div', { 
+                                            className: item.interest_coverage < 1 ? 'text-red-400 font-bold' : 
+                                                      item.interest_coverage < 1.5 ? 'text-yellow-400 font-bold' : 'text-green-400 font-bold',
+                                            key: 'interest'
+                                        }, `${Number(item.interest_coverage).toFixed(2)}`),
+                                        React.createElement('div', { 
+                                            className: item.current_ratio < 0.8 ? 'text-red-400 font-bold' : 
+                                                      item.current_ratio < 1 ? 'text-yellow-400 font-bold' : 'text-green-400 font-bold',
+                                            key: 'current'
+                                        }, `${Number(item.current_ratio).toFixed(2)}`),
+                                        React.createElement('div', { 
+                                            className: item.net_income < 0 ? 'text-red-400 font-bold' : 'text-green-400 font-bold',
+                                            key: 'net-income'
+                                        }, formatMillions(item.net_income)),
+                                        React.createElement('div', { 
+                                            className: item.operating_cash_flow < 0 ? 'text-red-400 font-bold' : 'text-green-400 font-bold',
+                                            key: 'cash-flow'
+                                        }, formatMillions(item.operating_cash_flow)),
+                                        React.createElement('div', { 
+                                            key: 'revenue'
+                                        }, formatMillions(item.revenue)),
+                                        React.createElement('div', { 
+                                            className: item.risk_score >= 8 ? 'text-red-400 font-bold' : 
+                                                      item.risk_score >= 5 ? 'text-yellow-400 font-bold' : 'text-green-400 font-bold',
+                                            key: 'risk-score'
+                                        }, item.risk_score),
+                                        React.createElement('div', { 
+                                            className: `px-3 py-2 rounded-full text-xs font-bold text-center text-white ${getShortSignalColor(item.short_signal)}`,
+                                            key: 'signal'
+                                        }, item.short_signal)
+                                    ]
+                                )
+                            )
+                        ]
                     )
                 ]
             ),
 
-            // Pagination et compteur
+            // PAGINATION (MÊME DESIGN QUE BUFFETT)
             React.createElement(Pagination, {
                 key: 'pagination',
                 currentPage: currentPage,
@@ -1904,19 +2300,9 @@ const ShortRiskTab = ({
                 onItemsPerPageChange: onItemsPerPageChange, 
                 totalItems: filteredData.length
             })
-         ]
-      );
-  };
-        // Fonction utilitaire pour les labels des filtres de risque
-        const getRiskFilterLabel = (filter) => {
-            const labels = {
-                'CRITICAL': 'critique',
-                'HIGH': 'élevé', 
-                'MEDIUM': 'moyen',
-                'LOW': 'faible'
-            };
-            return labels[filter] || '';
-        };
+        ]
+    );
+};
 
 // COMPOSANT PRINCIPAL - InvestmentApp
 const InvestmentApp = () => {
@@ -1927,7 +2313,13 @@ const InvestmentApp = () => {
     const [shortRiskData, setShortRiskData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [filter, setFilter] = useState('ALL');
+    
+    // ÉTATS LOCAUX POUR CHAQUE ONGLET
+    const [buffettFilter, setBuffettFilter] = useState('ALL');
+    const [cashFlowFilter, setCashFlowFilter] = useState('ALL');
+    const [valueTrapFilter, setValueTrapFilter] = useState('ALL');
+    const [shortRiskFilter, setShortRiskFilter] = useState('ALL');
+    
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
     const [globalSearch, setGlobalSearch] = useState('');
         
@@ -1936,59 +2328,12 @@ const InvestmentApp = () => {
     const [itemsPerPage, setItemsPerPage] = useState(20);
     const [totalPages, setTotalPages] = useState(1);
 
-    // DONNÉES FILTRÉES
-    const filteredBuffettData = filter === 'ALL' 
-        ? buffettData 
-        : buffettData.filter(item => item.buffett_rating && item.buffett_rating.includes(filter));
-
+    // DONNÉES FILTRÉES (supprimer l'ancien filtre global)
+    const filteredBuffettData = buffettData || [];
     const filteredCashFlowData = cashFlowData || [];
     const filteredValueTrapData = valueTrapData || [];
     const filteredShortRiskData = shortRiskData || [];
 
-    // 🔥 CORRECTION : UNE SEULE DÉFINITION de getSortedAndFilteredData
-    const getSortedAndFilteredData = (data) => {
-        if (!data) return [];
-        
-        // Filtrage par recherche globale
-        let filteredData = data;
-        if (globalSearch) {
-            const searchLower = globalSearch.toLowerCase();
-            filteredData = data.filter(item => 
-                Object.values(item).some(value => 
-                    value && value.toString().toLowerCase().includes(searchLower)
-                )
-            );
-        }
-    
-        // Tri
-        if (sortConfig.key) {
-            filteredData = [...filteredData].sort((a, b) => {
-                let aValue = a[sortConfig.key];
-                let bValue = b[sortConfig.key];
-    
-                // Gestion des valeurs nulles/undefined
-                if (aValue === null || aValue === undefined) aValue = '';
-                if (bValue === null || bValue === undefined) bValue = '';
-    
-                // Conversion en nombre si possible
-                if (!isNaN(parseFloat(aValue)) && !isNaN(parseFloat(bValue))) {
-                    aValue = parseFloat(aValue);
-                    bValue = parseFloat(bValue);
-                }
-    
-                if (aValue < bValue) {
-                    return sortConfig.direction === 'asc' ? -1 : 1;
-                }
-                if (aValue > bValue) {
-                    return sortConfig.direction === 'asc' ? 1 : -1;
-                }
-                return 0;
-            });
-        }
-    
-        return filteredData;
-    };
-  
     // FONCTION PAGINATION
     const getPaginatedData = (data) => {
         if (!data || data.length === 0) return [];
@@ -2071,9 +2416,6 @@ const InvestmentApp = () => {
     useEffect(() => {
         fetchAllData();
     }, []);
-
-  
-
 
     // Fonctions de style (inchangées)
     const getBuffettRatingColor = (rating) => {
@@ -2206,41 +2548,41 @@ const InvestmentApp = () => {
         );
     }
 
- return React.createElement('div', { className: 'min-h-screen bg-gray-900 text-white p-4' },
+    return React.createElement('div', { className: 'min-h-screen bg-gray-900 text-white p-4' },
         React.createElement('div', { className: 'max-w-7xl mx-auto' },
             [
                 // En-tête
                 React.createElement('div', { key: 'header' },
-            [
-                React.createElement('div', { 
-                    className: 'glass-header',
-                    key: 'main-header'
-                },
                     [
-                        React.createElement('div', {
-                            className: 'flex items-center gap-4 mb-4',
-                            key: 'title-section'
+                        React.createElement('div', { 
+                            className: 'glass-header',
+                            key: 'main-header'
                         },
                             [
                                 React.createElement('div', {
-                                    className: 'header-icon text-xl',
-                                    key: 'main-icon'
-                                }, ''),
-                                
-                                React.createElement('div', { key: 'title-text' },
+                                    className: 'flex items-center gap-4 mb-4',
+                                    key: 'title-section'
+                                },
                                     [
-                                        React.createElement('h1', { 
-                                            className: 'text-3xl font-bold text-white mb-0',
-                                            key: 'main-title'
-                                        }, 'Analyse d\'entreprises'),
+                                        React.createElement('div', {
+                                            className: 'header-icon text-xl',
+                                            key: 'main-icon'
+                                        }, ''),
+                                        
+                                        React.createElement('div', { key: 'title-text' },
+                                            [
+                                                React.createElement('h1', { 
+                                                    className: 'text-3xl font-bold text-white mb-0',
+                                                    key: 'main-title'
+                                                }, 'Analyse d\'entreprises'),
+                                            ]
+                                        )
                                     ]
-                                )
+                                ),
                             ]
-                        ),
+                        )
                     ]
-                )
-            ]
-        ),
+                ),
                 
                 // Onglets
                 React.createElement('div', { 
@@ -2273,95 +2615,85 @@ const InvestmentApp = () => {
                     )
                 ),
 
-                  // Contenu des onglets
-          activeTab === 'buffett' 
-              ? React.createElement('div', { key: 'buffett-tab' },
-                  [
-                      React.createElement(DescriptionBox, {
-                          key: 'description',
-                          analysisType: 'buffett'
-                      }),
-                      React.createElement(BuffettTab, {
-                          key: 'table',
-                          data: filteredBuffettData,
-                          filter: filter,
-                          onFilterChange: setFilter,
-                          getRatingColor: getBuffettRatingColor,
-                          getValueColor: getValueColor,
-                          sortConfig: sortConfig,
-                          onSort: handleSort,
-                          searchTerm: globalSearch,
-                          onSearch: handleGlobalSearch,
-                          getSortedAndFilteredData: getSortedAndFilteredData,
-                          getPaginatedData: getPaginatedData,
-                          currentPage: currentPage,
-                          totalPages: totalPages,
-                          onPageChange: setCurrentPage,
-                          itemsPerPage: itemsPerPage,
-                          onItemsPerPageChange: setItemsPerPage,
-                          totalItems: filteredBuffettData.length
-                      })
-                  ]
-              )
-              : activeTab === 'cashflow'
-              ? React.createElement(CashFlowTab, {
-                  key: 'cashflow-tab',
-                  data: filteredCashFlowData,
-                  getCashFlowColor: getCashFlowColor,
-                  formatMillions: formatMillions,
-                  formatPercent: formatPercent,
-                  sortConfig: sortConfig,
-                  onSort: handleSort,
-                  searchTerm: globalSearch,
-                  onSearch: handleGlobalSearch,
-                  getSortedAndFilteredData: getSortedAndFilteredData,
-                  getPaginatedData: getPaginatedData,
-                  currentPage: currentPage,
-                  totalPages: totalPages,
-                  onPageChange: setCurrentPage,
-                  itemsPerPage: itemsPerPage,
-                  onItemsPerPageChange: setItemsPerPage,
-                  totalItems: filteredCashFlowtData.length
-              })
-              : activeTab === 'valuetrap'
-              ? React.createElement(ValueTrapTab, {
-                  key: 'valuetrap-tab',
-                  data: filteredValueTrapData,
-                  getValueGradeColor: getValueGradeColor,
-                  getValueScoreColor: getValueScoreColor,
-                  sortConfig: sortConfig,
-                  onSort: handleSort,
-                  searchTerm: globalSearch,
-                  onSearch: handleGlobalSearch,
-                  getSortedAndFilteredData: getSortedAndFilteredData,
-                  getPaginatedData: getPaginatedData,
-                  currentPage: currentPage,
-                  totalPages: totalPages,
-                  onPageChange: setCurrentPage,
-                  itemsPerPage: itemsPerPage,
-                  onItemsPerPageChange: setItemsPerPage,
-                  totalItems: filteredvaluetrapData.length
-              })
-              : React.createElement(ShortRiskTab, {
-                  key: 'shortrisk-tab',
-                  data: filteredShortRiskData,
-                  getShortSignalColor: getShortSignalColor,
-                  getRiskScoreColor: getRiskScoreColor,
-                  getMetricColor: getMetricColor,
-                  formatMillions: formatMillions,
-                  sortConfig: sortConfig,
-                  onSort: handleSort,
-                  searchTerm: globalSearch,
-                  onSearch: handleGlobalSearch,
-                  getSortedAndFilteredData: getSortedAndFilteredData,
-                  getPaginatedData: getPaginatedData,
-                  currentPage: currentPage,
-                  totalPages: totalPages,
-                  onPageChange: setCurrentPage,
-                  itemsPerPage: itemsPerPage,
-                  onItemsPerPageChange: setItemsPerPage,
-                  totalItems: filteredShortRiskData.length
-              })
+                // Contenu des onglets
+                activeTab === 'buffett' 
+                    ? React.createElement('div', { key: 'buffett-tab' },
+                        [
+                            React.createElement(DescriptionBox, {
+                                key: 'description',
+                                analysisType: 'buffett'
+                            }),
+                            React.createElement(BuffettTab, {
+                                key: 'table',
+                                data: filteredBuffettData,
+                                getRatingColor: getBuffettRatingColor,
+                                getValueColor: getValueColor,
+                                sortConfig: sortConfig,
+                                onSort: handleSort,
+                                searchTerm: globalSearch,
+                                onSearch: handleGlobalSearch,
+                                currentPage: currentPage,
+                                totalPages: totalPages,
+                                onPageChange: setCurrentPage,
+                                itemsPerPage: itemsPerPage,
+                                onItemsPerPageChange: setItemsPerPage,
+                                totalItems: filteredBuffettData.length
+                            })
+                        ]
+                    )
+                    : activeTab === 'cashflow'
+                    ? React.createElement(CashFlowTab, {
+                        key: 'cashflow-tab',
+                        data: filteredCashFlowData,
+                        getCashFlowColor: getCashFlowColor,
+                        formatMillions: formatMillions,
+                        formatPercent: formatPercent,
+                        sortConfig: sortConfig,
+                        onSort: handleSort,
+                        searchTerm: globalSearch,
+                        onSearch: handleGlobalSearch,
+                        currentPage: currentPage,
+                        totalPages: totalPages,
+                        onPageChange: setCurrentPage,
+                        itemsPerPage: itemsPerPage,
+                        onItemsPerPageChange: setItemsPerPage,
+                        totalItems: filteredCashFlowData.length
+                    })
+                    : activeTab === 'valuetrap'
+                    ? React.createElement(ValueTrapTab, {
+                        key: 'valuetrap-tab',
+                        data: filteredValueTrapData,
+                        getValueGradeColor: getValueGradeColor,
+                        getValueScoreColor: getValueScoreColor,
+                        sortConfig: sortConfig,
+                        onSort: handleSort,
+                        searchTerm: globalSearch,
+                        onSearch: handleGlobalSearch,
+                        currentPage: currentPage,
+                        totalPages: totalPages,
+                        onPageChange: setCurrentPage,
+                        itemsPerPage: itemsPerPage,
+                        onItemsPerPageChange: setItemsPerPage,
+                        totalItems: filteredValueTrapData.length
+                    })
+                    : React.createElement(ShortRiskTab, {
+                        key: 'shortrisk-tab',
+                        data: filteredShortRiskData,
+                        getShortSignalColor: getShortSignalColor,
+                        getRiskScoreColor: getRiskScoreColor,
+                        getMetricColor: getMetricColor,
+                        formatMillions: formatMillions,
+                        sortConfig: sortConfig,
+                        onSort: handleSort,
+                        searchTerm: globalSearch,
+                        onSearch: handleGlobalSearch,
+                        currentPage: currentPage,
+                        totalPages: totalPages,
+                        onPageChange: setCurrentPage,
+                        itemsPerPage: itemsPerPage,
+                        onItemsPerPageChange: setItemsPerPage,
+                        totalItems: filteredShortRiskData.length
+                    })
             ]
         )
     );
