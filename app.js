@@ -388,11 +388,6 @@ const renderSectionContent = (section) => {
                   [
                     React.createElement('h4', { 
                       className: 'pillar-title text-white',
-                        item.title.includes('ROE') ? 'text-green-400' :
-                        item.title.includes('ROIC') ? 'text-blue-400' :
-                        item.title.includes('Dette') ? 'text-purple-400' :
-                        'text-orange-400'
-                      }`,
                       key: 'item-title'
                     }, item.title),
                     
