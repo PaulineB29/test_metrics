@@ -435,11 +435,11 @@ body {
 }
 /* Ajoutez ces classes à votre CSS */
 .search-section {
-  background: rgba(30, 41, 59, 0.7);
-  backdrop-filter: blur(10px);
-  border-radius: 0.75rem;
-  border: 1px solid rgba(100, 116, 139, 0.3);
-  padding: 1.5rem;
+    background: linear-gradient(135deg, rgb(44 53 67 / 80%), rgb(23 40 67));
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem; /* mb-6 équivaut à 1.5rem */
 }
 
 .search-input-container {
