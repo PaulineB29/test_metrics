@@ -387,7 +387,7 @@ const renderSectionContent = (section) => {
                 },
                   [
                     React.createElement('h4', { 
-                      className: `pillar-title ${
+                      className: 'pillar-title text-white',
                         item.title.includes('ROE') ? 'text-green-400' :
                         item.title.includes('ROIC') ? 'text-blue-400' :
                         item.title.includes('Dette') ? 'text-purple-400' :
@@ -559,7 +559,7 @@ const renderSectionContent = (section) => {
                 },
                   [
                     React.createElement('h4', {
-                      className: 'usage-title',
+                      className: 'usage-title text-white',
                       key: 'target'
                     }, item.target),
                     React.createElement('p', {
@@ -592,7 +592,7 @@ const renderSectionContent = (section) => {
                 },
                   [
                     React.createElement('h4', {
-                      className: 'warning-title text-orange-400',
+                      className: 'warning-title text-white',
                       key: 'limitations-title'
                     }, section.limitations.title),
                     
@@ -621,7 +621,7 @@ const renderSectionContent = (section) => {
                 },
                   [
                     React.createElement('h4', {
-                      className: 'warning-title text-blue-400',
+                      className: 'warning-title text-white',
                       key: 'complements-title'
                     }, section.complements.title),
                     
