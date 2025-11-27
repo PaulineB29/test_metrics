@@ -709,7 +709,7 @@ const renderSectionContent = (section) => {
             ]
           ),
       
-     // Contenu déroulant
+      // SECTION DÉROULANTE CORRIGÉE (sans duplication de titre)
       isExpanded && React.createElement('div', {
         className: 'expandable-section p-6 space-y-6 mt-4',
         key: 'methodology-content'
@@ -717,16 +717,10 @@ const renderSectionContent = (section) => {
         desc.sections.slice(1).map((section, index) =>
           React.createElement('div', {
             key: `section-${index + 1}`,
-            className: 'mb-6'
+            className: 'mb-8 last:mb-0'
           },
-            [
-              section.title && React.createElement('h3', { 
-                className: 'text-lg font-bold mb-3 text-white border-l-4 border-blue-500 pl-3',
-                key: 'title'
-              }, section.title),
-              
-              renderSectionContent(section)
-            ]
+            // ⚠️ Appel direct sans afficher le titre ici
+            renderSectionContent(section)
           )
         )
       )
