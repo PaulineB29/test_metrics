@@ -632,13 +632,7 @@ const DescriptionBox = ({ analysisType }) => {
       return React.createElement('div', { 
           className: 'glass-main'
         },
-          [
-            // Titre seulement (suppression de la div flex)
-            React.createElement('h1', { 
-              className: 'text-xl text-white mb-6',
-              key: 'title'
-            }, 'Buffett Quality Score'),
-            
+          [          
             // Carte explicative
             React.createElement('div', { 
               key: 'explanation-card'
