@@ -334,102 +334,111 @@ const DescriptionBox = ({ analysisType }) => {
     setIsExpanded(!isExpanded);
   };
 
-  const renderSectionContent = (section) => {
+
+const renderSectionContent = (section) => {
     switch (section.type) {
       case "columns":
         return React.createElement('div', { key: 'columns-content' },
-          React.createElement('div', {
-            className: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4',
-          },
-            section.items.map((item, idx) =>
-              React.createElement('div', {
-                className: 'glass rounded-xl p-4 transition-all hover:scale-105',
-                key: idx
-              },
-                [
-                  React.createElement('div', { 
-                    className: 'text-blue-400 font-bold text-lg mb-3',
-                    key: 'icon'
-                  }, 
-                    item.title.includes('ROE') ? 'R' :
-                    item.title.includes('ROIC') ? 'E' :
-                    item.title.includes('Dette') ? 'D' :
-                    item.title.includes('Marge') ? 'M' : 'Q'
-                  ),
-                  
-                  React.createElement('h4', { 
-                    className: 'font-bold text-white mb-2',
-                    key: 'item-title'
-                  }, item.title),
-                  
-                  React.createElement('p', {
-                    className: 'text-gray-300 text-sm mb-3',
-                    key: 'desc'
-                  }, item.description),
-                  
-                  item.quote && React.createElement('blockquote', {
-                    className: 'text-yellow-400 text-xs italic border-l-2 border-yellow-400 pl-2 mt-2',
-                    key: 'quote'
-                  }, item.quote),
-                  
-                  item.note && React.createElement('p', {
-                    className: 'text-blue-400 text-xs mt-2',
-                    key: 'note'
-                  }, item.note)
-                ]
+          [
+            React.createElement('h3', {
+              className: 'section-title section-title-green',
+              key: 'title'
+            }, section.title),
+            
+            React.createElement('div', {
+              className: 'grid grid-cols-1 md:grid-cols-2 gap-6',
+              key: 'pillars-grid'
+            },
+              section.items.map((item, idx) =>
+                React.createElement('div', {
+                  className: 'pillar-card',
+                  key: idx
+                },
+                  [
+                    React.createElement('h4', { 
+                      className: `pillar-title ${
+                        item.title.includes('ROE') ? 'text-green-400' :
+                        item.title.includes('ROIC') ? 'text-blue-400' :
+                        item.title.includes('Dette') ? 'text-purple-400' :
+                        'text-orange-400'
+                      }`,
+                      key: 'item-title'
+                    }, item.title),
+                    
+                    React.createElement('p', {
+                      className: 'pillar-text',
+                      key: 'desc'
+                    }, item.description),
+                    
+                    (item.quote || item.note) && React.createElement('p', {
+                      className: `pillar-quote ${
+                        item.quote ? 'border-yellow-400' : 'border-blue-400'
+                      }`,
+                      key: 'quote-note'
+                    }, item.quote || item.note)
+                  ]
+                )
               )
             )
-          )
+          ]
         );
 
       case "table":
         return React.createElement('div', { key: 'table-content' },
-          React.createElement('div', {
-            className: 'overflow-x-auto rounded-lg',
-          },
-            React.createElement('table', { 
-              className: 'w-full text-sm glass rounded-lg overflow-hidden',
+          [
+            React.createElement('h3', {
+              className: 'section-title section-title-yellow',
+              key: 'title'
+            }, section.title),
+            
+            React.createElement('div', {
+              className: 'overflow-x-auto rounded-lg',
+              key: 'table-container'
             },
-              [
-                React.createElement('thead', { key: 'head' },
-                  React.createElement('tr', { className: 'bg-gray-700' },
-                    section.headers.map((header, idx) =>
-                      React.createElement('th', {
-                        className: 'px-4 py-3 text-left font-semibold text-gray-200',
-                        key: idx
-                      }, header)
+              React.createElement('table', { 
+                className: 'rating-table',
+              },
+                [
+                  React.createElement('thead', { key: 'head' },
+                    React.createElement('tr', {},
+                      section.headers.map((header, idx) =>
+                        React.createElement('th', {
+                          key: idx
+                        }, header)
+                      )
                     )
-                  )
-                ),
-                
-                React.createElement('tbody', { key: 'body' },
-                  section.rows.map((row, rowIdx) =>
-                    React.createElement('tr', {
-                      className: rowIdx % 2 === 0 ? 'bg-gray-800' : 'bg-gray-750',
-                      key: rowIdx
-                    },
-                      row.map((cell, cellIdx) =>
-                        React.createElement('td', {
-                          className: 'px-4 py-3 border-b border-gray-700',
-                          key: cellIdx
-                        }, cell)
+                  ),
+                  
+                  React.createElement('tbody', { key: 'body' },
+                    section.rows.map((row, rowIdx) =>
+                      React.createElement('tr', {
+                        key: rowIdx
+                      },
+                        row.map((cell, cellIdx) =>
+                          React.createElement('td', {
+                            key: cellIdx,
+                            className: cellIdx === 0 ? 
+                              (cell.includes('ELITE') ? 'text-yellow-400 font-semibold' :
+                               cell.includes('STRONG') ? 'text-green-400 font-semibold' :
+                               cell.includes('DECENT') ? 'text-orange-400 font-semibold' :
+                               'text-red-400 font-semibold') : 
+                              (cellIdx === 1 ? 'text-slate-300' : 'text-slate-400')
+                          }, cell)
+                        )
                       )
                     )
                   )
-                )
-              ]
+                ]
+              )
             )
-          )
+          ]
         );
 
       case "comparison":
-        return React.createElement('div', { 
-          className: 'glass rounded-xl p-6 mb-6',
-          key: 'comparison'
-        },
+        return React.createElement('div', { key: 'comparison' },
           [
-            React.createElement('h3', { 
-              className: 'text-lg font-bold mb-4 text-white',
+            React.createElement('h3', {
+              className: 'section-title section-title-blue',
               key: 'title'
             }, section.title),
             
@@ -439,48 +448,58 @@ const DescriptionBox = ({ analysisType }) => {
             },
               [
                 React.createElement('div', {
-                  className: 'bg-green-900/20 p-4 rounded-lg border border-green-500/30',
+                  className: 'philosophy-card philosophy-good',
                   key: 'good'
                 },
                   [
                     React.createElement('h4', {
-                      className: 'font-bold text-green-400 mb-3',
+                      className: 'philosophy-title text-green-400',
                       key: 'good-title'
                     }, section.good.title),
+                    
                     ...section.good.items.map((item, idx) =>
                       React.createElement('div', {
-                        className: 'flex items-center text-green-300 text-sm mb-2',
+                        className: 'list-item',
                         key: `good-${idx}`
-                      }, 
-                        React.createElement('span', {
-                          className: 'text-green-400 mr-2 font-bold',
-                          key: 'check'
-                        }, '✓'),
-                        item
+                      },
+                        [
+                          React.createElement('span', {
+                            className: 'text-green-400',
+                            key: 'check'
+                          }, '✓'),
+                          React.createElement('span', {
+                            key: 'text'
+                          }, item.replace('✅ ', ''))
+                        ]
                       )
                     )
                   ]
                 ),
                 
                 React.createElement('div', {
-                  className: 'bg-red-900/20 p-4 rounded-lg border border-red-500/30',
+                  className: 'philosophy-card philosophy-bad',
                   key: 'bad'
                 },
                   [
                     React.createElement('h4', {
-                      className: 'font-bold text-red-400 mb-3',
+                      className: 'philosophy-title text-red-400',
                       key: 'bad-title'
                     }, section.bad.title),
+                    
                     ...section.bad.items.map((item, idx) =>
                       React.createElement('div', {
-                        className: 'flex items-center text-red-300 text-sm mb-2',
+                        className: 'list-item',
                         key: `bad-${idx}`
                       },
-                        React.createElement('span', {
-                          className: 'text-red-400 mr-2 font-bold',
-                          key: 'cross'
-                        }, '✗'),
-                        item
+                        [
+                          React.createElement('span', {
+                            className: 'text-red-400',
+                            key: 'cross'
+                          }, '✗'),
+                          React.createElement('span', {
+                            key: 'text'
+                          }, item.replace('❌ ', ''))
+                        ]
                       )
                     )
                   ]
@@ -490,46 +509,44 @@ const DescriptionBox = ({ analysisType }) => {
           ]
         );
 
-      // ... autres cas restent similaires mais sans emojis
       case "usage":
-        return React.createElement('div', { 
-          className: 'glass rounded-xl p-6 mb-6',
-          key: 'usage'
-        },
+        return React.createElement('div', { key: 'usage' },
           [
-            React.createElement('h3', { 
-              className: 'text-lg font-bold mb-4 text-white',
+            React.createElement('h3', {
+              className: 'section-title section-title-purple',
               key: 'title'
             }, section.title),
             
-            ...section.items.map((item, idx) =>
-              React.createElement('div', {
-                className: 'mb-3 p-3 bg-gray-800/50 rounded-lg border border-gray-700',
-                key: `usage-${idx}`
-              },
-                [
-                  React.createElement('div', {
-                    className: 'font-semibold text-blue-400 mb-1',
-                    key: 'target'
-                  }, item.target),
-                  React.createElement('div', {
-                    className: 'text-white',
-                    key: 'action'
-                  }, item.action.replace('→', '→'))
-                ]
+            React.createElement('div', {
+              className: 'space-y-4',
+              key: 'usage-cards'
+            },
+              section.items.map((item, idx) =>
+                React.createElement('div', {
+                  className: 'usage-card',
+                  key: `usage-${idx}`
+                },
+                  [
+                    React.createElement('h4', {
+                      className: 'usage-title',
+                      key: 'target'
+                    }, item.target),
+                    React.createElement('p', {
+                      className: 'text-slate-300 text-sm',
+                      key: 'action'
+                    }, item.action)
+                  ]
+                )
               )
             )
           ]
         );
 
       case "warnings":
-        return React.createElement('div', { 
-          className: 'bg-yellow-900/10 rounded-xl p-6 mb-6 border border-yellow-500/30',
-          key: 'warnings'
-        },
+        return React.createElement('div', { key: 'warnings' },
           [
-            React.createElement('h3', { 
-              className: 'text-lg font-bold mb-4 text-yellow-400',
+            React.createElement('h3', {
+              className: 'section-title section-title-red',
               key: 'title'
             }, section.title),
             
@@ -539,46 +556,58 @@ const DescriptionBox = ({ analysisType }) => {
             },
               [
                 React.createElement('div', {
+                  className: 'warning-column',
                   key: 'limitations'
                 },
                   [
                     React.createElement('h4', {
-                      className: 'font-semibold text-yellow-300 mb-3',
+                      className: 'warning-title text-orange-400',
                       key: 'limitations-title'
                     }, section.limitations.title),
+                    
                     ...section.limitations.items.map((item, idx) =>
                       React.createElement('div', {
-                        className: 'flex items-center text-yellow-200 text-sm mb-2',
+                        className: 'list-item',
                         key: `limit-${idx}`
-                      }, 
-                        React.createElement('span', {
-                          className: 'text-yellow-400 mr-2',
-                          key: 'bullet'
-                        }, '•'),
-                        item
+                      },
+                        [
+                          React.createElement('span', {
+                            className: 'text-orange-400',
+                            key: 'bullet'
+                          }, '•'),
+                          React.createElement('span', {
+                            key: 'text'
+                          }, item)
+                        ]
                       )
                     )
                   ]
                 ),
                 
                 React.createElement('div', {
+                  className: 'warning-column',
                   key: 'complements'
                 },
                   [
                     React.createElement('h4', {
-                      className: 'font-semibold text-blue-300 mb-3',
+                      className: 'warning-title text-blue-400',
                       key: 'complements-title'
                     }, section.complements.title),
+                    
                     ...section.complements.items.map((item, idx) =>
                       React.createElement('div', {
-                        className: 'flex items-center text-blue-200 text-sm mb-2',
+                        className: 'list-item',
                         key: `comp-${idx}`
                       },
-                        React.createElement('span', {
-                          className: 'text-blue-400 mr-2',
-                          key: 'bullet'
-                        }, '•'),
-                        item
+                        [
+                          React.createElement('span', {
+                            className: 'text-blue-400',
+                            key: 'bullet'
+                          }, '•'),
+                          React.createElement('span', {
+                            key: 'text'
+                          }, item)
+                        ]
                       )
                     )
                   ]
@@ -590,22 +619,22 @@ const DescriptionBox = ({ analysisType }) => {
 
       case "quote":
         return React.createElement('div', { 
-          className: 'bg-purple-900/20 rounded-xl p-6 mb-6 text-center border border-purple-500/30',
+          className: 'secret-section',
           key: 'quote'
         },
           [
             React.createElement('h3', { 
-              className: 'text-xl font-bold mb-3 text-purple-300',
+              className: 'secret-title',
               key: 'content'
             }, section.content),
             
             React.createElement('blockquote', {
-              className: 'text-white text-lg italic mb-4',
+              className: 'secret-quote',
               key: 'quote'
             }, section.quote),
             
             React.createElement('p', {
-              className: 'text-gray-300',
+              className: 'secret-text',
               key: 'note'
             }, section.note)
           ]
@@ -613,13 +642,9 @@ const DescriptionBox = ({ analysisType }) => {
 
       case "final-note":
         return React.createElement('div', { 
-          className: 'bg-blue-900/20 rounded-lg p-4 mb-4 text-center border border-blue-500/30',
+          className: 'secret-text text-center',
           key: 'final-note'
-        },
-          React.createElement('p', {
-            className: 'text-blue-300 font-semibold'
-          }, section.content)
-        );
+        }, section.content);
 
       default:
         return React.createElement('p', {
@@ -628,7 +653,6 @@ const DescriptionBox = ({ analysisType }) => {
         }, section.content);
     }
   };
-
       return React.createElement('div', { 
           className: 'glass-main'
         },
