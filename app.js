@@ -926,7 +926,9 @@ const BuffettTab = ({
         const endIndex = startIndex + itemsPerPage;
         return data.slice(startIndex, endIndex);
     };
-    
+
+    const sortedAndFilteredData = getSortedAndFilteredData(data);
+  
     // Appliquer les filtres qualité ET secteur
     const filteredData = sortedAndFilteredData.filter(item => {
         // Filtre qualité
@@ -1271,42 +1273,40 @@ const CashFlowTab = ({
         return data.slice(startIndex, endIndex);
     };
 
-    const sortedAndFilteredData = React.useMemo(() => {
-      return getSortedAndFilteredData(data);
+      const sortedAndFilteredData = React.useMemo(() => {
+        return getSortedAndFilteredData(data);
     }, [data, searchTerm, sortConfig]);
-  
-    const filteredData = React.useMemo(() => {
-      return sortedAndFilteredData.filter(item => {
-          // logique de filtrage
-      });
-    }, [sortedAndFilteredData, filter, sectorFilter]);
-      
-  const qualityMatch = filter === 'ALL' || 
-            (filter === 'EXCELLENT' && item.fcf_yield > 0.06) ||
-            (filter === 'GOOD' && item.fcf_yield > 0.03 && item.fcf_yield <= 0.06) ||
-            (filter === 'WEAK' && item.fcf_yield <= 0.03);
-        
-        const sectorMatch = sectorFilter === 'Tous secteurs' || 
-            (item.secteur && item.secteur === sectorFilter);
-        
-        return qualityMatch && sectorMatch;
-    });
-    
-    const paginatedData = getPaginatedData(filteredData);
 
-    const getCashFlowRating = (item) => {
+      const filteredData = React.useMemo(() => {
+        return sortedAndFilteredData.filter(item => {
+            const qualityMatch = filter === 'ALL' || 
+                (filter === 'EXCELLENT' && item.fcf_yield > 0.06) ||
+                (filter === 'GOOD' && item.fcf_yield > 0.03 && item.fcf_yield <= 0.06) ||
+                (filter === 'WEAK' && item.fcf_yield <= 0.03);
+            
+            const sectorMatch = sectorFilter === 'Tous secteurs' || 
+                (item.secteur && item.secteur === sectorFilter);
+            
+            return qualityMatch && sectorMatch;
+        });
+    }, [sortedAndFilteredData, filter, sectorFilter]);
+
+      const paginatedData = React.useMemo(() => {
+        return getPaginatedData(filteredData);
+    }, [filteredData, currentPage, itemsPerPage]);
+
+      const getCashFlowRating = (item) => {
         if (item.fcf_yield > 0.06) return '💰 EXCELLENT';
         if (item.fcf_yield > 0.03) return '💸 BON';
         return '🔴 FAIBLE';
     };
 
-            const getCashFlowRatingColor = (item) => {
-                if (item.fcf_yield > 0.06) return 'bg-green-600';
-                if (item.fcf_yield > 0.03) return 'bg-blue-600';
-                return 'bg-red-600';
-            };
+      const getCashFlowRatingColor = (item) => {
+        if (item.fcf_yield > 0.06) return 'bg-green-600';
+        if (item.fcf_yield > 0.03) return 'bg-blue-600';
+        return 'bg-red-600';
 
-    return React.createElement('div', {},
+      return React.createElement('div', {},
         [
             // Section Recherche et Filtres (MÊME DESIGN QUE BUFFETT)
             React.createElement('div', { 
@@ -1638,16 +1638,7 @@ const ValueTrapTab = ({
         return filteredData;
     };
 
-    const sortedAndFilteredData = React.useMemo(() => {
-        return getSortedAndFilteredData(data);
-    }, [data, searchTerm, sortConfig]);
     
-    const filteredData = React.useMemo(() => {
-        return sortedAndFilteredData.filter(item => {
-            // logique de filtrage
-        });
-    }, [sortedAndFilteredData, filter, sectorFilter]);
-  
     const getPaginatedData = (data) => {
         if (!data || data.length === 0) return [];
         const startIndex = (currentPage - 1) * itemsPerPage;
@@ -1655,19 +1646,27 @@ const ValueTrapTab = ({
         return data.slice(startIndex, endIndex);
     };
 
-    const sortedAndFilteredData = getSortedAndFilteredData(data);
-    
-    const filteredData = sortedAndFilteredData.filter(item => {
-    const qualityMatch = filter === 'ALL' || 
-        (item.value_grade && item.value_grade.includes(filter));
-    
-    const sectorMatch = sectorFilter === 'Tous secteurs' || 
-        (item.secteur && item.secteur === sectorFilter);
-    
-    return qualityMatch && sectorMatch;
-    });
-    
-    const paginatedData = getPaginatedData(filteredData);
+    // ✅ CORRECTION : Une seule déclaration avec useMemo
+    const sortedAndFilteredData = React.useMemo(() => {
+        return getSortedAndFilteredData(data);
+    }, [data, searchTerm, sortConfig]);
+
+    const filteredData = React.useMemo(() => {
+        return sortedAndFilteredData.filter(item => {
+            const qualityMatch = filter === 'ALL' || 
+                (item.value_grade && item.value_grade.includes(filter));
+            
+            const sectorMatch = sectorFilter === 'Tous secteurs' || 
+                (item.secteur && item.secteur === sectorFilter);
+            
+            return qualityMatch && sectorMatch;
+        });
+    }, [sortedAndFilteredData, filter, sectorFilter]);
+
+    const paginatedData = React.useMemo(() => {
+        return getPaginatedData(filteredData);
+    }, [filteredData, currentPage, itemsPerPage]);
+  
 
     return React.createElement('div', {},
         [
@@ -2031,39 +2030,36 @@ const ShortRiskTab = ({
         return filteredData;
     };
 
-     const sortedAndFilteredData = React.useMemo(() => {
-        return getSortedAndFilteredData(data);
-    }, [data, searchTerm, sortConfig]);
-    
-    const filteredData = React.useMemo(() => {
-        return sortedAndFilteredData.filter(item => {
-            // logique de filtrage
-        });
-    }, [sortedAndFilteredData, filter, sectorFilter]);
-  
-    const getPaginatedData = (data) => {
+const getPaginatedData = (data) => {
         if (!data || data.length === 0) return [];
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         return data.slice(startIndex, endIndex);
     };
 
-    const sortedAndFilteredData = getSortedAndFilteredData(data);
-    
-    const filteredData = sortedAndFilteredData.filter(item => {
-        const qualityMatch = filter === 'ALL' || 
-            (filter === 'CRITICAL' && item.risk_score >= 8) ||
-            (filter === 'HIGH' && item.risk_score >= 5 && item.risk_score < 8) ||
-            (filter === 'MEDIUM' && item.risk_score >= 3 && item.risk_score < 5) ||
-            (filter === 'LOW' && item.risk_score < 3);
-        
-        const sectorMatch = sectorFilter === 'Tous secteurs' || 
-            (item.secteur && item.secteur === sectorFilter);
-        
-        return qualityMatch && sectorMatch;
-    });
-    
-    const paginatedData = getPaginatedData(filteredData);
+    // ✅ CORRECTION : Une seule déclaration avec useMemo
+    const sortedAndFilteredData = React.useMemo(() => {
+        return getSortedAndFilteredData(data);
+    }, [data, searchTerm, sortConfig]);
+
+    const filteredData = React.useMemo(() => {
+        return sortedAndFilteredData.filter(item => {
+            const qualityMatch = filter === 'ALL' || 
+                (filter === 'CRITICAL' && item.risk_score >= 8) ||
+                (filter === 'HIGH' && item.risk_score >= 5 && item.risk_score < 8) ||
+                (filter === 'MEDIUM' && item.risk_score >= 3 && item.risk_score < 5) ||
+                (filter === 'LOW' && item.risk_score < 3);
+            
+            const sectorMatch = sectorFilter === 'Tous secteurs' || 
+                (item.secteur && item.secteur === sectorFilter);
+            
+            return qualityMatch && sectorMatch;
+        });
+    }, [sortedAndFilteredData, filter, sectorFilter]);
+
+    const paginatedData = React.useMemo(() => {
+        return getPaginatedData(filteredData);
+    }, [filteredData, currentPage, itemsPerPage]);
 
     return React.createElement('div', {},
         [
