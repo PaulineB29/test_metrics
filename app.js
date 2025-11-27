@@ -216,7 +216,7 @@ const SortableHeader = ({ column, sortConfig, onSort, children }) => {
 // Composant Pagination réutilisable
 const Pagination = ({ currentPage, totalPages, onPageChange, itemsPerPage, onItemsPerPageChange }) => {
     const pages = [];
-    const maxVisiblePages = 5;
+    const maxVisiblePages = 4;
     
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
     let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
@@ -240,14 +240,14 @@ const Pagination = ({ currentPage, totalPages, onPageChange, itemsPerPage, onIte
             },
                 [
                     React.createElement('span', {
-                        className: 'text-gray-400 text-sm',
+                        className: 'text-gray-300 text-sm font-medium',
                         key: 'label'
                     }, 'Lignes par page:'),
                     
                     React.createElement('select', {
                         value: itemsPerPage,
                         onChange: (e) => onItemsPerPageChange(Number(e.target.value)),
-                        className: 'bg-gray-700 text-white px-3 py-1 rounded border border-gray-600',
+                        className: 'bg-gray-700 text-white px-3 py-2 rounded-lg border border-gray-500 focus:border-blue-500 focus:outline-none',
                         key: 'select'
                     },
                         [20, 50, 100, 200].map(value =>
@@ -270,35 +270,34 @@ const Pagination = ({ currentPage, totalPages, onPageChange, itemsPerPage, onIte
                     React.createElement('button', {
                         onClick: () => onPageChange(1),
                         disabled: currentPage === 1,
-                        className: `px-3 py-1 rounded ${
+                        className: `px-3 py-2 rounded-lg font-medium transition-all 
                             currentPage === 1 
-                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
-                                : 'bg-gray-600 text-white hover:bg-gray-500'
+                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed border border-gray-600' 
+                                : 'bg-gray-600 text-white hover:bg-gray-500 border border-gray-500 hover:border-gray-400'
                         }`,
                         key: 'first'
-                    }, '⏮️ Première'),
+                    }, '⏮️'),
                     
                     // Bouton Précédent
                     React.createElement('button', {
                         onClick: () => onPageChange(currentPage - 1),
                         disabled: currentPage === 1,
-                        className: `px-3 py-1 rounded ${
+                        className: `px-3 py-2 rounded-lg font-medium transition-all
                             currentPage === 1 
-                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
-                                : 'bg-gray-600 text-white hover:bg-gray-500'
+                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed border border-gray-600' 
+                                : 'bg-gray-600 text-white hover:bg-gray-500 border border-gray-500 hover:border-gray-400'
                         }`,
                         key: 'prev'
-                    }, '◀️ Précédent'),
+                    }, '◀️'),
                     
                     // Numéros de page
                     ...pages.map(page =>
                         React.createElement('button', {
                             onClick: () => onPageChange(page),
-                            className: `px-3 py-1 rounded ${
+                            className: `px-3 py-2 rounded-lg font-medium transition-all 
                                 page === currentPage 
-                                    ? 'bg-blue-600 text-white font-bold' 
-                                    : 'bg-gray-600 text-white hover:bg-gray-500'
-                            }`,
+                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed border border-gray-600' 
+                                : 'bg-gray-600 text-white hover:bg-gray-500 border border-gray-500 hover:border-gray-400'
                             key: page
                         }, page)
                     ),
@@ -307,31 +306,31 @@ const Pagination = ({ currentPage, totalPages, onPageChange, itemsPerPage, onIte
                     React.createElement('button', {
                         onClick: () => onPageChange(currentPage + 1),
                         disabled: currentPage === totalPages,
-                        className: `px-3 py-1 rounded ${
+                        className: `px-3 py-2 rounded-lg font-medium transition-all
                             currentPage === totalPages 
-                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
-                                : 'bg-gray-600 text-white hover:bg-gray-500'
+                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed border border-gray-600' 
+                                : 'bg-gray-600 text-white hover:bg-gray-500 border border-gray-500 hover:border-gray-400'
                         }`,
                         key: 'next'
-                    }, 'Suivant ▶️'),
+                    }, '▶️'),
                     
                     // Bouton Dernière page
                     React.createElement('button', {
                         onClick: () => onPageChange(totalPages),
                         disabled: currentPage === totalPages,
-                        className: `px-3 py-1 rounded ${
+                        className: `px-3 py-2 rounded-lg font-medium transition-all
                             currentPage === totalPages 
-                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
-                                : 'bg-gray-600 text-white hover:bg-gray-500'
+                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed border border-gray-600' 
+                                : 'bg-gray-600 text-white hover:bg-gray-500 border border-gray-500 hover:border-gray-400'
                         }`,
                         key: 'last'
-                    }, 'Dernière ⏭️')
+                    }, '⏭️')
                 ]
             ),
             
             // Informations de pagination
             React.createElement('div', {
-                className: 'text-gray-400 text-sm',
+                className: 'text-gray-300 text-sm font-medium',
                 key: 'page-info'
             }, `Page ${currentPage} sur ${totalPages}`)
         ]
