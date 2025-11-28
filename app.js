@@ -377,38 +377,133 @@ const ANALYSIS_DESCRIPTIONS = {
     ]
   },
   shortrisk: {
-    title: "Short Risk - Détecteur de Détresse",
+    title: "🔍 Short Selling Candidates - Explication pour les Investisseurs",
     sections: [
       {
-        title: "Identifier les Entreprises à Risque",
-        content: "Cette analyse détecte les signes avant-coureurs de difficultés financières. Elle identifie les entreprises qui pourraient rencontrer des problèmes de solvabilité.",
+        title: "Enteprises avec signaux de détresse financière",
+        content: "Identification des entreprises présentant des situations où la santé financière est préoccupante.",
         expanded: true
       },
       {
-        title: "Les 4 Signaux d'Alerte",
-        type: "columns",
-        items: [
+        title: "Les signaux de danger analysés",
+        type: "danger-signals",
+        signals: [
           {
-            title: "Dette Dangereuse",
-            description: "Ratio dette/equity trop élevé",
-            quote: "Une dette excessive est le premier signe de danger"
+            name: "DANGEROUS_DEBT",
+            description: "Dette/Equity > 4 (ou > 8 pour les banques)",
+            risk: "Risque : Surendettement, difficultés de remboursement"
           },
           {
-            title: "Problèmes de Liquidité",
-            description: "Current ratio faible, difficultés à payer les dettes court terme",
-            note: "Les problèmes de liquidité peuvent être fatals"
+            name: "INTEREST_CRISIS", 
+            description: "Couverture des intérêts < 1",
+            risk: "Risque : Impossible de payer les intérêts de la dette"
           },
           {
-            title: "Cash Flow Négatif", 
-            description: "L'entreprise brûle plus de cash qu'elle n'en génère",
-            rule: "Brûler du cash n'est pas soutenable à long terme"
+            name: "LIQUIDITY_PROBLEM",
+            description: "Current Ratio < 0.8",
+            risk: "Risque : Problèmes de liquidité à court terme"
           },
           {
-            title: "Pertes Récurrentes",
-            description: "Bénéfices négatifs sur plusieurs périodes",
-            indicator: "Les pertes répétées épuisent les réserves"
+            name: "BURNING_CASH",
+            description: "Résultat net ET cash flow opérationnel négatifs",
+            risk: "Risque : L'entreprise brûle du cash des deux côtés"
+          },
+          {
+            name: "DOUBLE_TROUBLE",
+            description: "Forte dette + faible couverture des intérêts",
+            risk: "Risque : Situation financière très tendue"
+          },
+          {
+            name: "MICRO_CAP_DISTRESS",
+            description: "Pertes + petit chiffre d'affaires",
+            risk: "Risque : Petite entreprise en difficulté"
           }
         ],
+        expanded: false
+      },
+      {
+        title: "Le système de scoring de risque",
+        type: "scoring-system",
+        description: "Chaque signal ajoute des points au Risk Score :",
+        headers: ["Problème", "Points", "Gravité"],
+        rows: [
+          ["Dette/Equity > 3", "3 points", "Critique"],
+          ["Dette/Equity > 2", "2 points", "Élevée"],
+          ["Couverture intérêts < 1", "3 points", "Critique"],
+          ["Couverture intérêts < 1.5", "2 points", "Élevée"],
+          ["Current Ratio < 0.8", "3 points", "Critique"],
+          ["Current Ratio < 1", "2 points", "Élevée"],
+          ["Résultat net négatif", "2 points", "Préoccupant"],
+          ["Cash flow négatif", "2 points", "Préoccupant"]
+        ],
+        interpretation: {
+          title: "Score d'interprétation :",
+          levels: [
+            "8-15 points : Risque critique",
+            "5-7 points : Risque élevé", 
+            "3-4 points : Risque modéré",
+            "0-2 points : À surveiller"
+          ]
+        },
+        expanded: false
+      },
+      {
+        title: "Comment utiliser ces informations",
+        type: "usage",
+        items: [
+          {
+            target: "Pour les investisseurs prudents",
+            action: "→ Évitez ces entreprises dans votre portefeuille"
+          },
+          {
+            target: "Pour les investisseurs avancés",
+            action: "→ Surveillez ces signaux pour anticiper les baisses"
+          },
+          {
+            target: "Pour les traders expérimentés",
+            action: "→ Analysez ces opportunités de short selling"
+          }
+        ],
+        expanded: false
+      },
+      {
+        title: "MISE EN GARDE IMPORTANTE",
+        type: "critical-warning",
+        warning: "ATTENTION : Ces signaux indiquent des risques MAIS :",
+        caveats: [
+          "Certaines situations peuvent être temporaires",
+          "Les banques ont naturellement plus de dette",
+          "Certaines entreprises peuvent se redresser (turnaround)",
+          "Le short selling est TRÈS RISQUÉ"
+        ],
+        expanded: false
+      },
+      {
+        title: "Notre philosophie",
+        type: "philosophy-short",
+        quote: "\"Mieux vaut prévenir que guérir\"",
+        benefits: "Cette analyse vous aide à :",
+        items: [
+          "✅ Identifier les risques dans votre portefeuille",
+          "✅ Éviter les mauvaises surprises", 
+          "✅ Comprendre la santé financière des entreprises"
+        ],
+        expanded: false
+      },
+      {
+        title: "Recommandations",
+        type: "recommendations",
+        items: [
+          "Ne basez pas vos décisions uniquement sur cette analyse",
+          "Faites vos propres recherches approfondies",
+          "Consultez un conseiller financier si nécessaire",
+          "Diversifiez votre portefeuille"
+        ],
+        expanded: false
+      },
+      {
+        type: "final-note",
+        content: "Utilisez cette analyse comme un radar de détection des risques, pas comme une garantie de performance. La prudence est mère de sûreté !",
         expanded: false
       }
     ]
@@ -1258,6 +1353,267 @@ const DescriptionBox = ({ analysisType }) => {
             )
           ]
         );
+
+        case "danger-signals":
+        return React.createElement('div', { key: 'danger-signals' },
+          [
+            React.createElement('h3', {
+              className: 'section-title section-title-red',
+              key: 'title'
+            }, section.title),
+            
+            React.createElement('div', {
+              className: 'grid grid-cols-1 md:grid-cols-2 gap-4',
+              key: 'signals-grid'
+            },
+              section.signals.map((signal, idx) =>
+                React.createElement('div', {
+                  className: 'danger-signal-card',
+                  key: idx
+                },
+                  [
+                    React.createElement('div', {
+                      className: 'flex items-center gap-3 mb-3',
+                      key: 'header'
+                    },
+                      [
+                        React.createElement('span', {
+                          className: 'text-2xl',
+                          key: 'icon'
+                        }, signal.icon),
+                        React.createElement('h4', {
+                          className: 'text-red-400 font-bold text-lg',
+                          key: 'name'
+                        }, signal.name)
+                      ]
+                    ),
+                    
+                    React.createElement('p', {
+                      className: 'text-gray-300 mb-2',
+                      key: 'description'
+                    }, signal.description),
+                    
+                    React.createElement('p', {
+                      className: 'text-orange-400 text-sm font-semibold',
+                      key: 'risk'
+                    }, signal.risk)
+                  ]
+                )
+              )
+            )
+          ]
+        );
+
+      case "scoring-system":
+        return React.createElement('div', { key: 'scoring-system' },
+          [
+            React.createElement('h3', {
+              className: 'section-title section-title-orange',
+              key: 'title'
+            }, section.title),
+            
+            React.createElement('p', {
+              className: 'text-gray-300 mb-4',
+              key: 'description'
+            }, section.description),
+            
+            React.createElement('div', {
+              className: 'overflow-x-auto rounded-lg mb-6',
+              key: 'table-container'
+            },
+              React.createElement('table', { 
+                className: 'scoring-table'
+              },
+                [
+                  React.createElement('thead', { key: 'head' },
+                    React.createElement('tr', {},
+                      section.headers.map((header, idx) =>
+                        React.createElement('th', {
+                          key: idx,
+                          className: idx === 0 ? 'text-left' : 'text-center'
+                        }, header)
+                      )
+                    )
+                  ),
+                  
+                  React.createElement('tbody', { key: 'body' },
+                    section.rows.map((row, rowIdx) =>
+                      React.createElement('tr', {
+                        key: rowIdx
+                      },
+                        row.map((cell, cellIdx) =>
+                          React.createElement('td', {
+                            key: cellIdx,
+                            className: `${
+                              cellIdx === 0 ? 'text-left' : 'text-center'
+                            } ${
+                              cell.includes('Critique') ? 'text-red-400 font-bold' :
+                              cell.includes('Élevée') ? 'text-orange-400 font-bold' :
+                              'text-yellow-400'
+                            }`
+                          }, cell)
+                        )
+                      )
+                    )
+                  )
+                ]
+              )
+            ),
+            
+            React.createElement('div', {
+              className: 'scoring-interpretation',
+              key: 'interpretation'
+            },
+              [
+                React.createElement('h4', {
+                  className: 'text-yellow-400 font-bold mb-3',
+                  key: 'interpretation-title'
+                }, section.interpretation.title),
+                
+                React.createElement('div', {
+                  className: 'space-y-2',
+                  key: 'levels-list'
+                },
+                  section.interpretation.levels.map((level, idx) =>
+                    React.createElement('div', {
+                      className: 'flex items-center gap-3',
+                      key: idx
+                    },
+                      [
+                        React.createElement('span', {
+                          className: 'text-lg',
+                          key: 'level-text'
+                        }, level)
+                      ]
+                    )
+                  )
+                )
+              ]
+            )
+          ]
+        );
+
+      case "critical-warning":
+        return React.createElement('div', { key: 'critical-warning' },
+          [
+            React.createElement('h3', {
+              className: 'section-title section-title-red text-center',
+              key: 'title'
+            }, section.title),
+            
+            React.createElement('div', {
+              className: 'critical-warning-card',
+              key: 'warning-content'
+            },
+              [
+                React.createElement('p', {
+                  className: 'critical-warning-text',
+                  key: 'warning'
+                }, section.warning),
+                
+                React.createElement('div', {
+                  className: 'space-y-3 mt-4',
+                  key: 'caveats-list'
+                },
+                  section.caveats.map((caveat, idx) =>
+                    React.createElement('div', {
+                      className: 'flex items-start gap-3',
+                      key: idx
+                    },
+                      [
+                        React.createElement('span', {
+                          className: 'text-yellow-400 text-lg',
+                          key: 'bullet'
+                        }, '•'),
+                        React.createElement('span', {
+                          className: 'text-gray-300',
+                          key: 'text'
+                        }, caveat)
+                      ]
+                    )
+                  )
+                )
+              ]
+            )
+          ]
+        );
+
+      case "philosophy-short":
+        return React.createElement('div', { key: 'philosophy-short' },
+          [
+            React.createElement('h3', {
+              className: 'section-title section-title-blue',
+              key: 'title'
+            }, section.title),
+            
+            React.createElement('blockquote', {
+              className: 'philosophy-quote-short',
+              key: 'quote'
+            }, section.quote),
+            
+            React.createElement('p', {
+              className: 'text-gray-300 mb-4 font-semibold',
+              key: 'benefits'
+            }, section.benefits),
+            
+            React.createElement('div', {
+              className: 'space-y-3',
+              key: 'items-list'
+            },
+              section.items.map((item, idx) =>
+                React.createElement('div', {
+                  className: 'flex items-start gap-3',
+                  key: idx
+                },
+                  [
+                    React.createElement('span', {
+                      className: 'text-green-400 text-lg',
+                      key: 'check'
+                    }, '✓'),
+                    React.createElement('span', {
+                      className: 'text-gray-300',
+                      key: 'text'
+                    }, item)
+                  ]
+                )
+              )
+            )
+          ]
+        );
+
+      case "recommendations":
+        return React.createElement('div', { key: 'recommendations' },
+          [
+            React.createElement('h3', {
+              className: 'section-title section-title-purple',
+              key: 'title'
+            }, section.title),
+            
+            React.createElement('div', {
+              className: 'recommendations-list',
+              key: 'list'
+            },
+              section.items.map((item, idx) =>
+                React.createElement('div', {
+                  className: 'recommendation-item',
+                  key: idx
+                },
+                  [
+                    React.createElement('span', {
+                      className: 'text-blue-400 text-lg',
+                      key: 'icon'
+                    }, '📌'),
+                    React.createElement('span', {
+                      className: 'text-gray-300',
+                      key: 'text'
+                    }, item)
+                  ]
+                )
+              )
+            )
+          ]
+        );
+        
         default:
           return React.createElement('p', {
             className: 'text-gray-300 leading-relaxed',
@@ -2545,102 +2901,106 @@ const ShortRiskTab = ({
         return filteredData;
     };
 
-const getPaginatedData = (data) => {
-        if (!data || data.length === 0) return [];
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        return data.slice(startIndex, endIndex);
-    };
-
-    // ✅ CORRECTION : Une seule déclaration avec useMemo
-    const sortedAndFilteredData = React.useMemo(() => {
-        return getSortedAndFilteredData(data);
-    }, [data, searchTerm, sortConfig]);
-
-    const filteredData = React.useMemo(() => {
-        return sortedAndFilteredData.filter(item => {
-            const qualityMatch = filter === 'ALL' || 
-                (filter === 'CRITICAL' && item.risk_score >= 8) ||
-                (filter === 'HIGH' && item.risk_score >= 5 && item.risk_score < 8) ||
-                (filter === 'MEDIUM' && item.risk_score >= 3 && item.risk_score < 5) ||
-                (filter === 'LOW' && item.risk_score < 3);
-            
-            const sectorMatch = sectorFilter === 'Tous secteurs' || 
-                (item.secteur && item.secteur === sectorFilter);
-            
-            return qualityMatch && sectorMatch;
-        });
-    }, [sortedAndFilteredData, filter, sectorFilter]);
-
-    const paginatedData = React.useMemo(() => {
-        return getPaginatedData(filteredData);
-    }, [filteredData, currentPage, itemsPerPage]);
-
-    return React.createElement('div', {},
-        [
-            // Section Recherche et Filtres (MÊME DESIGN QUE BUFFETT)
-            React.createElement('div', { 
-                className: 'search-section mb-6',
-                key: 'search-filters'
-            },
+        const getPaginatedData = (data) => {
+                if (!data || data.length === 0) return [];
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                return data.slice(startIndex, endIndex);
+            };
+        
+            // ✅ CORRECTION : Une seule déclaration avec useMemo
+            const sortedAndFilteredData = React.useMemo(() => {
+                return getSortedAndFilteredData(data);
+            }, [data, searchTerm, sortConfig]);
+        
+            const filteredData = React.useMemo(() => {
+                return sortedAndFilteredData.filter(item => {
+                    const qualityMatch = filter === 'ALL' || 
+                        (filter === 'CRITICAL' && item.risk_score >= 8) ||
+                        (filter === 'HIGH' && item.risk_score >= 5 && item.risk_score < 8) ||
+                        (filter === 'MEDIUM' && item.risk_score >= 3 && item.risk_score < 5) ||
+                        (filter === 'LOW' && item.risk_score < 3);
+                    
+                    const sectorMatch = sectorFilter === 'Tous secteurs' || 
+                        (item.secteur && item.secteur === sectorFilter);
+                    
+                    return qualityMatch && sectorMatch;
+                });
+            }, [sortedAndFilteredData, filter, sectorFilter]);
+        
+            const paginatedData = React.useMemo(() => {
+                return getPaginatedData(filteredData);
+            }, [filteredData, currentPage, itemsPerPage]);
+        
+            return React.createElement('div', {},
                 [
-                    React.createElement('div', {
-                        className: 'search-input-container',
-                        key: 'search-bar'
+                    // Section Recherche et Filtres (MÊME DESIGN QUE BUFFETT)
+                    React.createElement('div', { 
+                        className: 'search-section mb-6',
+                        key: 'search-filters'
                     },
-                        [
-                            React.createElement('div', {
-                                className: 'search-icon',
-                                key: 'search-icon'
-                            }, '🔍'),
-                            
-                            React.createElement('input', {
-                                type: 'text',
-                                placeholder: 'Rechercher entreprises',
-                                value: searchTerm,
-                                onChange: (e) => onSearch(e.target.value),
-                                className: 'search-input',
-                                key: 'search-input'
-                            }),
-                            
-                            React.createElement('div', {
-                                className: 'results-counter',
-                                key: 'counter'
-                            }, `${filteredData.length} résultat(s)`)
-                        ]
-                    ),
-
-                    React.createElement('div', {
-                        className: 'dropdown-grid',
-                        key: 'dropdowns-grid'
-                    },
-                        [
-                            React.createElement('div', {
-                                className: 'dropdown-group',
-                                key: 'quality-dropdown'
-                            },
                                 [
-                                    React.createElement('label', {
-                                        className: 'dropdown-label',
-                                        key: 'quality-label'
-                                    }, 'Filtrer par risque'),
-                                    
-                                    React.createElement('select', {
-                                        value: filter,
-                                        onChange: (e) => setFilter(e.target.value),
-                                        className: 'dropdown-select',
-                                        key: 'quality-select'
-                                    },
-                                        RISK_FILTERS.map(option =>
-                                            React.createElement('option', {
-                                                value: option.value,
-                                                key: option.value,
-                                                className: 'bg-gray-800'
-                                            }, option.label)
-                                        )
-                                    )
-                                ]
-                            ),
+                                      React.createElement(DescriptionBox, {
+                                          key: 'description',
+                                          analysisType: 'shortrisk'
+                                        }),  
+                                      React.createElement('div', {
+                                           className: 'search-input-container',
+                                           key: 'search-bar'
+                                        },
+                                  [
+                                      React.createElement('div', {
+                                          className: 'search-icon',
+                                          key: 'search-icon'
+                                      }, '🔍'),
+                                      
+                                      React.createElement('input', {
+                                          type: 'text',
+                                          placeholder: 'Rechercher entreprises',
+                                          value: searchTerm,
+                                          onChange: (e) => onSearch(e.target.value),
+                                          className: 'search-input',
+                                          key: 'search-input'
+                                      }),
+                                      
+                                      React.createElement('div', {
+                                          className: 'results-counter',
+                                          key: 'counter'
+                                      }, `${filteredData.length} résultat(s)`)
+                                  ]
+                              ),
+          
+                              React.createElement('div', {
+                                  className: 'dropdown-grid',
+                                  key: 'dropdowns-grid'
+                              },
+                                  [
+                                      React.createElement('div', {
+                                          className: 'dropdown-group',
+                                          key: 'quality-dropdown'
+                                      },
+                                          [
+                                              React.createElement('label', {
+                                                  className: 'dropdown-label',
+                                                  key: 'quality-label'
+                                              }, 'Filtrer par risque'),
+                                              
+                                              React.createElement('select', {
+                                                  value: filter,
+                                                  onChange: (e) => setFilter(e.target.value),
+                                                  className: 'dropdown-select',
+                                                  key: 'quality-select'
+                                              },
+                                                  RISK_FILTERS.map(option =>
+                                                      React.createElement('option', {
+                                                          value: option.value,
+                                                          key: option.value,
+                                                          className: 'bg-gray-800'
+                                                      }, option.label)
+                                                  )
+                                              )
+                                          ]
+                                      ),
 
                             React.createElement('div', {
                                 className: 'dropdown-group',
