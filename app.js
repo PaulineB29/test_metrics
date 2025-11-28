@@ -2368,13 +2368,12 @@ const ValueTrapTab = ({
 
     return React.createElement('div', {},
         [
-
             React.createElement(DescriptionBox, {
-              key: 'description',
-              analysisType: 'valuetrap'
+                key: 'description',
+                analysisType: 'valuetrap'
             }),
-    
-            // Section Recherche et Filtres (MÊME DESIGN QUE BUFFETT)
+
+            // Section Recherche et Filtres
             React.createElement('div', { 
                 className: 'search-section mb-6',
                 key: 'search-filters'
