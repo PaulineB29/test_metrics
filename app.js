@@ -1810,7 +1810,7 @@ const BuffettTab = ({
         setSectorFilter(e.target.value);
     };
     
-    return React.createElement('div', {},
+    
         [
             // Section Recherche et Filtres (NOUVEAU DESIGN COMPACT)
             React.createElement('div', { 
@@ -2165,7 +2165,7 @@ const CashFlowTab = ({
         return getPaginatedData(filteredData);
     }, [filteredData, currentPage, itemsPerPage]);
 
-      return React.createElement('div', {},
+      
         [
             // DESCRIPTION BOX 
             React.createElement(DescriptionBox, {
@@ -2934,16 +2934,18 @@ const ShortRiskTab = ({
         
             return React.createElement('div', {},
                 [
+
+                  React.createElement(DescriptionBox, {
+                         key: 'description',
+                         analysisType: 'shortrisk'
+                   }),  
+                  
                     // Section Recherche et Filtres (MÊME DESIGN QUE BUFFETT)
                     React.createElement('div', { 
                         className: 'search-section mb-6',
                         key: 'search-filters'
                     },
                                 [
-                                      React.createElement(DescriptionBox, {
-                                          key: 'description',
-                                          analysisType: 'shortrisk'
-                                        }),  
                                       React.createElement('div', {
                                            className: 'search-input-container',
                                            key: 'search-bar'
