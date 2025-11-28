@@ -477,11 +477,10 @@ valuetrap: {
           "Le short selling est TRÈS RISQUÉ"
         ],
         expanded: false
-      },
-    ]
-  }
-};
-
+    }
+  ]
+},
+  
 dividend: {
   title: "Analyse des Dividendes Durables",
   sections: [
@@ -605,7 +604,7 @@ dividend: {
       expanded: false
     }
   ]
-},
+};
 
 // Composant Barre de Recherche Globale
 const GlobalSearchBar = ({ searchTerm, onSearch, dataCount }) => {
@@ -3208,43 +3207,43 @@ const InvestmentApp = () => {
             setError(null);
 
             // Charger toutes les données en parallèle
-            const [buffettResponse, cashFlowResponse, valueTrapResponse, shortRiskResponse] = await Promise.all([
+          const [buffettResponse, cashFlowResponse, valueTrapResponse, shortRiskResponse, dividendResponse] = await Promise.all([ 
                 fetch(`${API_BASE_URL}/buffett-scores`),
                 fetch(`${API_BASE_URL}/cash-flow-momentum`),
                 fetch(`${API_BASE_URL}/value-trap-detector`),
-                fetch(`${API_BASE_URL}/short-risk-detector`)
-                fetch(`${API_BASE_URL}/dividend-quality`)
-            ]);
+                fetch(`${API_BASE_URL}/short-risk-detector`),
+                fetch(`${API_BASE_URL}/dividend-quality`) 
+              ]);
 
             // Vérifier les réponses
             if (!buffettResponse.ok) throw new Error('Erreur Buffett API');
             if (!cashFlowResponse.ok) throw new Error('Erreur Cash Flow API');
             if (!valueTrapResponse.ok) throw new Error('Erreur Value Trap API');
             if (!shortRiskResponse.ok) throw new Error('Erreur Short Risk API');
+            if (!dividendResponse.ok) throw new Error('Erreur Dividend API');
 
-            // Convertir en JSON
-            const [buffettResult, cashFlowResult, valueTrapResult, shortRiskResult] = await Promise.all([
-                buffettResponse.json(),
-                cashFlowResponse.json(),
-                valueTrapResponse.json(),
-                shortRiskResponse.json()
-                dividendResponse.json()
+               // Convertir en JSON
+            const [buffettResult, cashFlowResult, valueTrapResult, shortRiskResult, dividendResult] = await Promise.all([ // ← VIRGULE AJOUTÉE
+              buffettResponse.json(),
+              cashFlowResponse.json(),
+              valueTrapResponse.json(),
+              shortRiskResponse.json(),
+              dividendResponse.json() 
             ]);
-
+        
             setBuffettData(buffettResult);
             setCashFlowData(cashFlowResult);
             setValueTrapData(valueTrapResult);
             setShortRiskData(shortRiskResult);
-            setDividendData(dividendResult);
-
-        } catch (err) {
+            setDividendData(dividendResult); 
+        
+          } catch (err) {
             console.error('Erreur de chargement:', err);
             setError(`Erreur de connexion: ${err.message}. Vérifiez que le serveur backend est démarré.`);
-        } finally {
+          } finally {
             setLoading(false);
-        }
-    };
-
+          }
+        };
     useEffect(() => {
         fetchAllData();
     }, []);
@@ -3460,7 +3459,7 @@ const InvestmentApp = () => {
                                 key: 'shortrisk',
                                 onClick: () => setActiveTab('shortrisk'),
                                 className: `tab tab-gradient ${activeTab === 'shortrisk' ? 'active' : ''}`
-                            }, `Short Risk (${shortRiskData.length})`)
+                            }, `Short Risk (${shortRiskData.length})`),
                           React.createElement('button', {
                                 key: 'dividend',
                                 onClick: () => setActiveTab('dividend'),
@@ -3533,7 +3532,7 @@ const InvestmentApp = () => {
                         onItemsPerPageChange: setItemsPerPage,
                         totalItems: filteredValueTrapData.length
                     })
-                      : activeTab === 'ShortRisk'
+                      : activeTab === 'shortrisk'
                       ? React.createElement(ShortRiskTab, {
                         key: 'shortrisk-tab',
                         data: filteredShortRiskData,
