@@ -2358,9 +2358,8 @@ const ValueTrapTab = ({
                 onItemsPerPageChange: onItemsPerPageChange, 
                 totalItems: filteredData.length
             })
-        ]
-    );
-};
+        ]);
+    };
 
 // Composant Onglet Short Risk Detector avec Filtres, Tri et Recherche
 const ShortRiskTab = ({ 
@@ -2746,9 +2745,8 @@ const ShortRiskTab = ({
                 onItemsPerPageChange: onItemsPerPageChange, 
                 totalItems: filteredData.length
             })
-        ]
-    );
-};
+        ]);
+    };
 // Composant Onglet Dividend avec Filtres, Tri, Recherche et PAGINATION
 const DividendTab = ({ 
     data, 
@@ -3125,9 +3123,8 @@ const DividendTab = ({
                 onItemsPerPageChange: onItemsPerPageChange, 
                 totalItems: filteredData.length
             })
-        ]
-    );
-};
+        ]);
+    };
 
 // COMPOSANT PRINCIPAL - InvestmentApp
 const InvestmentApp = () => {
