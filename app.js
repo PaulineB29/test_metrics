@@ -2251,8 +2251,7 @@ const CashFlowTab = ({
                 totalItems: filteredData.length
             })
         ]
-    );
-};
+   };
 
 // Composant Onglet Value Trap Detector avec Filtres, Tri, Recherche et PAGINATION
 const ValueTrapTab = ({ 
