@@ -1448,6 +1448,12 @@ const CashFlowTab = ({
 
       return React.createElement('div', {},
         [
+            // DESCRIPTION BOX 
+            React.createElement(DescriptionBox, {
+                key: 'description',
+                analysisType: 'cashflow'
+            }),  
+          
             // Section Recherche et Filtres (MÊME DESIGN QUE BUFFETT)
             React.createElement('div', { 
                 className: 'search-section mb-6',
