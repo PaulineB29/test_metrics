@@ -386,7 +386,7 @@ const ANALYSIS_DESCRIPTIONS = {
       },
       {
         title: "Les signaux de danger analysés",
-        type: "danger-signals",
+        type: "columns",
         signals: [
           {
             name: "DANGEROUS_DEBT",
@@ -423,8 +423,7 @@ const ANALYSIS_DESCRIPTIONS = {
       },
       {
         title: "Le système de scoring de risque",
-        type: "scoring-system",
-        description: "Chaque signal ajoute des points au Risk Score :",
+        type: "table",
         headers: ["Problème", "Points", "Gravité"],
         rows: [
           ["Dette/Equity > 3", "3 points", "Critique"],
@@ -437,14 +436,17 @@ const ANALYSIS_DESCRIPTIONS = {
           ["Cash flow négatif", "2 points", "Préoccupant"]
         ],
         interpretation: {
-          title: "Score d'interprétation :",
-          levels: [
-            "8-15 points : Risque critique",
-            "5-7 points : Risque élevé", 
-            "3-4 points : Risque modéré",
-            "0-2 points : À surveiller"
-          ]
-        },
+          title: "Interprétation du Score de Risque",
+          type: "table",
+          headers: ["Score", "Niveau de Risque", "Signification"],
+          rows: [
+            ["0-2 points", "À surveiller", "Entreprises stables financièrement"],
+            ["3-4 points", "Risque modéré", "Signaux d'alerte légers"],
+            ["5-7 points", "Risque élevé", "Signes de difficultés financières"],
+            ["8-15 points", "Risque critique", "Détresse financière avancée"]
+          ],
+          expanded: false
+        }
         expanded: false
       },
       {
@@ -478,34 +480,6 @@ const ANALYSIS_DESCRIPTIONS = {
         ],
         expanded: false
       },
-      {
-        title: "Notre philosophie",
-        type: "philosophy-short",
-        quote: "\"Mieux vaut prévenir que guérir\"",
-        benefits: "Cette analyse vous aide à :",
-        items: [
-          "✅ Identifier les risques dans votre portefeuille",
-          "✅ Éviter les mauvaises surprises", 
-          "✅ Comprendre la santé financière des entreprises"
-        ],
-        expanded: false
-      },
-      {
-        title: "Recommandations",
-        type: "recommendations",
-        items: [
-          "Ne basez pas vos décisions uniquement sur cette analyse",
-          "Faites vos propres recherches approfondies",
-          "Consultez un conseiller financier si nécessaire",
-          "Diversifiez votre portefeuille"
-        ],
-        expanded: false
-      },
-      {
-        type: "final-note",
-        content: "Utilisez cette analyse comme un radar de détection des risques, pas comme une garantie de performance. La prudence est mère de sûreté !",
-        expanded: false
-      }
     ]
   }
 };
@@ -1348,145 +1322,6 @@ const DescriptionBox = ({ analysisType }) => {
                       ]
                     )
                   ]
-                )
-              ]
-            )
-          ]
-        );
-
-        case "danger-signals":
-        return React.createElement('div', { key: 'danger-signals' },
-          [
-            React.createElement('h3', {
-              className: 'section-title section-title-red',
-              key: 'title'
-            }, section.title),
-            
-            React.createElement('div', {
-              className: 'grid grid-cols-1 md:grid-cols-2 gap-4',
-              key: 'signals-grid'
-            },
-              section.signals.map((signal, idx) =>
-                React.createElement('div', {
-                  className: 'danger-signal-card',
-                  key: idx
-                },
-                  [
-                    React.createElement('div', {
-                      className: 'flex items-center gap-3 mb-3',
-                      key: 'header'
-                    },
-                      [
-                        React.createElement('span', {
-                          className: 'text-2xl',
-                          key: 'icon'
-                        }, signal.icon),
-                        React.createElement('h4', {
-                          className: 'text-red-400 font-bold text-lg',
-                          key: 'name'
-                        }, signal.name)
-                      ]
-                    ),
-                    
-                    React.createElement('p', {
-                      className: 'text-gray-300 mb-2',
-                      key: 'description'
-                    }, signal.description),
-                    
-                    React.createElement('p', {
-                      className: 'text-orange-400 text-sm font-semibold',
-                      key: 'risk'
-                    }, signal.risk)
-                  ]
-                )
-              )
-            )
-          ]
-        );
-
-      case "scoring-system":
-        return React.createElement('div', { key: 'scoring-system' },
-          [
-            React.createElement('h3', {
-              className: 'section-title section-title-orange',
-              key: 'title'
-            }, section.title),
-            
-            React.createElement('p', {
-              className: 'text-gray-300 mb-4',
-              key: 'description'
-            }, section.description),
-            
-            React.createElement('div', {
-              className: 'overflow-x-auto rounded-lg mb-6',
-              key: 'table-container'
-            },
-              React.createElement('table', { 
-                className: 'scoring-table'
-              },
-                [
-                  React.createElement('thead', { key: 'head' },
-                    React.createElement('tr', {},
-                      section.headers.map((header, idx) =>
-                        React.createElement('th', {
-                          key: idx,
-                          className: idx === 0 ? 'text-left' : 'text-center'
-                        }, header)
-                      )
-                    )
-                  ),
-                  
-                  React.createElement('tbody', { key: 'body' },
-                    section.rows.map((row, rowIdx) =>
-                      React.createElement('tr', {
-                        key: rowIdx
-                      },
-                        row.map((cell, cellIdx) =>
-                          React.createElement('td', {
-                            key: cellIdx,
-                            className: `${
-                              cellIdx === 0 ? 'text-left' : 'text-center'
-                            } ${
-                              cell.includes('Critique') ? 'text-red-400 font-bold' :
-                              cell.includes('Élevée') ? 'text-orange-400 font-bold' :
-                              'text-yellow-400'
-                            }`
-                          }, cell)
-                        )
-                      )
-                    )
-                  )
-                ]
-              )
-            ),
-            
-            React.createElement('div', {
-              className: 'scoring-interpretation',
-              key: 'interpretation'
-            },
-              [
-                React.createElement('h4', {
-                  className: 'text-yellow-400 font-bold mb-3',
-                  key: 'interpretation-title'
-                }, section.interpretation.title),
-                
-                React.createElement('div', {
-                  className: 'space-y-2',
-                  key: 'levels-list'
-                },
-                  section.interpretation.levels.map((level, idx) =>
-                    React.createElement('div', {
-                      className: 'flex items-center gap-3',
-                      key: idx
-                    },
-                      [
-                        React.createElement('span', {
-                          className: 'text-lg',
-                          key: 'level-text'
-                        }, level)
-                      ]
-                    )
-                  )
                 )
               ]
             )
