@@ -36,6 +36,7 @@ app.get('/', (req, res) => {
       '/api/cash-flow-momentum',
       '/api/value-trap-detector', 
       '/api/short-risk-detector',
+      '/api/dividend-quality',
       '/health'
     ]
   });
