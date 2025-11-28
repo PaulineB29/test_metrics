@@ -238,38 +238,140 @@ const ANALYSIS_DESCRIPTIONS = {
     ]
   },
   valuetrap: {
-    title: "Value Trap Detector - Éviter les Fausses Bonnes Affaires",
+     title: "Value Trap Detector - Explication pour les Investisseurs",
     sections: [
       {
-        title: "Le Danger des Value Traps",
-        content: "Un value trap est une entreprise qui semble bon marché mais qui cache des problèmes fondamentaux. Cette analyse vous aide à distinguer les vraies opportunités des pièges.",
+        title: "Ce que cette analyse révèle",
+        content: "Cette analyse identifie les entreprises sous-évaluées tout en évitant les 'Value Traps' - ces actions qui semblent bon marché mais cachent des problèmes fondamentaux.",
         expanded: true
       },
       {
-        title: "Les 4 Signes d'un Value Trap",
-        type: "columns",
+        title: "🔍 Les pièges à éviter (Value Traps)",
+        type: "trap-definition",
+        definition: "Un Value Trap, c'est :",
         items: [
+          "❌ Une action 'bon marché' (faible P/E, P/B)",
+          "❌ Mais avec une rentabilité médiocre (ROE faible)", 
+          "❌ Ou des problèmes structurels qui empêchent la croissance"
+        ],
+        conclusion: "→ Notre algorithme détecte ces pièges pour vous !",
+        expanded: false
+      },
+      {
+        title: "Notre système de notation",
+        type: "table",
+        headers: ["Rating", "Signification", "Caractéristiques"],
+        rows: [
+          ["ELITE_VALUE", "Excellence absolue", "P/E < 8, P/B < 1, ROE > 15%"],
+          ["SOLID_VALUE", "Très bon rapport qualité/prix", "P/E < 12, P/B < 1.5, ROE > 12%"],
+          ["POTENTIAL_VALUE", "Opportunité intéressante", "P/E < 15, P/B < 2, ROE > 8%"],
+          ["DEEP_VALUE", "Décote importante", "P/E très inférieur au P/B"],
+          ["VALUE_TRAP", "DANGER - À éviter", "Prix bas mais rentabilité faible"],
+          ["SPECULATIVE", "Risque élevé", "Métriques incohérentes"]
+        ],
+        expanded: false
+      },
+      {
+        title: "Les métriques clés analysées",
+        type: "metrics-grid",
+        categories: [
           {
-            title: "Déclin Structurel",
-            description: "L'entreprise opère dans un secteur en déclin",
-            quote: "Même à prix bas, une entreprise en déclin reste risquée"
+            title: "Prix (Valeur)",
+            items: [
+              "P/E Ratio : Prix / Bénéfices → Plus il est bas, mieux c'est",
+              "P/B Ratio : Prix / Valeur comptable → < 1 = décote", 
+              "Price to FCF : Prix / Cash Flow Libre → Qualité des profits"
+            ]
           },
           {
-            title: "Dette Excessive",
-            description: "Trop de dette par rapport à la capacité de remboursement",
-            note: "La dette peut anéantir les bénéfices"
+            title: "Qualité (Rentabilité)",
+            items: [
+              "ROE : Return on Equity → Efficacité des capitaux propres",
+              "ROIC : Return on Invested Capital → Efficacité des investissements"
+            ]
           },
           {
-            title: "Mauvais Management", 
-            description: "Décisions stratégiques médiocres répétées",
-            rule: "Un bon management crée de la valeur, un mauvais la détruit"
-          },
-          {
-            title: "Avantage Concurrentiel Faible",
-            description: "Pas de barrières à l'entrée ou de différenciation",
-            indicator: "Sans avantage concurrentiel, les marges s'érodent"
+            title: "Score Composite", 
+            items: [
+              "Value Score : Combine rentabilité et décote → Plus élevé = meilleur"
+            ]
           }
         ],
+        expanded: false
+      },
+      {
+        title: "Notre philosophie d'investissement",
+        type: "philosophy",
+        quote: "\"Il vaut mieux acheter une bonne entreprise à un prix raisonnable qu'une entreprise moyenne à un prix très bas\"",
+        strategy: "Notre algorithme cherche l'équilibre parfait :",
+        items: [
+          "✅ Prix attractif (décote)",
+          "✅ Qualité fondamentale (rentabilité)", 
+          "✅ Cohérence (ROE et ROIC alignés)"
+        ],
+        expanded: false
+      },
+      {
+        title: "Comment utiliser ces résultats",
+        type: "usage",
+        items: [
+          {
+            target: "Pour les investisseurs prudents",
+            action: "→ Ciblez ELITE_VALUE et SOLID_VALUE"
+          },
+          {
+            target: "Pour les investisseurs opportunistes", 
+            action: "→ Explorez POTENTIAL_VALUE et DEEP_VALUE"
+          },
+          {
+            target: "À éviter absolument",
+            action: "→ VALUE_TRAP et SPECULATIVE"
+          }
+        ],
+        expanded: false
+      },
+      {
+        title: "Mise en garde importante",
+        type: "warnings",
+        note: "Même les meilleures valeurs comportent des risques :",
+        items: [
+          "Secteurs cycliques (shipping, énergie)",
+          "Risques géopolitiques", 
+          "Liquidité des petites capitalisations"
+        ],
+        conclusion: "Diversifiez toujours votre portefeuille !",
+        expanded: false
+      },
+      {
+        title: "ELITE_VALUE vs VALUE_TRAP",
+        type: "comparison-table",
+        headers: ["", "ELITE_VALUE", "VALUE_TRAP"],
+        rows: [
+          ["Prix", "Bas (P/E < 8)", "Bas (P/E < 6)"],
+          ["Valeur comptable", "Décote (P/B < 1)", "Forte décote (P/B < 0.8)"],
+          ["Rentabilité", "EXCELLENTE (ROE > 15%)", "FAIBLE (ROE < 8%)"],
+          ["Efficacité", "ÉLEVÉE (ROIC > 12%)", "Médiocre"]
+        ],
+        expanded: false
+      },
+      {
+        title: "La différence cruciale",
+        type: "crucial-difference",
+        elite: {
+          title: "ELITE_VALUE = 'Bon marché ET excellent'",
+          description: "Entreprise de qualité vendue à prix discount",
+          example: "Exemple : Une Mercedes au prix d'une Renault"
+        },
+        trap: {
+          title: "VALUE_TRAP = 'Bon marché PARCE QUE médiocre'", 
+          description: "Entreprise problématique justifiant son faible prix",
+          example: "Exemple : Une voiture accidentée 'bon marché'"
+        },
+        expanded: false
+      },
+      {
+        type: "final-note",
+        content: "Notre Value Trap Detector vous aide à distinguer les vraies opportunités des pièges coûteux. Investissez malin, pas juste bon marché ! 🎯💰",
         expanded: false
       }
     ]
@@ -894,12 +996,273 @@ const DescriptionBox = ({ analysisType }) => {
           className: 'secret-text text-center',
           key: 'final-note'
         }, section.content);
+        
+        case "trap-definition":
+        return React.createElement('div', { key: 'trap-definition' },
+          [
+            React.createElement('h3', {
+              className: 'section-title section-title-red',
+              key: 'title'
+            }, section.title),
+            
+            React.createElement('p', {
+              className: 'text-gray-300 mb-4 font-semibold',
+              key: 'definition'
+            }, section.definition),
+            
+            React.createElement('div', {
+              className: 'space-y-3 mb-4',
+              key: 'items-list'
+            },
+              section.items.map((item, idx) =>
+                React.createElement('div', {
+                  className: 'flex items-start gap-3',
+                  key: idx
+                },
+                  [
+                    React.createElement('span', {
+                      className: 'text-red-400 text-lg',
+                      key: 'icon'
+                    }, '❌'),
+                    React.createElement('span', {
+                      className: 'text-gray-300',
+                      key: 'text'
+                    }, item)
+                  ]
+                )
+              )
+            ),
+            
+            React.createElement('p', {
+              className: 'text-yellow-400 font-bold text-lg',
+              key: 'conclusion'
+            }, section.conclusion)
+          ]
+        );
 
-      default:
-        return React.createElement('p', {
-          className: 'text-gray-300 leading-relaxed',
-          key: 'default-content'
-        }, section.content);
+        case "metrics-grid":
+          return React.createElement('div', { key: 'metrics-grid' },
+            [
+              React.createElement('h3', {
+              className: 'section-title section-title-purple',
+              key: 'title'
+            }, section.title),
+            
+            React.createElement('div', {
+              className: 'grid grid-cols-1 md:grid-cols-3 gap-6',
+              key: 'grid-container'
+            },
+              section.categories.map((category, idx) =>
+                React.createElement('div', {
+                  className: 'bg-gray-800/50 p-4 rounded-lg',
+                  key: idx
+                },
+                  [
+                    React.createElement('h4', {
+                      className: 'text-purple-400 font-bold mb-3',
+                      key: 'category-title'
+                    }, category.title),
+                    
+                    React.createElement('ul', {
+                      className: 'space-y-2',
+                      key: 'items-list'
+                    },
+                      category.items.map((item, itemIdx) =>
+                        React.createElement('li', {
+                          className: 'text-gray-300 text-sm leading-relaxed',
+                          key: itemIdx
+                        }, item)
+                      )
+                    )
+                  ]
+                )
+              )
+            )
+          ]
+        );
+
+        case "philosophy":
+        return React.createElement('div', { key: 'philosophy' },
+          [
+            React.createElement('h3', {
+              className: 'section-title section-title-green',
+              key: 'title'
+            }, section.title),
+            
+            React.createElement('blockquote', {
+              className: 'border-l-4 border-yellow-400 pl-4 my-4 italic text-yellow-300 text-lg',
+              key: 'quote'
+            }, section.quote),
+            
+            React.createElement('p', {
+              className: 'text-gray-300 mb-4 font-semibold',
+              key: 'strategy'
+            }, section.strategy),
+            
+            React.createElement('div', {
+              className: 'space-y-3',
+              key: 'items-list'
+            },
+              section.items.map((item, idx) =>
+                React.createElement('div', {
+                  className: 'flex items-start gap-3',
+                  key: idx
+                },
+                  [
+                    React.createElement('span', {
+                      className: 'text-green-400 text-lg',
+                      key: 'check'
+                    }, '✓'),
+                    React.createElement('span', {
+                      className: 'text-gray-300',
+                      key: 'text'
+                    }, item)
+                  ]
+                )
+              )
+            )
+          ]
+        );
+
+        case "comparison-table":
+        return React.createElement('div', { key: 'comparison-table' },
+          [
+            React.createElement('h3', {
+              className: 'section-title section-title-blue text-center',
+              key: 'title'
+            }, section.title),
+            
+            React.createElement('div', {
+              className: 'overflow-x-auto rounded-lg',
+              key: 'table-container'
+            },
+              React.createElement('table', { 
+                className: 'comparison-table'
+              },
+                [
+                  React.createElement('thead', { key: 'head' },
+                    React.createElement('tr', {},
+                      section.headers.map((header, idx) =>
+                        React.createElement('th', {
+                          key: idx,
+                          className: idx === 0 ? 'text-left' : 'text-center'
+                        }, header)
+                      )
+                    )
+                  ),
+                  
+                  React.createElement('tbody', { key: 'body' },
+                    section.rows.map((row, rowIdx) =>
+                      React.createElement('tr', {
+                        key: rowIdx
+                      },
+                        row.map((cell, cellIdx) =>
+                          React.createElement('td', {
+                            key: cellIdx,
+                            className: `${
+                              cellIdx === 0 ? 'text-left font-semibold' : 'text-center'
+                            } ${
+                              cellIdx === 1 ? 'text-yellow-400' : 
+                              cellIdx === 2 ? 'text-red-400' : ''
+                            }`
+                          }, cell)
+                        )
+                      )
+                    )
+                  )
+                ]
+              )
+            )
+          ]
+        );
+
+        case "crucial-difference":
+        return React.createElement('div', { key: 'crucial-difference' },
+          [
+            React.createElement('h3', {
+              className: 'section-title section-title-orange text-center mb-6',
+              key: 'title'
+            }, section.title),
+            
+            React.createElement('div', {
+              className: 'grid grid-cols-1 md:grid-cols-2 gap-6',
+              key: 'comparison-cards'
+            },
+              [
+                // Carte ELITE_VALUE
+                React.createElement('div', {
+                  className: 'elite-card',
+                  key: 'elite'
+                },
+                  [
+                    React.createElement('h4', {
+                      className: 'elite-title',
+                      key: 'title'
+                    }, section.elite.title),
+                    
+                    React.createElement('p', {
+                      className: 'elite-description',
+                      key: 'description'
+                    }, section.elite.description),
+                    
+                    React.createElement('div', {
+                      className: 'elite-example',
+                      key: 'example'
+                    },
+                      [
+                        React.createElement('span', {
+                          className: 'text-yellow-400 font-semibold',
+                          key: 'label'
+                        }, 'Exemple : '),
+                        React.createElement('span', {
+                          key: 'text'
+                        }, section.elite.example)
+                      ]
+                    )
+                  ]
+                ),
+                
+                // Carte VALUE_TRAP
+                React.createElement('div', {
+                  className: 'trap-card',
+                  key: 'trap'
+                },
+                  [
+                    React.createElement('h4', {
+                      className: 'trap-title',
+                      key: 'title'
+                    }, section.trap.title),
+                    
+                    React.createElement('p', {
+                      className: 'trap-description',
+                      key: 'description'
+                    }, section.trap.description),
+                    
+                    React.createElement('div', {
+                      className: 'trap-example',
+                      key: 'example'
+                    },
+                      [
+                        React.createElement('span', {
+                          className: 'text-red-400 font-semibold',
+                          key: 'label'
+                        }, 'Exemple : '),
+                        React.createElement('span', {
+                          key: 'text'
+                        }, section.trap.example)
+                      ]
+                    )
+                  ]
+                )
+              ]
+            )
+          ]
+        );
+        default:
+          return React.createElement('p', {
+            className: 'text-gray-300 leading-relaxed',
+            key: 'default-content'
+          }, section.content);
     }
   };
 
@@ -1816,6 +2179,12 @@ const ValueTrapTab = ({
 
     return React.createElement('div', {},
         [
+
+            React.createElement(DescriptionBox, {
+              key: 'description',
+              analysisType: 'valuetrap'
+            }),
+    
             // Section Recherche et Filtres (MÊME DESIGN QUE BUFFETT)
             React.createElement('div', { 
                 className: 'search-section mb-6',
