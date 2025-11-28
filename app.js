@@ -3461,7 +3461,7 @@ const InvestmentApp = () => {
                                 onClick: () => setActiveTab('shortrisk'),
                                 className: `tab tab-gradient ${activeTab === 'shortrisk' ? 'active' : ''}`
                             }, `Short Risk (${shortRiskData.length})`),
-                          React.createElement('button', {
+                            React.createElement('button', { 
                                 key: 'dividend',
                                 onClick: () => setActiveTab('dividend'),
                                 className: `tab tab-gradient ${activeTab === 'dividend' ? 'active' : ''}`
@@ -3569,11 +3569,11 @@ const InvestmentApp = () => {
                         onItemsPerPageChange: setItemsPerPage,
                         totalItems: filteredDividendData.length
                     })
+                : React.createElement('div', { key: 'default' }, 'Aucun onglet sélectionné') // ← CAS PAR DÉFAUT AJOUTÉ
             ]
         )
     );
-}; 
-
+  
 // Rendu de l'application
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(React.createElement(InvestmentApp));
