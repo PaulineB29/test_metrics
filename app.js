@@ -124,50 +124,115 @@ const ANALYSIS_DESCRIPTIONS = {
       },
       {
         type: "final-note",
-        content: "Utilisez ces résultats comme point de départ pour vos recherches, pas comme décision finale d'investissement. La qualité durable paie toujours à long terme ! 📈💰",
+        content: "Utilisez ces résultats comme point de départ pour vos recherches, pas comme décision finale d'investissement. La qualité durable paie toujours à long terme !",
         expanded: false
       }
     ]
   },
   cashflow: {
-    title: "Cash Flow - Les Générateurs de Trésorerie",
+    title: "Cash Flow - Explication pour les Investisseurs",
     sections: [
       {
-        title: "L'Importance du Cash Flow",
-        content: "Le cash flow est le véritable oxygène d'une entreprise. Cette analyse identifie les entreprises qui génèrent d'excellents flux de trésorerie - le signe d'un business sain et durable.",
+        title: "Ce que cette analyse mesure",
+        content: "Cette analyse identifie les entreprises qui génèrent d'excellents flux de trésorerie - le véritable 'oxygène' d'une entreprise.",
         expanded: true
       },
       {
-        title: "Les 3 Piliers du Cash Flow",
-        type: "columns",
+        title: "Les métriques clés",
+        type: "table",
+        headers: ["Métrique", "Ce que ça mesure", "Pourquoi c'est important"],
+        rows: [
+          [
+            "Free Cash Flow", 
+            "Argent réellement disponible après les investissements", 
+            "Capacité à payer dividendes, réduire dette, investir"
+          ],
+          [
+            "FCF Margin", 
+            "% du chiffre d'affaires transformé en cash libre", 
+            "Efficacité opérationnelle"
+          ],
+          [
+            "FCF Yield", 
+            "Rendement cash par rapport à la valorisation", 
+            "Attractivité pour les actionnaires"
+          ]
+        ],
+        expanded: false
+      },
+      {
+        title: "Nos critères de qualité",
+        type: "criteria",
+        items: [
+          "✅ Génèrent plus de cash qu'elles n'en déclarent de bénéfices (qualité des profits)",
+          "✅ Transforment au moins 5% de leur CA en cash libre", 
+          "✅ Offrent un rendement cash d'au moins 1% par rapport à leur valorisation",
+          "✅ Ont une capitalisation boursière significative (plus de 100M$)"
+        ],
+        expanded: false
+      },
+      {
+        title: "Pourquoi c'est crucial",
+        type: "insight",
+        quote: "\"Le bénéfice est une opinion, le cash est un fait\"",
+        content: "Les investisseurs expérimentés savent que les entreprises avec un fort cash flow résistent mieux aux crises, peuvent investir dans la croissance et récompenser leurs actionnaires.",
+        example: {
+          title: "Exemple concret :",
+          text: "Une entreprise avec 20% de FCF Yield génère 20€ de cash libre pour chaque 100€ investi en actions - un rendement exceptionnel !"
+        },
+        conclusion: "Cette analyse vous montre les vrais générateurs de cash du marché, pas juste celles qui affichent de beaux bénéfices sur le papier.",
+        expanded: false
+      },
+      {
+        title: "Comment Utiliser Ces Résultats",
+        type: "usage",
         items: [
           {
-            title: "Cash Flow Opérationnel",
-            description: "Trésorerie générée par l'activité principale de l'entreprise",
-            quote: "Le cash flow opérationnel doit être positif et croissant"
+            target: "Pour les investisseurs dividendes",
+            action: "→ Ciblez les entreprises avec FCF Yield élevé pour des revenus stables"
           },
           {
-            title: "Free Cash Flow",
-            description: "Cash flow disponible après les investissements",
-            note: "Indicateur clé : Capacité à financer la croissance et verser des dividendes"
+            target: "Pour les investisseurs croissance",
+            action: "→ Recherchez les entreprises avec FCF Margin croissante"
           },
           {
-            title: "Marge de Cash Flow", 
-            description: "Pourcentage du chiffre d'affaires transformé en cash",
-            rule: "Une marge élevée = avantage concurrentiel fort"
+            target: "Pour tous les investisseurs",
+            action: "→ Évitez les entreprises avec FCF négatif chronique"
           }
         ],
         expanded: false
       },
       {
-        title: "Notre Système de Notation Cash Flow",
-        type: "table",
-        headers: ["Rating", "Signification", "Critères"],
-        rows: [
-          ["💰 EXCELLENT", "Générateur de cash exceptionnel", "Yield FCF > 6%, Marge FCF > 30%"],
-          ["💸 BON", "Bon générateur de cash", "Yield FCF > 3%, Marge FCF > 15%"],
-          ["🔴 FAIBLE", "Cash flow à améliorer", "Ne répond pas aux critères de qualité"]
-        ],
+        title: "Points de Vigilance",
+        type: "warnings",
+        limitations: {
+          title: "Les limites de l'analyse :",
+          items: [
+            "Cash flow cyclique (certains secteurs ont des flux variables)",
+            "Investissements ponctuels (peut temporairement réduire le FCF)",
+            "Politique de dividendes (impacte le cash disponible)"
+          ]
+        },
+        complements: {
+          title: "Les compléments nécessaires :",
+          items: [
+            "Croissance du FCF sur plusieurs années",
+            "Qualité de la trésorerie (récurrente vs exceptionnelle)",
+            "Politique d'investissement (CAPEX intelligent vs gaspillage)"
+          ]
+        },
+        expanded: false
+      },
+      {
+        type: "quote",
+        content: "🌟 Le Pouvoir du Cash Flow",
+        quote: "\"Dans les moments difficiles, le cash flow est ce qui sépare les entreprises qui survivent de celles qui disparaissent.\"",
+        note: "Cette analyse vous aide à identifier les entreprises les plus résilientes.",
+        expanded: false
+      },
+      {
+        type: "final-note",
+        content: "Le cash flow est la vie de l'entreprise. Utilisez ces résultats pour investir dans des générateurs de trésorerie durables !",
         expanded: false
       }
     ]
@@ -750,6 +815,80 @@ const DescriptionBox = ({ analysisType }) => {
           ]
         );
 
+        case "criteria":
+        return React.createElement('div', { key: 'criteria-content' },
+          [
+            React.createElement('h3', {
+              className: 'section-title section-title-green',
+              key: 'title'
+            }, section.title),
+            
+            React.createElement('div', {
+              className: 'space-y-3',
+              key: 'criteria-list'
+            },
+              section.items.map((item, idx) =>
+                React.createElement('div', {
+                  className: 'flex items-start gap-3',
+                  key: idx
+                },
+                  [
+                    React.createElement('span', {
+                      className: 'text-green-400 text-lg',
+                      key: 'check'
+                    }, '✓'),
+                    React.createElement('span', {
+                      className: 'text-gray-300',
+                      key: 'text'
+                    }, item)
+                  ]
+                )
+              )
+            )
+          ]
+        );
+
+      case "insight":
+        return React.createElement('div', { key: 'insight-content' },
+          [
+            React.createElement('h3', {
+              className: 'section-title section-title-blue',
+              key: 'title'
+            }, section.title),
+            
+            React.createElement('blockquote', {
+              className: 'border-l-4 border-yellow-400 pl-4 my-4 italic text-yellow-300',
+              key: 'quote'
+            }, section.quote),
+            
+            React.createElement('p', {
+              className: 'text-gray-300 mb-4',
+              key: 'content'
+            }, section.content),
+            
+            section.example && React.createElement('div', {
+              className: 'bg-blue-900/30 p-4 rounded-lg mb-4',
+              key: 'example'
+            },
+              [
+                React.createElement('h4', {
+                  className: 'text-blue-300 font-semibold mb-2',
+                  key: 'example-title'
+                }, section.example.title),
+                React.createElement('p', {
+                  className: 'text-gray-300',
+                  key: 'example-text'
+                }, section.example.text)
+              ]
+            ),
+            
+            React.createElement('p', {
+              className: 'text-gray-300 font-semibold',
+              key: 'conclusion'
+            }, section.conclusion)
+          ]
+        );
+        
       case "final-note":
         return React.createElement('div', { 
           className: 'secret-text text-center',
