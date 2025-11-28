@@ -821,78 +821,78 @@ const DescriptionBox = ({ analysisType }) => {
 
       case "warnings":
         return React.createElement('div', { key: 'warnings' },
-          [
-            React.createElement('h3', {
-              className: 'section-title section-title-red',
-              key: 'title'
-            }, section.title),
-            
-            React.createElement('div', {
-              className: 'grid grid-cols-1 md:grid-cols-2 gap-6',
-              key: 'warnings-grid'
-            },
-              [
+    [
+      React.createElement('h3', {
+        className: 'section-title section-title-red',
+        key: 'title'
+      }, section.title),
+      
+      React.createElement('div', {
+        className: 'grid grid-cols-1 md:grid-cols-2 gap-6',
+        key: 'warnings-grid'
+      },
+        [
+          React.createElement('div', {
+            className: 'warning-column',
+            key: 'limitations'
+          },
+            [
+              React.createElement('h4', {
+                className: 'warning-title text-white',
+                key: 'limitations-title'
+              }, section.limitations.title),
+              
+              ...section.limitations.items.map((item, idx) =>
                 React.createElement('div', {
-                  className: 'warning-column',
-                  key: 'limitations'
+                  className: 'list-item',
+                  key: `limit-${idx}`
                 },
                   [
-                    React.createElement('h4', {
-                      className: 'warning-title text-white',
-                      key: 'limitations-title'
-                    }, section.limitations.title),
-                    
-                    ...section.limitations.items.map((item, idx) =>
-                      React.createElement('div', {
-                        className: 'list-item',
-                        key: `limit-${idx}`
-                      },
-                        [
-                          React.createElement('span', {
-                            className: 'text-orange-400',
-                            key: 'bullet'
-                          }, '•'),
-                          React.createElement('span', {
-                            key: 'text'
-                          }, item)
-                        ]
-                      )
-                    )
-                  ]
-                ),
-                
-                React.createElement('div', {
-                  className: 'warning-column',
-                  key: 'complements'
-                },
-                  [
-                    React.createElement('h4', {
-                      className: 'warning-title text-white',
-                      key: 'complements-title'
-                    }, section.complements.title),
-                    
-                    ...section.complements.items.map((item, idx) =>
-                      React.createElement('div', {
-                        className: 'list-item',
-                        key: `comp-${idx}`
-                      },
-                        [
-                          React.createElement('span', {
-                            className: 'text-blue-400',
-                            key: 'bullet'
-                          }, '•'),
-                          React.createElement('span', {
-                            key: 'text'
-                          }, item)
-                        ]
-                      )
-                    )
+                    React.createElement('span', {
+                      className: 'text-orange-400',
+                      key: 'bullet'
+                    }, '•'),
+                    React.createElement('span', {
+                      key: 'text'
+                    }, item)
                   ]
                 )
-              ]
-            )
-          ]
-        );
+              )
+            ]
+          ),
+          
+          React.createElement('div', {
+            className: 'warning-column',
+            key: 'complements'
+          },
+            [
+              React.createElement('h4', {
+                className: 'warning-title text-white',
+                key: 'complements-title'
+              }, section.complements.title),
+              
+              ...section.complements.items.map((item, idx) =>
+                React.createElement('div', {
+                  className: 'list-item',
+                  key: `comp-${idx}`
+                },
+                  [
+                    React.createElement('span', {
+                      className: 'text-blue-400',
+                      key: 'bullet'
+                    }, '•'),
+                    React.createElement('span', {
+                      key: 'text'
+                    }, item)
+                  ]
+                )
+              )
+            ]
+          )
+        ]
+      )
+    ]
+  );
 
       case "quote":
         return React.createElement('div', { 
