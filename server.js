@@ -214,6 +214,59 @@ app.get('/api/short-risk-detector', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+// 5. DIVIDEND QUALITY
+app.get('/api/dividend-quality', async (req, res) => {
+  try {
+    const query = `
+      SELECT DISTINCT ON (e.symbole)
+          e.symbole,
+          e.nom,
+          e.secteur,
+          ROUND(a."dividendYield"::numeric, 2) as dividend_yield,
+          ROUND(a."earningsYield"::numeric, 2) as earnings_yield,
+          ROUND((a."dividendYield" / NULLIF(a."earningsYield", 0))::numeric, 2) as payout_ratio,
+          ROUND(a.roe::numeric, 1) as roe,
+          ROUND(a."debtToEquity"::numeric, 2) as debt_equity,
+          -- COUVERTURE SIMPLIFIÉE
+          ROUND((a."earningsYield" / NULLIF(a."dividendYield", 0))::numeric, 1) as coverage_ratio,
+          -- GRADE FINAL OPTIMISÉ
+          CASE
+              WHEN a."dividendYield" > 12 OR (a."dividendYield" / NULLIF(a."earningsYield", 0)) > 0.8 THEN '🚨 RISKY_INCOME'
+              WHEN a."dividendYield" BETWEEN 6 AND 12 AND a.roe > 15 AND (a."earningsYield" / NULLIF(a."dividendYield", 0)) > 1.5 THEN '✅ HIGH_INCOME'
+              WHEN a."dividendYield" BETWEEN 4 AND 8 AND a.roe > 18 AND (a."earningsYield" / NULLIF(a."dividendYield", 0)) > 2 THEN '⭐ QUALITY_INCOME'
+              WHEN a."dividendYield" BETWEEN 2 AND 5 AND a.roe > 20 AND (a."earningsYield" / NULLIF(a."dividendYield", 0)) > 3 THEN '🏆 ELITE_DIVIDEND'
+              WHEN a."dividendYield" < 3 AND a.roe > 25 THEN '📈 GROWTH_INCOME'
+              ELSE '🔍 ANALYSIS_NEEDED'
+          END as dividend_grade,
+          -- SCORE DE SÉCURITÉ
+          (CASE WHEN a.roe > 20 THEN 2 WHEN a.roe > 15 THEN 1 ELSE 0 END +
+           CASE WHEN a."debtToEquity" < 0.5 THEN 2 WHEN a."debtToEquity" < 1 THEN 1 ELSE 0 END +
+           CASE WHEN (a."earningsYield" / NULLIF(a."dividendYield", 0)) > 2 THEN 2 WHEN (a."earningsYield" / NULLIF(a."dividendYield", 0)) > 1.5 THEN 1 ELSE 0 END +
+           CASE WHEN df.operating_cash_flow > df.net_income THEN 1 ELSE 0 END) as safety_score
+      FROM analyses_buffett a
+      JOIN entreprises e ON a.entreprise_id = e.id
+      JOIN donnees_financieres df ON a.entreprise_id = df.entreprise_id
+          AND df.date = (
+              SELECT MAX(date) FROM donnees_financieres df2
+              WHERE df2.entreprise_id = a.entreprise_id
+          )
+      WHERE a."dividendYield" > 1.5
+        AND df.net_income > 0
+        AND df.operating_cash_flow > 0
+        AND df.market_cap > 50000000
+        AND (a."earningsYield" / NULLIF(a."dividendYield", 0)) > 1.0
+      ORDER BY
+          e.symbole,  -- Pour DISTINCT ON
+          safety_score DESC,
+          a.roe DESC,
+          a."dividendYield" DESC
+    `;
+    const result = await pool.query(query);
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 app.listen(port, () => {
   console.log(`🚀 Server running on port ${port}`);
