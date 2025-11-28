@@ -130,252 +130,251 @@ const ANALYSIS_DESCRIPTIONS = {
     ]
   },
   cashflow: {
-    title: "Cash Flow - Explication pour les Investisseurs",
-    sections: [
-      {
-        title: "Ce que cette analyse mesure",
-        content: "Cette analyse identifie les entreprises qui génèrent d'excellents flux de trésorerie - le véritable 'oxygène' d'une entreprise.",
-        expanded: true
-      },
-      {
-        title: "Les métriques clés",
-        type: "table",
-        headers: ["Métrique", "Ce que ça mesure", "Pourquoi c'est important"],
-        rows: [
-          [
-            "Free Cash Flow", 
-            "Argent réellement disponible après les investissements", 
-            "Capacité à payer dividendes, réduire dette, investir"
-          ],
-          [
-            "FCF Margin", 
-            "% du chiffre d'affaires transformé en cash libre", 
-            "Efficacité opérationnelle"
-          ],
-          [
-            "FCF Yield", 
-            "Rendement cash par rapport à la valorisation", 
-            "Attractivité pour les actionnaires"
-          ]
-        ],
-        expanded: false
-      },
-      {
-        title: "Nos critères de qualité",
-        type: "criteria",
-        items: [
-          "✅ Génèrent plus de cash qu'elles n'en déclarent de bénéfices (qualité des profits)",
-          "✅ Transforment au moins 5% de leur CA en cash libre", 
-          "✅ Offrent un rendement cash d'au moins 1% par rapport à leur valorisation",
-          "✅ Ont une capitalisation boursière significative (plus de 100M$)"
-        ],
-        expanded: false
-      },
-      {
-        title: "Pourquoi c'est crucial",
-        type: "insight",
-        quote: "\"Le bénéfice est une opinion, le cash est un fait\"",
-        content: "Les investisseurs expérimentés savent que les entreprises avec un fort cash flow résistent mieux aux crises, peuvent investir dans la croissance et récompenser leurs actionnaires.",
-        example: {
-          title: "Exemple concret :",
-          text: "Une entreprise avec 20% de FCF Yield génère 20€ de cash libre pour chaque 100€ investi en actions - un rendement exceptionnel !"
+  title: "Cash Flow Quality - Explication pour les Investisseurs",
+  sections: [
+    {
+      title: "La Philosophie Cash Flow de Buffett",
+      content: "Cette analyse applique un principe fondamental de Warren Buffett : 'Le bénéfice est une opinion, le cash est un fait.' Elle identifie les entreprises qui génèrent d'excellents flux de trésorerie - le véritable 'oxygène' d'une entreprise selon sa philosophie.",
+      expanded: true
+    },
+    {
+      title: "Les 4 Piliers du Cash Flow Durable",
+      type: "columns",
+      items: [
+        {
+          title: "Free Cash Flow",
+          description: "Argent réellement disponible après les investissements",
+          quote: "Buffett dit : 'Je ne me fie qu'au cash flow, pas aux bénéfices comptables'"
         },
-        conclusion: "Cette analyse vous montre les vrais générateurs de cash du marché, pas juste celles qui affichent de beaux bénéfices sur le papier.",
-        expanded: false
-      },
-      {
-        title: "Comment Utiliser Ces Résultats",
-        type: "usage",
-        items: [
-          {
-            target: "Pour les investisseurs dividendes",
-            action: "→ Ciblez les entreprises avec FCF Yield élevé pour des revenus stables"
-          },
-          {
-            target: "Pour les investisseurs croissance",
-            action: "→ Recherchez les entreprises avec FCF Margin croissante"
-          },
-          {
-            target: "Pour tous les investisseurs",
-            action: "→ Évitez les entreprises avec FCF négatif chronique"
-          }
-        ],
-        expanded: false
-      },
-      {
-        title: "Points de Vigilance",
-        type: "warnings",
-        limitations: {
-          title: "Les limites de l'analyse :",
-          items: [
-            "Cash flow cyclique (certains secteurs ont des flux variables)",
-            "Investissements ponctuels (peut temporairement réduire le FCF)",
-            "Politique de dividendes (impacte le cash disponible)"
-          ]
+        {
+          title: "FCF Margin",
+          description: "% du chiffre d'affaires transformé en cash libre",
+          note: "Pourquoi c'est important : Mesure l'efficacité opérationnelle réelle"
         },
-        complements: {
-          title: "Les compléments nécessaires :",
-          items: [
-            "Croissance du FCF sur plusieurs années",
-            "Qualité de la trésorerie (récurrente vs exceptionnelle)",
-            "Politique d'investissement (CAPEX intelligent vs gaspillage)"
-          ]
+        {
+          title: "FCF Yield", 
+          description: "Rendement cash par rapport à la valorisation boursière",
+          rule: "La règle d'or : Un bon FCF Yield signifie un prix raisonnable"
         },
-        expanded: false
-      },
-      {
-        type: "quote",
-        content: "🌟 Le Pouvoir du Cash Flow",
-        quote: "\"Dans les moments difficiles, le cash flow est ce qui sépare les entreprises qui survivent de celles qui disparaissent.\"",
-        note: "Cette analyse vous aide à identifier les entreprises les plus résilientes.",
-        expanded: false
-      },
-      {
-        type: "final-note",
-        content: "Le cash flow est la vie de l'entreprise. Utilisez ces résultats pour investir dans des générateurs de trésorerie durables !",
-        expanded: false
-      }
-    ]
-  },
-  valuetrap: {
-     title: "Value Trap Detector - Explication pour les Investisseurs",
-    sections: [
-      {
-        title: "Ce que cette analyse révèle",
-        content: "Cette analyse identifie les entreprises sous-évaluées tout en évitant les 'Value Traps' - ces actions qui semblent bon marché mais cachent des problèmes fondamentaux.",
-        expanded: true
-      },
-      {
-        title: "🔍 Les pièges à éviter (Value Traps)",
-        type: "trap-definition",
-        definition: "Un Value Trap, c'est :",
+        {
+          title: "Qualité des Profits",
+          description: "Cash flow opérationnel vs bénéfice net", 
+          indicator: "L'indicateur : Cash flow > bénéfice = qualité supérieure"
+        }
+      ],
+      expanded: false
+    },
+    {
+      title: "Notre Système de Notation Cash Flow",
+      type: "table",
+      headers: ["Rating", "Signification", "Critères"],
+      rows: [
+        ["💰 EXCELLENT", "Générateur de cash exceptionnel", "FCF Yield > 6%, FCF Margin > 10%, Cash Flow > Net Income"],
+        ["💸 BON", "Bon générateur de cash", "FCF Yield > 3%, FCF Margin > 5%, Cash Flow positif"],
+        ["🔴 FAIBLE", "Problèmes de trésorerie", "FCF négatif ou marges insuffisantes"]
+      ],
+      expanded: false
+    },
+    {
+      title: "La Philosophie Cash Flow en Action",
+      type: "comparison", 
+      good: {
+        title: "Ce que Buffett recherche :",
         items: [
-          "❌ Une action 'bon marché' (faible P/E, P/B)",
-          "❌ Mais avec une rentabilité médiocre (ROE faible)", 
-          "❌ Ou des problèmes structurels qui empêchent la croissance"
-        ],
-        conclusion: "→ Notre algorithme détecte ces pièges pour vous !",
-        expanded: false
+          "✅ Cash flow opérationnel supérieur au bénéfice net",
+          "✅ Free Cash Flow constamment positif",
+          "✅ FCF Yield attractif (>3%)",
+          "✅ Croissance régulière du cash flow"
+        ]
       },
-      {
-        title: "Notre système de notation",
-        type: "table",
-        headers: ["Rating", "Signification", "Caractéristiques"],
-        rows: [
-          ["ELITE_VALUE", "Excellence absolue", "P/E < 8, P/B < 1, ROE > 15%"],
-          ["SOLID_VALUE", "Très bon rapport qualité/prix", "P/E < 12, P/B < 1.5, ROE > 12%"],
-          ["POTENTIAL_VALUE", "Opportunité intéressante", "P/E < 15, P/B < 2, ROE > 8%"],
-          ["DEEP_VALUE", "Décote importante", "P/E très inférieur au P/B"],
-          ["VALUE_TRAP", "DANGER - À éviter", "Prix bas mais rentabilité faible"],
-          ["SPECULATIVE", "Risque élevé", "Métriques incohérentes"]
-        ],
-        expanded: false
-      },
-      {
-        title: "Les métriques clés analysées",
-        type: "metrics-grid",
-        categories: [
-          {
-            title: "Prix (Valeur)",
-            items: [
-              "P/E Ratio : Prix / Bénéfices → Plus il est bas, mieux c'est",
-              "P/B Ratio : Prix / Valeur comptable → < 1 = décote", 
-              "Price to FCF : Prix / Cash Flow Libre → Qualité des profits"
-            ]
-          },
-          {
-            title: "Qualité (Rentabilité)",
-            items: [
-              "ROE : Return on Equity → Efficacité des capitaux propres",
-              "ROIC : Return on Invested Capital → Efficacité des investissements"
-            ]
-          },
-          {
-            title: "Score Composite", 
-            items: [
-              "Value Score : Combine rentabilité et décote → Plus élevé = meilleur"
-            ]
-          }
-        ],
-        expanded: false
-      },
-      {
-        title: "Notre philosophie d'investissement",
-        type: "philosophy",
-        quote: "\"Il vaut mieux acheter une bonne entreprise à un prix raisonnable qu'une entreprise moyenne à un prix très bas\"",
-        strategy: "Notre algorithme cherche l'équilibre parfait :",
+      bad: {
+        title: "Ce qu'il évite :",
         items: [
-          "✅ Prix attractif (décote)",
-          "✅ Qualité fondamentale (rentabilité)", 
-          "✅ Cohérence (ROE et ROIC alignés)"
-        ],
-        expanded: false
+          "❌ Bénéfices sans génération de cash",
+          "❌ FCF négatif chronique",
+          "❌ Dette pour financer les opérations",
+          "❌ Cash flow erratique ou cyclique excessif"
+        ]
       },
-      {
-        title: "Comment utiliser ces résultats",
-        type: "usage",
+      expanded: false
+    },
+    {
+      title: "Comment Utiliser Ces Résultats",
+      type: "usage",
+      items: [
+        {
+          target: "Pour les investisseurs dividendes",
+          action: "→ Ciblez 💰 EXCELLENT pour des revenus stables et durables"
+        },
+        {
+          target: "Pour les investisseurs croissance", 
+          action: "→ Recherchez 💸 BON avec FCF Margin croissante"
+        },
+        {
+          target: "Pour tous les investisseurs",
+          action: "→ Évitez 🔴 FAIBLE sauf turnaround avéré"
+        }
+      ],
+      expanded: false
+    },
+    {
+      title: "Points de Vigilance",
+      type: "warnings",
+      limitations: {
+        title: "Les limites de l'analyse :",
         items: [
-          {
-            target: "Pour les investisseurs prudents",
-            action: "→ Ciblez ELITE_VALUE et SOLID_VALUE"
-          },
-          {
-            target: "Pour les investisseurs opportunistes", 
-            action: "→ Explorez POTENTIAL_VALUE et DEEP_VALUE"
-          },
-          {
-            target: "À éviter absolument",
-            action: "→ VALUE_TRAP et SPECULATIVE"
-          }
-        ],
-        expanded: false
+          "Cash flow cyclique (certains secteurs ont des flux variables)",
+          "Investissements ponctuels (peut temporairement réduire le FCF)",
+          "Politique de dividendes (impacte le cash disponible)"
+        ]
       },
-      {
-        title: "Mise en garde importante",
-        type: "warnings",
-        note: "Même les meilleures valeurs comportent des risques :",
+      complements: {
+        title: "Les compléments nécessaires :",
         items: [
-          "Secteurs cycliques (shipping, énergie)",
-          "Risques géopolitiques", 
+          "Croissance du FCF sur plusieurs années",
+          "Qualité de la trésorerie (récurrente vs exceptionnelle)",
+          "Politique d'investissement (CAPEX intelligent vs gaspillage)"
+        ]
+      },
+      expanded: false
+    },
+    {
+      type: "quote",
+      content: "🌟 Le Pouvoir du Cash Flow",
+      quote: "\"Dans les moments difficiles, le cash flow est ce qui sépare les entreprises qui survivent de celles qui disparaissent.\"",
+      note: "Cette analyse vous aide à identifier les entreprises les plus résilientes.",
+      expanded: false
+    },
+    {
+      type: "final-note",
+      content: "Le cash flow est la vie de l'entreprise. Utilisez ces résultats pour investir dans des générateurs de trésorerie durables !",
+      expanded: false
+    }
+  ]
+},
+valuetrap: {
+  title: "Value Trap Detector",
+  sections: [
+    {
+      content: "Cette analyse applique la célèbre maxime de Warren Buffett : 'Il vaut mieux acheter une bonne entreprise à un prix raisonnable qu'une entreprise moyenne à un prix très bas.' Elle identifie les vraies opportunités tout en évitant les 'Value Traps' - ces actions qui semblent bon marché mais cachent des problèmes fondamentaux.",
+      expanded: true
+    },
+    {
+      title: "Les 4 Piliers de la Valeur Durable",
+      type: "columns",
+      items: [
+        {
+          title: "Prix Raisonnable",
+          description: "Ratios d'évaluation attractifs mais pas excessifs",
+          quote: "Buffett dit : 'Le prix est ce que vous payez, la valeur est ce que vous obtenez'"
+        },
+        {
+          title: "Rentabilité Solide",
+          description: "ROE et ROIC élevés et durables",
+          note: "Pourquoi c'est important : Mesure la qualité fondamentale"
+        },
+        {
+          title: "Décote Justifiée", 
+          description: "P/B ratio bas mais avec de bons fondamentaux",
+          rule: "La règle d'or : Une décote doit être temporaire, pas permanente"
+        },
+        {
+          title: "Cohérence des Métriques",
+          description: "Alignement entre prix bas et qualité élevée", 
+          indicator: "L'indicateur : ROE et ROIC alignés = entreprise saine"
+        }
+      ],
+      expanded: false
+    },
+    {
+      title: "Notre Système de Notation Value",
+      type: "table",
+      headers: ["Rating", "Signification", "Critères"],
+      rows: [
+        ["⭐ ELITE_VALUE", "Excellence absolue", "P/E < 8, P/B < 1, ROE > 15%, ROIC > 12%"],
+        ["✅ SOLID_VALUE", "Très bon rapport qualité/prix", "P/E < 12, P/B < 1.5, ROE > 12%, ROIC > 10%"],
+        ["🟡 POTENTIAL_VALUE", "Opportunité intéressante", "P/E < 15, P/B < 2, ROE > 8%, ROIC > 8%"],
+        ["🎯 DEEP_VALUE", "Décote importante à analyser", "Prix très bas mais rentabilité correcte"],
+        ["🚨 VALUE_TRAP", "DANGER - À éviter", "Prix bas mais rentabilité faible ou déclinante"],
+        ["🔴 SPECULATIVE", "Risque élevé", "Métriques incohérentes ou cycliques excessives"]
+      ],
+      expanded: false
+    },
+    {
+      title: "La Philosophie Value en Action",
+      type: "comparison", 
+      good: {
+       items: [
+          "✅ Prix attractif avec qualité fondamentale",
+          "✅ Rentabilité durable et reproductible",
+          "✅ Avantage concurrentiel mesurable",
+          "✅ Décote temporaire, non structurelle"
+        ]
+      },
+      bad: {
+        items: [
+          "❌ Prix bas dû à des problèmes fondamentaux",
+          "❌ Rentabilité déclinante ou erratique",
+          "❌ Secteurs en déclin structurel",
+          "❌ Décote permanente justifiée"
+        ]
+      },
+      expanded: false
+    },
+    {
+      title: "Comment Utiliser Ces Résultats",
+      type: "usage",
+      items: [
+        {
+          target: "Pour les investisseurs prudents",
+          action: "→ Ciblez ⭐ ELITE_VALUE et ✅ SOLID_VALUE"
+        },
+        {
+          target: "Pour les investisseurs opportunistes", 
+          action: "→ Explorez 🟡 POTENTIAL_VALUE et 🎯 DEEP_VALUE"
+        },
+        {
+          target: "Pour tous les investisseurs",
+          action: "→ Évitez 🚨 VALUE_TRAP et 🔴 SPECULATIVE"
+        }
+      ],
+      expanded: false
+    },
+    {
+      title: "Points de Vigilance",
+      type: "warnings",
+      limitations: {
+        title: "Les limites de l'analyse :",
+        items: [
+          "Secteurs cycliques (shipping, énergie, matières premières)",
+          "Risques géopolitiques spécifiques à certaines régions",
           "Liquidité des petites capitalisations"
-        ],
-        conclusion: "Diversifiez toujours votre portefeuille !",
-        expanded: false
+        ]
       },
-      {
-        title: "ELITE_VALUE vs VALUE_TRAP",
-        type: "comparison-table",
-        headers: ["", "ELITE_VALUE", "VALUE_TRAP"],
-        rows: [
-          ["Prix", "Bas (P/E < 8)", "Bas (P/E < 6)"],
-          ["Valeur comptable", "Décote (P/B < 1)", "Forte décote (P/B < 0.8)"],
-          ["Rentabilité", "EXCELLENTE (ROE > 15%)", "FAIBLE (ROE < 8%)"],
-          ["Efficacité", "ÉLEVÉE (ROIC > 12%)", "Médiocre"]
-        ],
-        expanded: false
+      complements: {
+        title: "Les compléments nécessaires :",
+        items: [
+          "Analyse du secteur et des tendances long terme",
+          "Qualité du management et de la gouvernance",
+          "Dette et structure financière durable"
+        ]
       },
-      {
-        title: "La différence cruciale",
-        type: "crucial-difference",
-        elite: {
-          title: "ELITE_VALUE = 'Bon marché ET excellent'",
-          description: "Entreprise de qualité vendue à prix discount",
-          example: "Exemple : Une Mercedes au prix d'une Renault"
-        },
-        trap: {
-          title: "VALUE_TRAP = 'Bon marché PARCE QUE médiocre'", 
-          description: "Entreprise problématique justifiant son faible prix",
-          example: "Exemple : Une voiture accidentée 'bon marché'"
-        },
-        expanded: false
-      },
-      {
-        type: "final-note",
-        content: "Notre Value Trap Detector vous aide à distinguer les vraies opportunités des pièges coûteux. Investissez malin, pas juste bon marché ! 🎯💰",
-        expanded: false
-      }
-    ]
-  },
+      expanded: false
+    },
+    {
+      type: "quote",
+      content: "🌟 Le Secret des Vraies Opportunités",
+      quote: "\"Le marché est un appareil qui transfère de l'argent des impatients vers les patients.\"",
+      note: "Cette analyse vous aide à identifier les entreprises où la patience sera récompensée.",
+      expanded: false
+    },
+    {
+      type: "final-note",
+      content: "Les vraies opportunités d'investissement combinent qualité et prix raisonnable. Notre Value Trap Detector vous aide à distinguer les diamants bruts des pièges coûteux !",
+      expanded: false
+    }
+  ]
+},
   shortrisk: {
     title: "🔍 Short Selling Candidates - Explication pour les Investisseurs",
     sections: [
@@ -482,7 +481,8 @@ const ANALYSIS_DESCRIPTIONS = {
     ]
   }
 };
-{
+
+dividend: {
   title: "Analyse des Dividendes Durables",
   sections: [
     {
@@ -976,40 +976,7 @@ const DescriptionBox = ({ analysisType }) => {
               ]
             )
           ]
-        );
-
-      case "usage":
-        return React.createElement('div', { key: 'usage' },
-          [
-            React.createElement('h3', {
-              className: 'section-title section-title-purple',
-              key: 'title'
-            }, section.title),
-            
-            React.createElement('div', {
-              className: 'space-y-4',
-              key: 'usage-cards'
-            },
-              section.items.map((item, idx) =>
-                React.createElement('div', {
-                  className: 'usage-card',
-                  key: `usage-${idx}`
-                },
-                  [
-                    React.createElement('h4', {
-                      className: 'usage-title text-white',
-                      key: 'target'
-                    }, item.target),
-                    React.createElement('p', {
-                      className: 'text-slate-300 text-sm',
-                      key: 'action'
-                    }, item.action)
-                  ]
-                )
-              )
-            )
-          ]
-        );
+        );      
 
       case "warnings":
         return React.createElement('div', { key: 'warnings' },
@@ -1106,80 +1073,6 @@ const DescriptionBox = ({ analysisType }) => {
               className: 'secret-text',
               key: 'note'
             }, section.note)
-          ]
-        );
-
-        case "criteria":
-        return React.createElement('div', { key: 'criteria-content' },
-          [
-            React.createElement('h3', {
-              className: 'section-title section-title-green',
-              key: 'title'
-            }, section.title),
-            
-            React.createElement('div', {
-              className: 'space-y-3',
-              key: 'criteria-list'
-            },
-              section.items.map((item, idx) =>
-                React.createElement('div', {
-                  className: 'flex items-start gap-3',
-                  key: idx
-                },
-                  [
-                    React.createElement('span', {
-                      className: 'text-green-400 text-lg',
-                      key: 'check'
-                    }, '✓'),
-                    React.createElement('span', {
-                      className: 'text-gray-300',
-                      key: 'text'
-                    }, item)
-                  ]
-                )
-              )
-            )
-          ]
-        );
-
-      case "insight":
-        return React.createElement('div', { key: 'insight-content' },
-          [
-            React.createElement('h3', {
-              className: 'section-title section-title-blue',
-              key: 'title'
-            }, section.title),
-            
-            React.createElement('blockquote', {
-              className: 'border-l-4 border-yellow-400 pl-4 my-4 italic text-yellow-300',
-              key: 'quote'
-            }, section.quote),
-            
-            React.createElement('p', {
-              className: 'text-gray-300 mb-4',
-              key: 'content'
-            }, section.content),
-            
-            section.example && React.createElement('div', {
-              className: 'bg-blue-900/30 p-4 rounded-lg mb-4',
-              key: 'example'
-            },
-              [
-                React.createElement('h4', {
-                  className: 'text-blue-300 font-semibold mb-2',
-                  key: 'example-title'
-                }, section.example.title),
-                React.createElement('p', {
-                  className: 'text-gray-300',
-                  key: 'example-text'
-                }, section.example.text)
-              ]
-            ),
-            
-            React.createElement('p', {
-              className: 'text-gray-300 font-semibold',
-              key: 'conclusion'
-            }, section.conclusion)
           ]
         );
         
@@ -3160,6 +3053,385 @@ const ShortRiskTab = ({
         ]
     );
 };
+// Composant Onglet Dividend avec Filtres, Tri, Recherche et PAGINATION
+const DividendTab = ({ 
+    data, 
+    getDividendGradeColor, 
+    getSafetyScoreColor, 
+    sortConfig, 
+    onSort, 
+    searchTerm, 
+    onSearch, 
+    currentPage, 
+    totalPages, 
+    onPageChange, 
+    itemsPerPage, 
+    onItemsPerPageChange,
+    totalItems 
+}) => {
+    const [filter, setFilter] = useState('ALL');
+    const [sectorFilter, setSectorFilter] = useState('Tous secteurs');
+
+    const DIVIDEND_FILTERS = [
+        { value: 'ALL', label: 'Tous grades' },
+        { value: 'ELITE_DIVIDEND', label: '🏆 ELITE' },
+        { value: 'QUALITY_INCOME', label: '⭐ QUALITÉ' },
+        { value: 'HIGH_INCOME', label: '✅ HAUT RENDEMENT' },
+        { value: 'GROWTH_INCOME', label: '📈 CROISSANCE' },
+        { value: 'RISKY_INCOME', label: '🚨 RISQUE' }
+    ];
+
+    const SECTORS = [
+        'Tous secteurs',
+        'Industrials',
+        'Technology', 
+        'Financial Services',
+        'Consumer Cyclical',
+        'Consumer Defensive', 
+        'Healthcare',
+        'Basic Materials',
+        'Energy',
+        'Communication Services',
+        'Utilities',
+        'Real Estate'
+    ];
+
+    const getSortedAndFilteredData = (data) => {
+        if (!data) return [];
+        
+        let filteredData = data;
+        if (searchTerm) {
+            const searchLower = searchTerm.toLowerCase();
+            filteredData = data.filter(item => 
+                Object.values(item).some(value => 
+                    value && value.toString().toLowerCase().includes(searchLower)
+                )
+            );
+        }
+
+        if (sortConfig.key) {
+            filteredData = [...filteredData].sort((a, b) => {
+                let aValue = a[sortConfig.key];
+                let bValue = b[sortConfig.key];
+
+                if (aValue === null || aValue === undefined) aValue = '';
+                if (bValue === null || bValue === undefined) bValue = '';
+
+                if (!isNaN(parseFloat(aValue)) && !isNaN(parseFloat(bValue))) {
+                    aValue = parseFloat(aValue);
+                    bValue = parseFloat(bValue);
+                }
+
+                if (aValue < bValue) {
+                    return sortConfig.direction === 'asc' ? -1 : 1;
+                }
+                if (aValue > bValue) {
+                    return sortConfig.direction === 'asc' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+
+        return filteredData;
+    };
+
+    const getPaginatedData = (data) => {
+        if (!data || data.length === 0) return [];
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        return data.slice(startIndex, endIndex);
+    };
+
+    const sortedAndFilteredData = React.useMemo(() => {
+        return getSortedAndFilteredData(data);
+    }, [data, searchTerm, sortConfig]);
+
+    const filteredData = React.useMemo(() => {
+        return sortedAndFilteredData.filter(item => {
+            const qualityMatch = filter === 'ALL' || 
+                (item.dividend_grade && item.dividend_grade.includes(filter));
+            
+            const sectorMatch = sectorFilter === 'Tous secteurs' || 
+                (item.secteur && item.secteur === sectorFilter);
+            
+            return qualityMatch && sectorMatch;
+        });
+    }, [sortedAndFilteredData, filter, sectorFilter]);
+
+    const paginatedData = React.useMemo(() => {
+        return getPaginatedData(filteredData);
+    }, [filteredData, currentPage, itemsPerPage]);
+
+    return React.createElement('div', {},
+        [
+            React.createElement(DescriptionBox, {
+                key: 'description',
+                analysisType: 'dividend'
+            }),
+
+            // Section Recherche et Filtres
+            React.createElement('div', { 
+                className: 'search-section mb-6',
+                key: 'search-filters'
+            },
+                [
+                    React.createElement('div', {
+                        className: 'search-input-container',
+                        key: 'search-bar'
+                    },
+                        [
+                            React.createElement('div', {
+                                className: 'search-icon',
+                                key: 'search-icon'
+                            }, '🔍'),
+                            
+                            React.createElement('input', {
+                                type: 'text',
+                                placeholder: 'Rechercher entreprises',
+                                value: searchTerm,
+                                onChange: (e) => onSearch(e.target.value),
+                                className: 'search-input',
+                                key: 'search-input'
+                            }),
+                            
+                            React.createElement('div', {
+                                className: 'results-counter',
+                                key: 'counter'
+                            }, `${filteredData.length} résultat(s)`)
+                        ]
+                    ),
+
+                    React.createElement('div', {
+                        className: 'dropdown-grid',
+                        key: 'dropdowns-grid'
+                    },
+                        [
+                            React.createElement('div', {
+                                className: 'dropdown-group',
+                                key: 'quality-dropdown'
+                            },
+                                [
+                                    React.createElement('label', {
+                                        className: 'dropdown-label',
+                                        key: 'quality-label'
+                                    }, 'Filtrer par grade'),
+                                    
+                                    React.createElement('select', {
+                                        value: filter,
+                                        onChange: (e) => setFilter(e.target.value),
+                                        className: 'dropdown-select',
+                                        key: 'quality-select'
+                                    },
+                                        DIVIDEND_FILTERS.map(option =>
+                                            React.createElement('option', {
+                                                value: option.value,
+                                                key: option.value,
+                                                className: 'bg-gray-800'
+                                            }, option.label)
+                                        )
+                                    )
+                                ]
+                            ),
+
+                            React.createElement('div', {
+                                className: 'dropdown-group',
+                                key: 'sector-dropdown'
+                            },
+                                [
+                                    React.createElement('label', {
+                                        className: 'dropdown-label',
+                                        key: 'sector-label'
+                                    }, 'Filtrer par secteur'),
+                                    
+                                    React.createElement('select', {
+                                        value: sectorFilter,
+                                        onChange: (e) => setSectorFilter(e.target.value),
+                                        className: 'dropdown-select',
+                                        key: 'sector-select'
+                                    },
+                                        SECTORS.map(sector =>
+                                            React.createElement('option', {
+                                                value: sector,
+                                                key: sector,
+                                                className: 'bg-gray-800'
+                                            }, sector)
+                                        )
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                ]
+            ),
+          
+            // Tableau Dividend (MÊME DESIGN QUE BUFFETT)
+            React.createElement('div', { 
+                className: 'table-container',
+                key: 'table-container'
+            },
+                [
+                    React.createElement('div', { 
+                        className: 'bg-gray-800 rounded-lg overflow-hidden shadow-xl',
+                        key: 'table'
+                    },
+                        [
+                            // En-tête du tableau Dividend AVEC TRI
+                            React.createElement('div', { 
+                                className: 'grid grid-cols-11 gap-2 p-4 bg-gray-700 font-semibold text-xs',
+                                key: 'table-header'
+                            },
+                                [
+                                    React.createElement(SortableHeader, {
+                                        key: 'symbole',
+                                        column: 'symbole',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Symbole'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'nom',
+                                        column: 'nom',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Entreprise'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'secteur',
+                                        column: 'secteur',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Secteur'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'dividend_yield',
+                                        column: 'dividend_yield',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Dividend Yield'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'earnings_yield',
+                                        column: 'earnings_yield',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Earnings Yield'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'payout_ratio',
+                                        column: 'payout_ratio',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Payout Ratio'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'roe',
+                                        column: 'roe',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'ROE'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'debt_equity',
+                                        column: 'debt_equity',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Dette/Equity'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'coverage_ratio',
+                                        column: 'coverage_ratio',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Coverage Ratio'),
+                                    
+                                    React.createElement(SortableHeader, {
+                                        key: 'safety_score',
+                                        column: 'safety_score',
+                                        sortConfig: sortConfig,
+                                        onSort: onSort
+                                    }, 'Safety Score'),
+                                    
+                                    React.createElement('div', { key: 'grade' }, 'Grade')
+                                ]
+                            ),
+                            
+                            // Corps du tableau
+                            ...paginatedData.map((item, index) =>
+                                React.createElement('div', {
+                                    key: item.symbole + index,
+                                    className: 'grid grid-cols-11 gap-2 p-4 border-b border-gray-700 hover:bg-gray-750 transition-colors text-xs'
+                                },
+                                    [
+                                        React.createElement('div', { 
+                                            className: 'font-bold text-sm',
+                                            key: 'symbole'
+                                        }, item.symbole),
+                                        React.createElement('div', { 
+                                            className: 'font-semibold',
+                                            key: 'nom' 
+                                        }, item.nom),
+                                        React.createElement('div', { 
+                                            className: 'text-gray-300',
+                                            key: 'secteur' 
+                                        }, item.secteur),
+                                        React.createElement('div', { 
+                                            className: item.dividend_yield > 12 ? 'text-red-400 font-bold' : 
+                                                      item.dividend_yield > 6 ? 'text-yellow-400 font-bold' : 'text-green-400 font-bold',
+                                            key: 'dividend-yield'
+                                        }, `${Number(item.dividend_yield).toFixed(2)}%`),
+                                        React.createElement('div', { 
+                                            className: 'text-blue-400 font-bold',
+                                            key: 'earnings-yield'
+                                        }, `${Number(item.earnings_yield).toFixed(2)}%`),
+                                        React.createElement('div', { 
+                                            className: item.payout_ratio > 0.8 ? 'text-red-400 font-bold' : 
+                                                      item.payout_ratio > 0.5 ? 'text-yellow-400 font-bold' : 'text-green-400 font-bold',
+                                            key: 'payout-ratio'
+                                        }, `${Number(item.payout_ratio).toFixed(2)}`),
+                                        React.createElement('div', { 
+                                            className: item.roe > 20 ? 'text-green-400 font-bold' : 
+                                                      item.roe > 15 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
+                                            key: 'roe'
+                                        }, `${Number(item.roe).toFixed(1)}%`),
+                                        React.createElement('div', { 
+                                            className: item.debt_equity > 1 ? 'text-red-400 font-bold' : 
+                                                      item.debt_equity > 0.5 ? 'text-yellow-400 font-bold' : 'text-green-400 font-bold',
+                                            key: 'debt-equity'
+                                        }, `${Number(item.debt_equity).toFixed(2)}`),
+                                        React.createElement('div', { 
+                                            className: item.coverage_ratio > 2 ? 'text-green-400 font-bold' : 
+                                                      item.coverage_ratio > 1.5 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold',
+                                            key: 'coverage'
+                                        }, `${Number(item.coverage_ratio).toFixed(1)}x`),
+                                        React.createElement('div', { 
+                                            className: getSafetyScoreColor(item.safety_score),
+                                            key: 'safety-score'
+                                        }, item.safety_score),
+                                        React.createElement('div', { 
+                                            className: `px-2 py-1 rounded-full text-xs font-bold text-center text-white ${getDividendGradeColor(item.dividend_grade)}`,
+                                            key: 'grade'
+                                        }, item.dividend_grade)
+                                    ]
+                                )
+                            )
+                        ]
+                    )
+                ]
+            ),
+
+            // PAGINATION (MÊME DESIGN QUE BUFFETT)
+            React.createElement(Pagination, {
+                key: 'pagination',
+                currentPage: currentPage,
+                totalPages: totalPages,
+                onPageChange: onPageChange, 
+                itemsPerPage: itemsPerPage,
+                onItemsPerPageChange: onItemsPerPageChange, 
+                totalItems: filteredData.length
+            })
+        ]
+    );
+};
 
 // COMPOSANT PRINCIPAL - InvestmentApp
 const InvestmentApp = () => {
@@ -3168,6 +3440,7 @@ const InvestmentApp = () => {
     const [cashFlowData, setCashFlowData] = useState([]);
     const [valueTrapData, setValueTrapData] = useState([]);
     const [shortRiskData, setShortRiskData] = useState([]);
+    const [dividendData, setDividendData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     
@@ -3176,6 +3449,7 @@ const InvestmentApp = () => {
     const [cashFlowFilter, setCashFlowFilter] = useState('ALL');
     const [valueTrapFilter, setValueTrapFilter] = useState('ALL');
     const [shortRiskFilter, setShortRiskFilter] = useState('ALL');
+    const [dividendFilter, setDividendFilter] = useState('ALL');
     
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
     const [globalSearch, setGlobalSearch] = useState('');
@@ -3190,6 +3464,7 @@ const InvestmentApp = () => {
     const filteredCashFlowData = cashFlowData || [];
     const filteredValueTrapData = valueTrapData || [];
     const filteredShortRiskData = shortRiskData || [];
+    const filteredDividendData = dividendData || [];
 
     // FONCTION PAGINATION
     const getPaginatedData = (data) => {
@@ -3208,13 +3483,14 @@ const InvestmentApp = () => {
             case 'cashflow': dataLength = filteredCashFlowData.length; break;
             case 'valuetrap': dataLength = filteredValueTrapData.length; break;
             case 'shortrisk': dataLength = filteredShortRiskData.length; break;
+            case 'dividend': dataLength = filteredDividendData.length; break;
             default: dataLength = 0;
         }
         setTotalPages(Math.ceil(dataLength / itemsPerPage));
         
         // Revenir à la page 1 quand les données changent
         setCurrentPage(1);
-    }, [filteredBuffettData, filteredCashFlowData, filteredValueTrapData, filteredShortRiskData, activeTab, itemsPerPage]);
+    }, [filteredBuffettData, filteredCashFlowData, filteredValueTrapData, filteredShortRiskData, filteredDividendData, activeTab, itemsPerPage]);
    
     // FONCTION DE TRI
     const handleSort = (key) => {
@@ -3241,6 +3517,7 @@ const InvestmentApp = () => {
                 fetch(`${API_BASE_URL}/cash-flow-momentum`),
                 fetch(`${API_BASE_URL}/value-trap-detector`),
                 fetch(`${API_BASE_URL}/short-risk-detector`)
+                fetch(`${API_BASE_URL}/dividend-quality`)
             ]);
 
             // Vérifier les réponses
@@ -3255,12 +3532,14 @@ const InvestmentApp = () => {
                 cashFlowResponse.json(),
                 valueTrapResponse.json(),
                 shortRiskResponse.json()
+                dividendResponse.json()
             ]);
 
             setBuffettData(buffettResult);
             setCashFlowData(cashFlowResult);
             setValueTrapData(valueTrapResult);
             setShortRiskData(shortRiskResult);
+            setDividendData(dividendResult);
 
         } catch (err) {
             console.error('Erreur de chargement:', err);
@@ -3274,6 +3553,24 @@ const InvestmentApp = () => {
         fetchAllData();
     }, []);
 
+  // Ajoutez les fonctions de style pour Dividend :
+    const getDividendGradeColor = (grade) => {
+        if (grade.includes('ELITE_DIVIDEND')) return 'bg-gradient-yellow';
+        if (grade.includes('QUALITY_INCOME')) return 'bg-gradient-green';
+        if (grade.includes('HIGH_INCOME')) return 'bg-gradient-blue';
+        if (grade.includes('GROWTH_INCOME')) return 'bg-gradient-purple';
+        if (grade.includes('RISKY_INCOME')) return 'bg-gradient-red';
+        return 'bg-gradient-gray';
+    };
+
+    const getSafetyScoreColor = (score) => {
+        if (score >= 7) return 'text-green-400 font-bold';
+        if (score >= 5) return 'text-yellow-400 font-bold';
+        if (score >= 3) return 'text-orange-400 font-bold';
+        return 'text-red-400 font-bold';
+    };
+
+  
     // Fonctions de style (inchangées)
     const getBuffettRatingColor = (rating) => {
         if (rating.includes('ELITE')) return 'bg-gradient-yellow';
@@ -3468,6 +3765,11 @@ const InvestmentApp = () => {
                                 onClick: () => setActiveTab('shortrisk'),
                                 className: `tab tab-gradient ${activeTab === 'shortrisk' ? 'active' : ''}`
                             }, `Short Risk (${shortRiskData.length})`)
+                          React.createElement('button', {
+                                key: 'dividend',
+                                onClick: () => setActiveTab('dividend'),
+                                className: `tab tab-gradient ${activeTab === 'dividend' ? 'active' : ''}`
+                            }, `Dividendes (${dividendData.length})`)
                         ]
                     )
                 ),
@@ -3501,7 +3803,7 @@ const InvestmentApp = () => {
                         ]
                     )
                     : activeTab === 'cashflow'
-                    ? React.createElement(CashFlowTab, {
+                        ? React.createElement(CashFlowTab, {
                         key: 'cashflow-tab',
                         data: filteredCashFlowData,
                         getCashFlowColor: getCashFlowColor,
@@ -3535,7 +3837,8 @@ const InvestmentApp = () => {
                         onItemsPerPageChange: setItemsPerPage,
                         totalItems: filteredValueTrapData.length
                     })
-                    : React.createElement(ShortRiskTab, {
+                      : activeTab === 'ShortRisk'
+                      ? React.createElement(ShortRiskTab, {
                         key: 'shortrisk-tab',
                         data: filteredShortRiskData,
                         getShortSignalColor: getShortSignalColor,
@@ -3552,6 +3855,23 @@ const InvestmentApp = () => {
                         itemsPerPage: itemsPerPage,
                         onItemsPerPageChange: setItemsPerPage,
                         totalItems: filteredShortRiskData.length
+                    })
+                    : activeTab === 'dividend'
+                    ? React.createElement(DividendTab, {
+                        key: 'dividend-tab',
+                        data: filteredDividendData,
+                        getDividendGradeColor: getDividendGradeColor,
+                        getSafetyScoreColor: getSafetyScoreColor,
+                        sortConfig: sortConfig,
+                        onSort: handleSort,
+                        searchTerm: globalSearch,
+                        onSearch: handleGlobalSearch,
+                        currentPage: currentPage,
+                        totalPages: totalPages,
+                        onPageChange: setCurrentPage,
+                        itemsPerPage: itemsPerPage,
+                        onItemsPerPageChange: setItemsPerPage,
+                        totalItems: filteredDividendData.length
                     })
             ]
         )
