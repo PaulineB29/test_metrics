@@ -447,7 +447,6 @@ const ANALYSIS_DESCRIPTIONS = {
           ],
           expanded: false
         }
-        expanded: false
       },
       {
         title: "Comment utiliser ces informations",
