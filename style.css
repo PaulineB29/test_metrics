@@ -806,3 +806,21 @@ body {
     color: #94a3b8;
     font-size: 0.875rem;
 }
+
+/* Styles pour les sections Cash Flow */
+.criteria-list {
+  @apply space-y-2;
+}
+
+.insight-example {
+  @apply bg-blue-900/20 p-4 rounded-lg border border-blue-700/50;
+}
+
+.cash-flow-quote {
+  @apply border-l-4 border-yellow-400 pl-4 italic text-yellow-200 text-lg;
+}
+
+/* Adaptation des couleurs pour Cash Flow */
+.section-title-blue {
+  @apply text-blue-400 font-bold text-lg mb-4;
+}
