@@ -602,10 +602,10 @@ dividend: {
       type: "final-note",
       content: "Les meilleurs investissements dividendes sont ceux où vous n'aurez jamais à vendre. Choisissez la qualité, la sécurité, et laissez le temps travailler pour vous !",
       expanded: false
-    }
-  ]
-}
-
+      }
+    ]
+  }
+};
 // Composant Barre de Recherche Globale
 const GlobalSearchBar = ({ searchTerm, onSearch, dataCount }) => {
     return React.createElement('div', { 
