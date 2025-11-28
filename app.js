@@ -481,127 +481,128 @@ valuetrap: {
   ]
 },
   
-dividend: {
-  title: "Analyse des Dividendes Durables",
-  sections: [
-    {
-      title: "La Sagesse des Dividendes",
-      content: "Cette analyse applique la philosophie de Warren Buffett aux investissements dividendes  Ils doivent être le reflet d'une santé financière exceptionnelle, pas un leurre.",
-      expanded: true
-    },
-    {
-      title: "Les 4 Piliers des Dividendes Durables",
-      type: "columns",
-      items: [
-        {
-          title: "Rendement Raisonnable",
-          description: "Dividend Yield : Le rendement doit être soutenable, pas excessif",
-          quote: "Un dividende trop élevé est souvent le signe d'un dividende en danger"
-        },
-        {
-          title: "Couverture des Bénéfices",
-          description: "Payout Ratio : Pourcentage des bénéfices versés en dividendes",
-          note: "Pourquoi c'est important : Une couverture solide garantit la pérennité"
-        },
-        {
-          title: "Rentabilité (ROE)",
-          description: "Return on Equity : L'entreprise doit générer des rendements solides",
-          rule: "La règle d'or : ROE > 15% pour une croissance durable des dividendes"
-        },
-        {
-          title: "Solidité Financière",
-          description: "Dette/Equity & Cash Flow : Résistance aux crises économiques",
-          indicator: "L'indicateur : Cash-flow opérationnel > bénéfice net = qualité des revenus"
-        }
-      ],
-      expanded: false
-    },
-    {
-      title: "Notre Système de Notation des Dividendes",
-      type: "table",
-      headers: ["Grade", "Signification", "Critères Principaux"],
-      rows: [
-        ["🏆 ELITE_DIVIDEND", "Excellence absolue dividende", "Yield 2-5%, ROE > 20%, Coverage > 3x, Dette faible"],
-        ["⭐ QUALITY_INCOME", "Revenu de haute qualité", "Yield 4-8%, ROE > 18%, Coverage > 2x"],
-        ["✅ HIGH_INCOME", "Rendement élevé sécurisé", "Yield 6-12%, ROE > 15%, Coverage > 1.5x"],
-        ["📈 GROWTH_INCOME", "Croissance dividende future", "Yield < 3%, ROE > 25%, Fort potentiel"],
-        ["🚨 RISKY_INCOME", "Dividende à risque", "Yield > 12% ou Payout > 80%"]
-      ],
-      expanded: false
-    },
-    {
-      title: "La Philosophie des Dividendes",
-      type: "comparison",
-      good: {
-        items: [
-          "✅ Rendement raisonnable et durable",
-          "✅ Couverture solide par les bénéfices",
-          "✅ Croissance régulière du dividende",
-          "✅ Forte rentabilité des capitaux propres"
-        ]
+  dividend: {
+    title: "Analyse des Dividendes",
+    sections: [
+      {
+        title: "xx",
+        content: "Cette analyse applique la philosophie de Warren Buffett aux investissements dividendes : 'Il est bien plus important d'acheter une entreprise merveilleuse à un prix raisonnable, qu'une entreprise raisonnable à un prix merveilleux.' Les dividendes doivent être le reflet d'une santé financière exceptionnelle, pas un leurre.",
+        expanded: true
       },
-      bad: {
-        title: "Ce qu'il évite :",
+      {
+        title: "Les 4 Piliers des Dividendes Durables",
+        type: "columns",
         items: [
-          "❌ Rendements excessifs (>12%) souvent insoutenables",
-          "❌ Payout ratio trop élevé (>80%)",
-          "❌ Dette excessive qui menace le dividende",
-          "❌ Dividendes non couverts par le cash-flow"
-        ]
+          {
+            title: "Rendement Raisonnable",
+            description: "Dividend Yield : Le rendement doit être soutenable, pas excessif",
+            quote: "Buffett dit : 'Un dividende trop élevé est souvent le signe d'un dividende en danger'"
+          },
+          {
+            title: "Couverture des Bénéfices",
+            description: "Payout Ratio : Pourcentage des bénéfices versés en dividendes",
+            note: "Pourquoi c'est important : Une couverture solide garantit la pérennité"
+          },
+          {
+            title: "Rentabilité (ROE)",
+            description: "Return on Equity : L'entreprise doit générer des rendements solides",
+            rule: "La règle d'or : ROE > 15% pour une croissance durable des dividendes"
+          },
+          {
+            title: "Solidité Financière",
+            description: "Dette/Equity & Cash Flow : Résistance aux crises économiques",
+            indicator: "L'indicateur : Cash-flow opérationnel > bénéfice net = qualité des revenus"
+          }
+        ],
+        expanded: false
       },
-      expanded: false
-    },
-    {
-      title: "Comment Utiliser Ces Résultats",
-      type: "usage",
-      items: [
-        {
-          target: "Pour les investisseurs revenu",
-          action: "→ Privilégiez ⭐ QUALITY_INCOME et ✅ HIGH_INCOME avec safety_score > 5"
+      {
+        title: "Notre Système de Notation des Dividendes",
+        type: "table",
+        headers: ["Grade", "Signification", "Critères Principaux"],
+        rows: [
+          ["🏆 ELITE_DIVIDEND", "Excellence absolue dividende", "Yield 2-5%, ROE > 20%, Coverage > 3x, Dette faible"],
+          ["⭐ QUALITY_INCOME", "Revenu de haute qualité", "Yield 4-8%, ROE > 18%, Coverage > 2x"],
+          ["✅ HIGH_INCOME", "Rendement élevé sécurisé", "Yield 6-12%, ROE > 15%, Coverage > 1.5x"],
+          ["📈 GROWTH_INCOME", "Croissance dividende future", "Yield < 3%, ROE > 25%, Fort potentiel"],
+          ["🚨 RISKY_INCOME", "Dividende à risque", "Yield > 12% ou Payout > 80%"]
+        ],
+        expanded: false
+      },
+      {
+        title: "La Philosophie des Dividendes",
+        type: "comparison",
+        good: {
+          title: "Ce que Buffett recherche dans un dividende :",
+          items: [
+            "✅ Rendement raisonnable et durable",
+            "✅ Couverture solide par les bénéfices",
+            "✅ Croissance régulière du dividende",
+            "✅ Forte rentabilité des capitaux propres"
+          ]
         },
-        {
-          target: "Pour la croissance de revenus",
-          action: "→ Ciblez 📈 GROWTH_INCOME pour l'augmentation future des dividendes"
+        bad: {
+          title: "Ce qu'il évite :",
+          items: [
+            "❌ Rendements excessifs (>12%) souvent insoutenables",
+            "❌ Payout ratio trop élevé (>80%)",
+            "❌ Dette excessive qui menace le dividende",
+            "❌ Dividendes non couverts par le cash-flow"
+          ]
         },
-        {
-          target: "Pour la sécurité absolue",
-          action: "→ Les 🏆 ELITE_DIVIDEND offrent le meilleur équilibre sécurité/rendement"
-        }
-      ],
-      expanded: false
-    },
-    {
-      title: "Points de Vigilance Essentiels",
-      type: "warnings",
-      limitations: {
-        title: "Les pièges à éviter :",
-        items: [
-          "Un yield élevé peut cacher un prix en baisse (value trap)",
-          "Les secteurs cycliques peuvent réduire les dividendes",
-          "La dette excessive est le premier danger pour les dividendes"
-        ]
+        expanded: false
       },
-      complements: {
-        title: "Les vérifications complémentaires :",
+      {
+        title: "Comment Utiliser Ces Résultats",
+        type: "usage",
         items: [
-          "Historique de croissance du dividende (5-10 ans)",
-          "Stabilité du secteur d'activité",
-          "Politique de dividende de l'entreprise"
-        ]
+          {
+            target: "Pour les investisseurs revenu",
+            action: "→ Privilégiez ⭐ QUALITY_INCOME et ✅ HIGH_INCOME avec safety_score > 5"
+          },
+          {
+            target: "Pour la croissance de revenus",
+            action: "→ Ciblez 📈 GROWTH_INCOME pour l'augmentation future des dividendes"
+          },
+          {
+            target: "Pour la sécurité absolue",
+            action: "→ Les 🏆 ELITE_DIVIDEND offrent le meilleur équilibre sécurité/rendement"
+          }
+        ],
+        expanded: false
       },
-      expanded: false
-    },
-    {
-      type: "quote",
-      content: "🌟 La Sagesse des Dividendes Durables",
-      quote: "\"Le meilleur dividende est celui qui augmente chaque année, pas celui qui est le plus élevé aujourd'hui.\"",
-      note: "Cette analyse identifie les entreprises capables d'augmenter leurs dividendes durablement.",
-      expanded: false
-    },
-    {
-      type: "final-note",
-      content: "Les meilleurs investissements dividendes sont ceux où vous n'aurez jamais à vendre. Choisissez la qualité, la sécurité, et laissez le temps travailler pour vous !",
-      expanded: false
+      {
+        title: "Points de Vigilance Essentiels",
+        type: "warnings",
+        limitations: {
+          title: "Les limites de l'analyse :",
+          items: [
+            "Un yield élevé peut cacher un prix en baisse (value trap)",
+            "Les secteurs cycliques peuvent réduire les dividendes",
+            "La dette excessive est le premier danger pour les dividendes"
+          ]
+        },
+        complements: {
+          title: "Les vérifications complémentaires :",
+          items: [
+            "Historique de croissance du dividende (5-10 ans)",
+            "Stabilité du secteur d'activité",
+            "Politique de dividende de l'entreprise"
+          ]
+        },
+        expanded: false
+      },
+      {
+        type: "quote",
+        content: "Citation",
+        quote: "\"Le meilleur dividende est celui qui augmente chaque année, pas celui qui est le plus élevé aujourd'hui.\"",
+        note: "Cette analyse identifie les entreprises capables d'augmenter leurs dividendes durablement.",
+        expanded: false
+      },
+      {
+        type: "final-note",
+        content: "Les meilleurs investissements dividendes sont ceux où vous n'aurez jamais à vendre. Choisissez la qualité, la sécurité, et laissez le temps travailler pour vous !",
+        expanded: false
       }
     ]
   }
