@@ -604,7 +604,7 @@ dividend: {
       expanded: false
     }
   ]
-};
+}
 
 // Composant Barre de Recherche Globale
 const GlobalSearchBar = ({ searchTerm, onSearch, dataCount }) => {
