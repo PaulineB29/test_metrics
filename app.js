@@ -978,6 +978,39 @@ const DescriptionBox = ({ analysisType }) => {
           ]
         );      
 
+      case "usage":
+        return React.createElement('div', { key: 'usage' },
+          [
+            React.createElement('h3', {
+              className: 'section-title section-title-purple',
+              key: 'title'
+            }, section.title),
+            
+            React.createElement('div', {
+              className: 'space-y-4',
+              key: 'usage-cards'
+            },
+              section.items.map((item, idx) =>
+                React.createElement('div', {
+                  className: 'usage-card',
+                  key: `usage-${idx}`
+                },
+                  [
+                    React.createElement('h4', {
+                      className: 'usage-title text-white',
+                      key: 'target'
+                    }, item.target),
+                    React.createElement('p', {
+                      className: 'text-slate-300 text-sm',
+                      key: 'action'
+                    }, item.action)
+                  ]
+                )
+              )
+            )
+          ]
+        );
+        
       case "warnings":
         return React.createElement('div', { key: 'warnings' },
     [
@@ -1082,268 +1115,6 @@ const DescriptionBox = ({ analysisType }) => {
           key: 'final-note'
         }, section.content);
         
-        case "trap-definition":
-        return React.createElement('div', { key: 'trap-definition' },
-          [
-            React.createElement('h3', {
-              className: 'section-title section-title-red',
-              key: 'title'
-            }, section.title),
-            
-            React.createElement('p', {
-              className: 'text-gray-300 mb-4 font-semibold',
-              key: 'definition'
-            }, section.definition),
-            
-            React.createElement('div', {
-              className: 'space-y-3 mb-4',
-              key: 'items-list'
-            },
-              section.items.map((item, idx) =>
-                React.createElement('div', {
-                  className: 'flex items-start gap-3',
-                  key: idx
-                },
-                  [
-                    React.createElement('span', {
-                      className: 'text-red-400 text-lg',
-                      key: 'icon'
-                    }, '❌'),
-                    React.createElement('span', {
-                      className: 'text-gray-300',
-                      key: 'text'
-                    }, item)
-                  ]
-                )
-              )
-            ),
-            
-            React.createElement('p', {
-              className: 'text-yellow-400 font-bold text-lg',
-              key: 'conclusion'
-            }, section.conclusion)
-          ]
-        );
-
-        case "metrics-grid":
-          return React.createElement('div', { key: 'metrics-grid' },
-            [
-              React.createElement('h3', {
-              className: 'section-title section-title-purple',
-              key: 'title'
-            }, section.title),
-            
-            React.createElement('div', {
-              className: 'grid grid-cols-1 md:grid-cols-3 gap-6',
-              key: 'grid-container'
-            },
-              section.categories.map((category, idx) =>
-                React.createElement('div', {
-                  className: 'bg-gray-800/50 p-4 rounded-lg',
-                  key: idx
-                },
-                  [
-                    React.createElement('h4', {
-                      className: 'text-purple-400 font-bold mb-3',
-                      key: 'category-title'
-                    }, category.title),
-                    
-                    React.createElement('ul', {
-                      className: 'space-y-2',
-                      key: 'items-list'
-                    },
-                      category.items.map((item, itemIdx) =>
-                        React.createElement('li', {
-                          className: 'text-gray-300 text-sm leading-relaxed',
-                          key: itemIdx
-                        }, item)
-                      )
-                    )
-                  ]
-                )
-              )
-            )
-          ]
-        );
-
-        case "philosophy":
-        return React.createElement('div', { key: 'philosophy' },
-          [
-            React.createElement('h3', {
-              className: 'section-title section-title-green',
-              key: 'title'
-            }, section.title),
-            
-            React.createElement('blockquote', {
-              className: 'border-l-4 border-yellow-400 pl-4 my-4 italic text-yellow-300 text-lg',
-              key: 'quote'
-            }, section.quote),
-            
-            React.createElement('p', {
-              className: 'text-gray-300 mb-4 font-semibold',
-              key: 'strategy'
-            }, section.strategy),
-            
-            React.createElement('div', {
-              className: 'space-y-3',
-              key: 'items-list'
-            },
-              section.items.map((item, idx) =>
-                React.createElement('div', {
-                  className: 'flex items-start gap-3',
-                  key: idx
-                },
-                  [
-                    React.createElement('span', {
-                      className: 'text-green-400 text-lg',
-                      key: 'check'
-                    }, '✓'),
-                    React.createElement('span', {
-                      className: 'text-gray-300',
-                      key: 'text'
-                    }, item)
-                  ]
-                )
-              )
-            )
-          ]
-        );
-
-        case "comparison-table":
-        return React.createElement('div', { key: 'comparison-table' },
-          [
-            React.createElement('h3', {
-              className: 'section-title section-title-blue text-center',
-              key: 'title'
-            }, section.title),
-            
-            React.createElement('div', {
-              className: 'overflow-x-auto rounded-lg',
-              key: 'table-container'
-            },
-              React.createElement('table', { 
-                className: 'comparison-table'
-              },
-                [
-                  React.createElement('thead', { key: 'head' },
-                    React.createElement('tr', {},
-                      section.headers.map((header, idx) =>
-                        React.createElement('th', {
-                          key: idx,
-                          className: idx === 0 ? 'text-left' : 'text-center'
-                        }, header)
-                      )
-                    )
-                  ),
-                  
-                  React.createElement('tbody', { key: 'body' },
-                    section.rows.map((row, rowIdx) =>
-                      React.createElement('tr', {
-                        key: rowIdx
-                      },
-                        row.map((cell, cellIdx) =>
-                          React.createElement('td', {
-                            key: cellIdx,
-                            className: `${
-                              cellIdx === 0 ? 'text-left font-semibold' : 'text-center'
-                            } ${
-                              cellIdx === 1 ? 'text-yellow-400' : 
-                              cellIdx === 2 ? 'text-red-400' : ''
-                            }`
-                          }, cell)
-                        )
-                      )
-                    )
-                  )
-                ]
-              )
-            )
-          ]
-        );
-
-        case "crucial-difference":
-        return React.createElement('div', { key: 'crucial-difference' },
-          [
-            React.createElement('h3', {
-              className: 'section-title section-title-orange text-center mb-6',
-              key: 'title'
-            }, section.title),
-            
-            React.createElement('div', {
-              className: 'grid grid-cols-1 md:grid-cols-2 gap-6',
-              key: 'comparison-cards'
-            },
-              [
-                // Carte ELITE_VALUE
-                React.createElement('div', {
-                  className: 'elite-card',
-                  key: 'elite'
-                },
-                  [
-                    React.createElement('h4', {
-                      className: 'elite-title',
-                      key: 'title'
-                    }, section.elite.title),
-                    
-                    React.createElement('p', {
-                      className: 'elite-description',
-                      key: 'description'
-                    }, section.elite.description),
-                    
-                    React.createElement('div', {
-                      className: 'elite-example',
-                      key: 'example'
-                    },
-                      [
-                        React.createElement('span', {
-                          className: 'text-yellow-400 font-semibold',
-                          key: 'label'
-                        }, 'Exemple : '),
-                        React.createElement('span', {
-                          key: 'text'
-                        }, section.elite.example)
-                      ]
-                    )
-                  ]
-                ),
-                
-                // Carte VALUE_TRAP
-                React.createElement('div', {
-                  className: 'trap-card',
-                  key: 'trap'
-                },
-                  [
-                    React.createElement('h4', {
-                      className: 'trap-title',
-                      key: 'title'
-                    }, section.trap.title),
-                    
-                    React.createElement('p', {
-                      className: 'trap-description',
-                      key: 'description'
-                    }, section.trap.description),
-                    
-                    React.createElement('div', {
-                      className: 'trap-example',
-                      key: 'example'
-                    },
-                      [
-                        React.createElement('span', {
-                          className: 'text-red-400 font-semibold',
-                          key: 'label'
-                        }, 'Exemple : '),
-                        React.createElement('span', {
-                          key: 'text'
-                        }, section.trap.example)
-                      ]
-                    )
-                  ]
-                )
-              ]
-            )
-          ]
-        );
-
       case "critical-warning":
         return React.createElement('div', { key: 'critical-warning' },
           [
@@ -1389,82 +1160,7 @@ const DescriptionBox = ({ analysisType }) => {
           ]
         );
 
-      case "philosophy-short":
-        return React.createElement('div', { key: 'philosophy-short' },
-          [
-            React.createElement('h3', {
-              className: 'section-title section-title-blue',
-              key: 'title'
-            }, section.title),
-            
-            React.createElement('blockquote', {
-              className: 'philosophy-quote-short',
-              key: 'quote'
-            }, section.quote),
-            
-            React.createElement('p', {
-              className: 'text-gray-300 mb-4 font-semibold',
-              key: 'benefits'
-            }, section.benefits),
-            
-            React.createElement('div', {
-              className: 'space-y-3',
-              key: 'items-list'
-            },
-              section.items.map((item, idx) =>
-                React.createElement('div', {
-                  className: 'flex items-start gap-3',
-                  key: idx
-                },
-                  [
-                    React.createElement('span', {
-                      className: 'text-green-400 text-lg',
-                      key: 'check'
-                    }, '✓'),
-                    React.createElement('span', {
-                      className: 'text-gray-300',
-                      key: 'text'
-                    }, item)
-                  ]
-                )
-              )
-            )
-          ]
-        );
-
-      case "recommendations":
-        return React.createElement('div', { key: 'recommendations' },
-          [
-            React.createElement('h3', {
-              className: 'section-title section-title-purple',
-              key: 'title'
-            }, section.title),
-            
-            React.createElement('div', {
-              className: 'recommendations-list',
-              key: 'list'
-            },
-              section.items.map((item, idx) =>
-                React.createElement('div', {
-                  className: 'recommendation-item',
-                  key: idx
-                },
-                  [
-                    React.createElement('span', {
-                      className: 'text-blue-400 text-lg',
-                      key: 'icon'
-                    }, '📌'),
-                    React.createElement('span', {
-                      className: 'text-gray-300',
-                      key: 'text'
-                    }, item)
-                  ]
-                )
-              )
-            )
-          ]
-        );
-        
+      
         default:
           return React.createElement('p', {
             className: 'text-gray-300 leading-relaxed',
