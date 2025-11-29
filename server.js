@@ -1,5 +1,7 @@
 import express from 'express';
 import cors from 'cors';
+import pkg from 'pg';
+const { Client } = pkg;
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -11,16 +13,18 @@ app.use(express.json());
 // Configuration PostgreSQL
 const pool = {
   query: async (queryText) => {
-    // Cette fonction sera exécutée côté serveur Heroku
-    const { Client } = await import('pg');
     const client = new Client({
       connectionString: process.env.DATABASE_URL,
       ssl: { rejectUnauthorized: false }
     });
+    
     await client.connect();
     try {
       const result = await client.query(queryText);
       return result;
+    } catch (error) {
+      console.error('Database error:', error);
+      throw error;
     } finally {
       await client.end();
     }
@@ -81,11 +85,11 @@ app.get('/api/buffett-scores', async (req, res) => {
       AND a."debtToEquity" IS NOT NULL
       AND a."debtToEquity" < 15         
     ORDER BY e.symbole, a.roe DESC, a.roic DESC;
-
     `;
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (error) {
+    console.error('Error in buffett-scores:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -95,13 +99,13 @@ app.get('/api/cash-flow-momentum', async (req, res) => {
   try {
     const query = `
       SELECT DISTINCT ON (e.symbole)
-          e.symbole,      e.nom,
+          e.symbole,
+          e.nom,
           e.secteur,
           df.operating_cash_flow,
           df.free_cash_flow,
           df.revenue,
           df.net_income,
-          -- Vérification de cohérence
           CASE 
               WHEN df.free_cash_flow = df.operating_cash_flow THEN '⚠️ CAPEX=0?'
               WHEN df.free_cash_flow > df.operating_cash_flow THEN '❌ INCOHERENT'
@@ -112,14 +116,15 @@ app.get('/api/cash-flow-momentum', async (req, res) => {
       FROM donnees_financieres df
       JOIN entreprises e ON df.entreprise_id = e.id
       WHERE df.free_cash_flow > 0
-        AND df.free_cash_flow <= df.operating_cash_flow  -- Cohérence de base
-        AND (df.free_cash_flow / NULLIF(df.revenue, 0)) BETWEEN 0.05 AND 0.5  -- Plus réaliste
-        AND (df.free_cash_flow / NULLIF(df.market_cap, 0)) BETWEEN 0.01 AND 0.15  -- Plus réaliste
+        AND df.free_cash_flow <= df.operating_cash_flow
+        AND (df.free_cash_flow / NULLIF(df.revenue, 0)) BETWEEN 0.05 AND 0.5
+        AND (df.free_cash_flow / NULLIF(df.market_cap, 0)) BETWEEN 0.01 AND 0.15
       ORDER BY e.symbole, fcf_yield DESC
     `;
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (error) {
+    console.error('Error in cash-flow-momentum:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -138,9 +143,7 @@ app.get('/api/value-trap-detector', async (req, res) => {
           a."evToEbitda",
           a.roe,
           a.roic,
-          -- GRAHAM NUMBER CORRIGÉ (approximation)
           ROUND(SQRT(22.5 * a."peRatio" * a."pbRatio")::numeric, 2) as graham_multiple,
-          -- SCORE VALUE AMÉLIORÉ
           CASE
               WHEN a."peRatio" < 8 AND a."pbRatio" < 1 AND a.roe > 15 AND a.roic > 12 THEN '⭐ ELITE_VALUE'
               WHEN a."peRatio" < 12 AND a."pbRatio" < 1.5 AND a.roe > 12 AND a.roic > 10 THEN '✅ SOLID_VALUE'
@@ -149,26 +152,26 @@ app.get('/api/value-trap-detector', async (req, res) => {
               WHEN a."peRatio" < a."pbRatio" * 10 THEN '🎯 DEEP_VALUE'
               ELSE '🚫 SPECULATIVE'
           END as value_grade,
-          -- SCORE AMÉLIORÉ : ROE/P/E + marge de sécurité P/B
           ROUND(
               (a.roe / NULLIF(a."peRatio", 0.1)) *
-              (1 / NULLIF(GREATEST(a."pbRatio", 0.3), 5)) *  -- Évite division par trop petit
-              CASE WHEN a.roic > a.roe * 0.8 THEN 1.2 ELSE 1 END  -- Bonus qualité
+              (1 / NULLIF(GREATEST(a."pbRatio", 0.3), 5)) *
+              CASE WHEN a.roic > a.roe * 0.8 THEN 1.2 ELSE 1 END
           , 2) as value_score
       FROM analyses_buffett a
       JOIN entreprises e ON a.entreprise_id = e.id
-      WHERE a."peRatio" BETWEEN 4 AND 25  -- Plage élargie
-        AND a."pbRatio" BETWEEN 0.3 AND 3  -- Plage élargie
-        AND a.roe > 6  -- Rentabilité minimale
-        AND a."priceToFCF" BETWEEN 5 AND 30  -- FCF yield raisonnable
-        AND a.roic > 5  -- Efficacité capitalistique
-        AND a.roic > a.roe * 0.7  -- Cohérence ROE/ROIC
+      WHERE a."peRatio" BETWEEN 4 AND 25
+        AND a."pbRatio" BETWEEN 0.3 AND 3
+        AND a.roe > 6
+        AND a."priceToFCF" BETWEEN 5 AND 30
+        AND a.roic > 5
+        AND a.roic > a.roe * 0.7
       ORDER BY value_score DESC, a."peRatio" ASC
       LIMIT 50;
     `;
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (error) {
+    console.error('Error in value-trap-detector:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -207,15 +210,17 @@ app.get('/api/short-risk-detector', async (req, res) => {
         AND df.date = (SELECT MAX(date) FROM donnees_financieres df2 WHERE df2.entreprise_id = a.entreprise_id)
       WHERE (a."debtToEquity" > 2 OR a."interestCoverage" < 1.5 OR a."currentRatio" < 1 OR df.net_income < 0 OR df.operating_cash_flow < 0)
         AND df.market_cap > 50000000
-      ORDER BY risk_score DESC, a."debtToEquity" DESC
-      `;
+      ORDER BY risk_score DESC, a."debtToEquity" DESC;
+    `;
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (error) {
+    console.error('Error in short-risk-detector:', error);
     res.status(500).json({ error: error.message });
   }
 });
-// 5. DIVIDEND QUALITY
+
+// 5. DIVIDEND QUALITY - ROUTE MANQUANTE
 app.get('/api/dividend-quality', async (req, res) => {
   try {
     const query = `
@@ -228,9 +233,7 @@ app.get('/api/dividend-quality', async (req, res) => {
           ROUND((a."dividendYield" / NULLIF(a."earningsYield", 0))::numeric, 2) as payout_ratio,
           ROUND(a.roe::numeric, 1) as roe,
           ROUND(a."debtToEquity"::numeric, 2) as debt_equity,
-          -- COUVERTURE SIMPLIFIÉE
           ROUND((a."earningsYield" / NULLIF(a."dividendYield", 0))::numeric, 1) as coverage_ratio,
-          -- GRADE FINAL OPTIMISÉ
           CASE
               WHEN a."dividendYield" > 12 OR (a."dividendYield" / NULLIF(a."earningsYield", 0)) > 0.8 THEN '🚨 RISKY_INCOME'
               WHEN a."dividendYield" BETWEEN 6 AND 12 AND a.roe > 15 AND (a."earningsYield" / NULLIF(a."dividendYield", 0)) > 1.5 THEN '✅ HIGH_INCOME'
@@ -239,7 +242,6 @@ app.get('/api/dividend-quality', async (req, res) => {
               WHEN a."dividendYield" < 3 AND a.roe > 25 THEN '📈 GROWTH_INCOME'
               ELSE '🔍 ANALYSIS_NEEDED'
           END as dividend_grade,
-          -- SCORE DE SÉCURITÉ
           (CASE WHEN a.roe > 20 THEN 2 WHEN a.roe > 15 THEN 1 ELSE 0 END +
            CASE WHEN a."debtToEquity" < 0.5 THEN 2 WHEN a."debtToEquity" < 1 THEN 1 ELSE 0 END +
            CASE WHEN (a."earningsYield" / NULLIF(a."dividendYield", 0)) > 2 THEN 2 WHEN (a."earningsYield" / NULLIF(a."dividendYield", 0)) > 1.5 THEN 1 ELSE 0 END +
@@ -256,15 +258,12 @@ app.get('/api/dividend-quality', async (req, res) => {
         AND df.operating_cash_flow > 0
         AND df.market_cap > 50000000
         AND (a."earningsYield" / NULLIF(a."dividendYield", 0)) > 1.0
-      ORDER BY
-          e.symbole,  -- Pour DISTINCT ON
-          safety_score DESC,
-          a.roe DESC,
-          a."dividendYield" DESC
+      ORDER BY e.symbole, safety_score DESC, a.roe DESC, a."dividendYield" DESC;
     `;
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (error) {
+    console.error('Error in dividend-quality:', error);
     res.status(500).json({ error: error.message });
   }
 });
