@@ -1357,7 +1357,7 @@ const BuffettTab = ({
         setSectorFilter(e.target.value);
     };
     
-    
+return React.createElement('div', {},
         [
             // Section Recherche et Filtres (NOUVEAU DESIGN COMPACT)
             React.createElement('div', { 
@@ -1711,7 +1711,9 @@ const CashFlowTab = ({
         return getPaginatedData(filteredData);
     }, [filteredData, currentPage, itemsPerPage]);
 
-      
+
+return React.createElement('div', {},
+
         [
             // DESCRIPTION BOX 
             React.createElement(DescriptionBox, {
