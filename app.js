@@ -1587,7 +1587,8 @@ return React.createElement('div', {},
                 totalItems: filteredData.length
             })
          ]
-      };
+      ); 
+   };
 
 // Composant Onglet Cash Flow avec filtres, Tri, Recherche et PAGINATION
 const CashFlowTab = ({ 
