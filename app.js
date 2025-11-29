@@ -1967,6 +1967,7 @@ return React.createElement('div', {},
                 totalItems: filteredData.length
             })
         ]
+     );
    };
 
 // Composant Onglet Value Trap Detector avec Filtres, Tri, Recherche et PAGINATION
